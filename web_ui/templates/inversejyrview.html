@@ -1,0 +1,129 @@
+$def with (inp_expr, dropmenu_color_l, dropmenu_color_r)
+
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<script type="text/x-mathjax-config">
+  	MathJax.Hub.Config({ TeX: { extensions: ["color.js"] }});
+	MathJax.Hub.Config({"HTML-CSS": {preferredFont: "STIX"}});
+</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+<script>
+   MathJax.Hub.Queue(
+     function () {
+        document.getElementById('equ').style.visibility="";
+     }
+     );
+</script>
+<title>Oiva yhtälönratkaisija</title>
+<link rel="stylesheet" type="text/css" href="static/default.css">
+</head>
+
+<div class="container wrapper">
+ <div id="top">
+  <ul id="menu">
+   <li><a href="/">JYR - joustavaa yhtälönratkaisua</a>
+   <li><a href="/mojyr">MOJYR</a>
+   <li><a href="/contact">Yhteystiedot</a>
+  </ul>
+ </div>
+ <hr>
+ <div class="wrapper">
+  <div id="menubar">
+   <div id="menu1">
+   <h3>Sovellus</h3>
+   <ul id="menulist">
+    <li class="menuitem"><a href="/oldjyrquestion">Aloita alusta</a>
+    <li class="menuitem"><a href="/createjyrquestion">Hallinnoi omia yhtälöitä</a>
+    <li class="menuitem"><a href="/simpleview">Siirry perusratkaisijaan</a>
+    <li class="menuitem"><a href="/ohjeet">Ohjeet</a>
+   </ul>
+  </div>
+  <div id="menu2">
+   <h3>Linkkejä</h3>
+   <ul id="menulist2">
+    <li class="menuitem"><a href="/">Etusivu</a>
+    <li class="menuitem"><a href="https://ouluma.fi">OuLUMA</a>
+    <li class="menuitem"><a href="http://www.luma.fi/suomi/">LUMA Suomi</a>
+    <li class="menuitem"><a href="/ohjeet">Yhteystiedot</a>
+   </ul>
+  </div>
+  </div>
+  <div id="main">
+   <h2>Käänteinen yhtälönratkaisu (JYR)</h2>
+   <table>
+    <tr>
+     <td><p>Syötä haluamasi ratkaisu:</p></td>
+     <td align="right"><input type="text" id="inp_equ_lhs" name="inp_equ_lhs" size="5"/></td>
+     <td>\(=\)</td>
+     <td align="left"><input type="text" id="inp_equ_rhs" name="inp_equ_rhs" size="5"/></td>
+     </tr>
+     <tr><td colspan="3" align="center" id="buttoncol"><button id="postBut" value="start" name="postBut">Rakenna yhtälö</button>
+       </td></tr>
+     </table>
+     $if inp_expr:        
+       <table><tr><td colspan="4"><div id="equ" style="visibility:hidden; font-size:133%;">$:inp_expr</div></td></tr>
+       <tr><td><form name="l_oprs" method="post">
+       <fieldset><legend>Muokkaa vasenta puolta</legend>
+       <table><tr><td>Toiminto värille</td><td>$:dropmenu_color_l</td></tr>
+       <tr><td>
+       <select id="op_drop_l" name="op_drop_l">
+       <option value="yhdista_luvut_l">Yhdistä luvut</option>
+       <option value="yhdista_xtermit_l">Yhdistä x-termit</option>
+       <option value="poista_sulut_l">Poista sulut</option>
+       <option value="yhteinen_tekija_l">Ota yht. tekijä</option>
+       </select></td>
+       <td>Tekijä: <input type="text" id="inp_expr_l" name="inp_expr_l" size="6" value="1" /></td>
+       </tr>
+       <tr><td colspan="2" align="center" id="buttoncol"><button id="postBut" value="mod_expr_l" name="postBut">Tee toiminto</button>
+       </td>
+       </tr>
+       </table>
+       </fieldset>
+       </form>
+       </td>
+       <td><form name="lr_oprs" method="post">
+       <fieldset><legend>Muokkaa puolittain</legend>
+       <table><tr><td>Toiminto:</td></tr>
+       <tr><td><select id="op_drop_lr" name="op_drop_lr">
+       <option value="lisaa">Lisää termi:</option>
+       <option value="vahenna">Vähennä termi:</option>
+       <option value="kerro">Kerro termillä:</option>
+       <option value="jaa">Jaa termillä:</option>
+       </select></td>
+       <td><input type="text" id="inp_expr_lr" name="inp_expr_lr" size="9" value="0" /></td>
+       </tr>
+       <tr><td colspan="2" align="center" id="buttoncol">
+       <button id="postBut" value="modequ" name="postBut">Tee toiminto</button>
+       </td></tr></table></fieldset></form></td>
+       <td><form name="r_oprs" method="post">
+       <fieldset><legend>Muokkaa oikeaa puolta</legend>
+       <table><tr><td>Toiminto värille</td><td>$:dropmenu_color_r</td></tr>
+       <tr><td><select id="op_drop_r" name="op_drop_r">
+       <option value="yhdista_luvut_r">Yhdistä luvut</option>
+       <option value="yhdista_xtermit_r">Yhdistä x-termit</option>
+       <option value="poista_sulut_r">Poista sulut</option>
+       <option value="yhteinen_tekija_r">Ota yht. tekijä</option>
+       </select></td>
+       <td>Tekijä: <input type="text" id="inp_expr_r" name="inp_expr_r" size="6" value="1" /></td>
+       </tr>
+       <tr><td colspan="2" align="center" id="buttoncol">
+       <button id="postBut" value="mod_expr_r" name="postBut">Tee toiminto</button></td>
+       </tr>
+       <tr><td></td><td><button id="postBut" value="save_equ" name="postBut">Tallenna yhtälö</button></td></tr>
+       </table>
+       </fieldset>
+       </form>
+       </td>
+       </tr>
+       </table>
+  </div>
+  <div id="sidebar">
+   <h3>Tietoja</h3>
+   <p></p>
+   <p></p>
+  </div>
+ </div>
+</div>
+</html>

@@ -1,0 +1,146 @@
+$def with (inp_expr, num_ops, record, symvar,err=[])
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+
+<script type="text/javascript" 
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  	MathJax.Hub.Config({ TeX: { extensions: ["color.js"] }});
+	MathJax.Hub.Config({"HTML-CSS": {preferredFont: "STIX"}});	
+</script>
+
+<script>
+   MathJax.Hub.Queue(
+     function () {
+        document.getElementById('equ').style.visibility="";
+     }
+     );
+</script>
+<script language="JavaScript" type="text/javascript">
+ function HandleBrowseClick() {
+  var fileinput = document.getElementById("upload_solution");
+  fileinput.click();
+ }
+ function Handlechange() {
+  var fileinput = document.getElementById("upload_solution");
+  var filetext = fileinput.value;
+  var new_filetext = filetext.replace("C:\\fakepath\\", "");
+  var textinput = document.getElementById("filename");
+  textinput.value = new_filetext;
+ }
+ function instr() {
+  window.open("/ohjeet#basic","Ohjeet","width=800, height=530");
+ }
+</script>
+<title>Oiva yhtälönratkaisija</title>
+<link rel="stylesheet" type="text/css" href="static/default.css">
+</head>
+<body>
+<div class="container wrapper">
+ <div id="top">
+  <ul id="menu">
+   <li><a href="/">JYR - joustavaa yhtälönratkaisua</a>
+  </ul>
+ </div>
+ <hr>
+ <div class="wrapper">
+  <div id="menubar">
+   <div id="menu1">
+    <h3>Sovellus</h3>
+    <ul id="menulist">
+     <li class="menuitem"><a href="/oldsimplequestion">Aloita alusta</a>
+     <li class="menuitem"><a href="/newsimplequestion">Arvo uusi yhtälö</a>
+     <li class="menuitem"><a href="/inverseview">Käänteinen yhtälö</a>     
+     <li class="menuitem"><a href="/createsimplequestion">Omat yhtälöt</a>
+     <li class="menuitem"><a href="/jyrview">Joustava ratkaisija</a>
+     <li class="menuitem"><a onclick="instr()">Ohjeet</a>
+    </ul>
+   </div>
+   <div id="menu2">
+    <h3>Linkkejä</h3>
+    <ul id="menulist2">
+     <li class="menuitem"><a href="/">Etusivu</a>
+     <li class="menuitem"><a href="https://ouluma.fi">OuLUMA</a>
+     <li class="menuitem"><a href="https://ouluma.fi/joustava-yhtalonratkaisu/">Joustava yhtälönratkaisu</a>       
+     <li class="menuitem"><a href="https://ouluma.fi/joustava-yhtalonratkaisu/yhteyshenkilot/">Yhteystiedot</a>       
+     <li class="menuitem"><a href="http://www.luma.fi/suomi/">LUMA Suomi</a>
+    </ul>
+  </div>
+  </div>
+<div id="main">
+       <h2>Ratkaise yhtälö perustavalla</h2>
+<table>
+	<tr>
+	<td colspan="2">
+	  <div id="equ" style="visibility:hidden; font-size:133%;">$:inp_expr</div>
+	</td>
+	</tr>
+	<tr>
+	<td>
+		<form name="lr_oprs" method="post">
+		<fieldset>
+		<legend>Muokkaa yhtälöä puolittain</legend>
+		<table>
+    	
+    	<tr>
+              <label for="op_drop_lr">Toiminto:</label>
+    	<td>
+    		<select id="op_drop_lr" name="op_drop_lr">
+  				<option value="lisaa">Lisää termi:</option>
+  				<option value="vahenna">Vähennä termi:</option>
+  				<option value="kerro">Kerro termillä:</option>
+  				<option value="jaa">Jaa termillä:</option>
+  				<option value="yhdista_luvut">Yhdistä luvut</option>
+  				<option value="yhdista_xtermit">Yhdistä $:symvar-termit</option>
+			</select>
+		</td>
+		<td>
+			<input type="text" id="inp_expr_lr" name="inp_expr_lr" value="0" />
+		</td>
+		</tr>
+    	<tr>
+    	<td id="buttoncol" colspan="2">
+    		<button id="postBut" value="modequ" name="postBut">Tee toiminto
+    		</button>
+    	</td>
+    	</tr>
+		</table>
+		</fieldset>
+		</form>
+	</td>
+    <td></td>
+	</tr>
+</table>
+</div>
+   <div id="sidebar">
+   <h3>Tietoja</h3>
+   <p>Toimintoja nyt: $num_ops</p>
+   <p>Paras suoritus: $record</p>
+   <h3>Tuo ratkaisu ohjelmaan</h3>
+   <form name="upload_solution_form" method="post" enctype="multipart/form-data" action="">
+    <div>
+     <input type="file" class="upload" name="upload_solution" id="upload_solution"
+      style="display: none" onChange="Handlechange();" /> <input type="button"
+      value="Valitse tiedosto" id="fakeBrowse" onclick="HandleBrowseClick();"/>
+    </div>
+    <div>
+     <input type="text" id="filename" readonly="true" size="15" />
+    </div>
+    <div>
+     <button id="postBut" name="postBut" value="upload_solution_file">Tuo ratkaisu</button>
+    </div>
+   <h3>Vie ratkaisu tiedostoon</h3>
+    <button id="postBut" name="postBut" value="download_solution">Vie ratkaisu</button>
+   </form>
+  </div>
+</div> 
+   $if not err == []:
+    $:err      
+</div>
+</body>
+</html>
+  
+

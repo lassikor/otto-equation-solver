@@ -1,0 +1,115 @@
+$def with (new_equation, equ_lhs_str, equ_rhs_str, user_equs, err=[])
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" 
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+<script type="text/x-mathjax-config">
+  	MathJax.Hub.Config({ TeX: { extensions: ["color.js"] }});
+	MathJax.Hub.Config({"HTML-CSS": {preferredFont: "STIX"}});	
+</script>
+
+<script>
+	MathJax.Hub.Queue(function() {
+		document.getElementById('user_equs').style.visibility = "";
+		document.getElementById('equ').style.visibility = "";
+	});
+</script>
+<script type="text/javascript" language="JavaScript">
+ 	function HandleBrowseClick() {
+  	var fileinput = document.getElementById("upload_equs");
+  	fileinput.click();
+ 	}
+ 	function Handlechange() {
+  	var fileinput = document.getElementById("upload_equs");
+  	var filetext = fileinput.value;
+  	var new_filetext = filetext.replace("C:\\fakepath\\", "");
+  	var textinput = document.getElementById("filename");
+  	textinput.value = new_filetext;
+ 	}
+ 	function instr() {
+ 	  window.open("/ohjeet#own","Ohjeet","width=800, height=600");
+ 	}
+</script>
+<title>Oiva yhtälönratkaisija</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="static/default.css">
+
+</head>
+<body>
+<div class="container wrapper">
+ <div id="top">
+  <ul id="menu">
+   <li><a href="/">JYR - joustavaa yhtälönratkaisua</a>
+  </ul>
+ </div>
+ <hr>
+ <div class="wrapper">
+  <div id="menubar">
+   <div id="menu1">
+    <h3>Sovellus</h3>
+    <ul id="menulist">
+     <li class="menuitem"><a href="/simpleview">Perusratkaisija</a>
+     <li class="menuitem"><a href="/jyrview">Joustava ratkaisija</a>
+     <li class="menuitem"><a href="/inverseview">Käänteinen yhtälö</a>    
+     <li class="menuitem"><a href="/createjyrquestion">Joustavan ratkaisijan omat yhtälöt</a>
+     <li class="menuitem"><a onclick="instr()">Ohjeet</a>
+    </ul>
+   </div>
+   <div id="menu2">
+    <h3>Linkkejä</h3>
+    <ul id="menulist2">
+     <li class="menuitem"><a href="/">Etusivu</a>
+     <li class="menuitem"><a href="https://ouluma.fi">OuLUMA</a>
+     <li class="menuitem"><a href="https://ouluma.fi/joustava-yhtalonratkaisu/">Joustava yhtälönratkaisu</a>       
+     <li class="menuitem"><a href="https://ouluma.fi/joustava-yhtalonratkaisu/yhteyshenkilot/">Yhteystiedot</a>          
+     <li class="menuitem"><a href="http://www.luma.fi/suomi/">LUMA Suomi</a>
+    </ul>
+   </div>
+  </div>
+  <form name="create_equ" method="post" enctype="multipart/form-data" action="">
+   <div id="main_cr">
+    <h2>Syötä uusi yhtälö perusratkaisijalle</h2>
+    <table>
+     <tr>
+      <td align="right"><input type="text" id="inp_equ_lhs" name="inp_equ_lhs" size="15"
+       value="$:equ_lhs_str" /></td>
+      <td>\(=\)</td>
+      <td align="left"><input type="text" id="inp_equ_rhs" name="inp_equ_rhs" size="15"
+       value="$:equ_rhs_str" /></td>
+     </tr>
+     <tr>
+      <td colspan="3" align="right"><div id="equ" style="visibility: hidden; font-size: 133%;">$:new_equation</div></td>
+     </tr>
+     <tr>
+      <td colspan="3" align="center" id="buttoncol">
+       <button id="postBut" value="show_equ" name="postBut">Näytä yhtälö</button>
+       <button id="postBut" value="save_equ" name="postBut">Tallenna yhtälö</button>
+       <button id="postBut" value="solve_equ_x" name="postBut">Ratkaise yhtälö</button>
+      </td>
+     </tr>
+    </table>
+   </div>
+  <div id="sidebar_cr">
+   <h2>Omat yhtälöt perusratkaisijalle</h2>
+   <div id="user_equs" style="visibility: hidden; font-size: 133%;">$:user_equs</div>
+   <h3>Tuo yhtälöitä ohjelmaan</h3>
+    <div>
+     <input class="upload" type="file" name="upload_equs" id="upload_equs" style="display:none" onChange="Handlechange();"/>
+     <input type="button" value="Valitse tiedosto" id="fakeBrowse" onclick="HandleBrowseClick();" /></div>
+     <div><input type="text" id="filename" readonly="true" size="15" /></div>
+     <div><button id="postBut" name="postBut" value="file_upload">Tuo yhtälöt</button>
+    </div>
+   <h3>Vie omat yhtälöt tiedostoon</h3>
+    <button id="postBut" name="postBut" value="file_download">Vie yhtälöt</button>
+   
+  </div>
+  </form>
+ </div>
+   $if not err == []:
+    $:err 
+</div>
+</body>
+</html>

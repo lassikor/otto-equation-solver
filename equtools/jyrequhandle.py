@@ -1,0 +1,320 @@
+# -*- coding: utf8 -*-
+import jyrops
+import random
+from sympy import latex, solve, Mul, symbols
+from jyrsympify16 import jyrsympify
+
+
+class EquTable(object):
+    
+    def __init__(self, mode = 'jyr'):
+        #operations in use. check jyrops.py
+        self.functions = {'lisaa':jyrops.addlr,
+                          'lisaa_ja_laske':jyrops.addlr_eval,
+                          'vahenna':jyrops.substrlr,
+                          'kerro':jyrops.multiplr,
+                          'kerro_lauseke':jyrops.multiplr_expr,
+                          'jaa':jyrops.dividelr}
+        
+        self.func_texts = {'lisaa': r'\ \mbox{ Lis&#228;sin puolittain }',
+                          'vahenna': r'\ \mbox{ V&#228;hensin puolittain }',
+                          'kerro': r'\ \mbox{ Kerroin puolittain sievent&#228;en termill&#228; }',
+                          'jaa': r'\ \mbox{ Jaoin puolittain sievent&#228;en termill&#228; }',
+                          'kerro_lauseke': r'\ \mbox{ Kerroin puolittain termill&#228; }',
+                          'virhe': r'\ \mbox{ Jakajan tai kertojan pit&#228;&#228; olla jokin luku }\neq 0'}
+        self.func_ids = {'lisaa': r'& \ \ \mbox{L}',
+                          'vahenna': r'& \ \ \mbox{V}',
+                          'kerro': r'& \ \ \mbox{K}',
+                          'kerro_lauseke': r'& \ \ \mbox{K}',
+                          'jaa': r'& \ \ \mbox{J}'}
+      
+        self.mod_functions = {'poista_sulut':jyrops.open_braces,
+                              'yhteinen_tekija':jyrops.collect_comm_fact,
+                              'yhdista_termit':jyrops.collect_terms}
+
+        if not mode == 'inv': 
+            LhsTmp, RhsTmp = create_equ(mode)
+            symLhsTmp = jyrsympify(LhsTmp)
+            symRhsTmp = jyrsympify(RhsTmp)
+            self.solution = solve(symLhsTmp-symRhsTmp)
+        else:
+            LhsTmp, RhsTmp = '0','0'
+            symLhsTmp = jyrsympify(LhsTmp)
+            symRhsTmp = jyrsympify(RhsTmp)
+
+        #create the equation table
+        self.equTableLhs = [LhsTmp]
+        self.equTableRhs = [RhsTmp]
+        self.equTableText = []
+        self.equTableIndx = 0
+        self.record = u'-'
+        self.userEquLhs = []
+        self.userEquRhs = []
+        self.userEquRecord =[]
+        self.userEquIx = None
+        self.mode = mode
+        if not len(symLhsTmp.free_symbols) == 0:
+            self.symvar = str(symLhsTmp.free_symbols.pop())
+        elif not len(symRhsTmp.free_symbols) == 0:
+            self.symvar = str(symRhsTmp.free_symbols.pop())
+        else:
+            self.symvar = 'x'
+            
+    #method for equation transformations    
+    def equTransf(self, op, mod_expr, evaluate = False):
+        
+        func = self.functions[op] #operation chosen
+        newLhs, newRhs, errorF = func(mod_expr,self.equTableLhs[self.equTableIndx],self.equTableRhs[self.equTableIndx], evaluate = evaluate)
+        mod_expr_tex = latex(jyrsympify(mod_expr, evaluate = False))
+        if errorF == 1:
+            newText = self.func_texts['virhe']+'.'
+        elif op == 'jaa' or op == 'kerro':
+            newText = self.func_texts[op]+mod_expr_tex+'.'+self.func_ids[op]+mod_expr_tex+r'\ \ \mbox{M}'
+        else:
+            newText = self.func_texts[op]+mod_expr_tex+'.'+self.func_ids[op]+mod_expr_tex
+
+        #check if there is zero addition or -1 multiplication and remove it
+        newLhs = newLhs.replace(" + 0","")
+        newLhs = newLhs.replace("0 + ","")
+        newRhs = newRhs.replace(" + 0","")
+        newRhs = newRhs.replace("0 + ","")
+        newLhs = newLhs.replace(" - 1*"," - ")
+        newRhs = newRhs.replace(" - 1*"," - ")
+
+        #add both sides to table
+        self.equTableLhs.append(newLhs)
+        self.equTableRhs.append(newRhs)
+        self.equTableText.append(newText)
+        if not self.mode == 'inv' and newLhs == self.symvar and newRhs == str(self.solution[0]):
+            self.equTableText.append(r'\ \mbox{ Hienoa! L&#246;ysin ratkaisun.}')
+        elif not self.mode == 'inv' and newRhs == self.symvar and newLhs == str(self.solution[0]):
+            self.equTableText.append(r'\ \mbox{ Hienoa! Ratkaisu on siis }'+self.symvar+r'='+str(self.solution[0]))
+        self.equTableIndx += 1
+    
+    #Method for equation modifications   
+    def exprMods(self, op, color, side, param1):
+        
+        func = self.mod_functions[op] #operation chosen
+        
+        if op == 'poista_sulut':
+            if side == 'left':
+                newLhs, errorF = func(self.equTableLhs[self.equTableIndx], color)
+                newRhs = self.equTableRhs[self.equTableIndx]
+                newText = r'\ {\color{'+color+r'}\mbox{ Poistin sulut vasemmalta.}}&\ \ \mbox{M}'
+            elif side == 'right':
+                newRhs, errorF = func(self.equTableRhs[self.equTableIndx], color)
+                newLhs = self.equTableLhs[self.equTableIndx]
+                newText = r'\ {\color{'+color+r'}\mbox{ Poistin sulut oikealta.}}&\ \ \mbox{M}'
+                
+        elif op == 'yhteinen_tekija':
+            if side == 'left':
+                newLhs, errorF = func(self.equTableLhs[self.equTableIndx], color, param1)
+                newRhs = self.equTableRhs[self.equTableIndx]
+                #param1 = latex(jyrsympify(param1, evaluate = False))
+                newText = r'\ {\color{'+color+r'}\mbox{ Otin yhteisen tekij&#228;n }'+param1+r'\mbox{ vasemmalta.}}&\ \ \mbox{M}'
+            elif side == 'right':
+                newRhs, errorF = func(self.equTableRhs[self.equTableIndx], color, param1)
+                newLhs = self.equTableLhs[self.equTableIndx]
+                newText = r'\ {\color{'+color+r'}\mbox{ Otin yhteisen tekij&#228;n }'+param1+r'\mbox{ oikealta.}}&\ \ \mbox{M}'
+                
+        elif op == 'yhdista_termit':
+            if side == 'left':
+                newLhs, errorF = func(self.equTableLhs[self.equTableIndx], color, param1)
+                newRhs = self.equTableRhs[self.equTableIndx]
+                if param1 == 'const':
+                    newText = r'\ {\color{'+color+r'}\mbox{ Yhdistin luvut vasemmalta.}}&\ \ \mbox{M}'
+                else:
+                    newText = r'\ {\color{'+color+r'}\mbox{ Yhdistin \('+self.symvar+r'\)-termit vasemmalta.}}&\ \ \mbox{M}'
+                    
+            elif side == 'right':
+                newRhs, errorF = func(self.equTableRhs[self.equTableIndx], color, param1)
+                newLhs = self.equTableLhs[self.equTableIndx]
+                if param1 == 'const':
+                    newText = r'\ {\color{'+color+r'}\mbox{ Yhdistin luvut oikealta.}}&\ \ \mbox{M}'
+                else:
+                    newText = r'\ {\color{'+color+r'}\mbox{ Yhdistin \('+self.symvar+r'\)-termit oikealta.}}&\ \ \mbox{M}'
+                    
+            elif side == 'both':
+                newRhs, errorF = func(self.equTableRhs[self.equTableIndx], color, param1)
+                newLhs, errorF = func(self.equTableLhs[self.equTableIndx], color, param1)
+                if param1 == 'const':
+                    newText = r'\ {\color{'+color+r'}\mbox{ Yhdistin luvut.}}&\ \ \mbox{M}'
+                else:
+                    newText = r'\ {\color{'+color+r'}\mbox{ Yhdistin \(x\)-termit.}}&\ \ \mbox{M}'
+                
+        
+        #check if there is zero addition or -1 multiplication and remove it
+        newLhs = newLhs.replace(" + 0","")
+        newLhs = newLhs.replace("0 + ","")
+        newRhs = newRhs.replace(" + 0","")
+        newRhs = newRhs.replace("0 + ","")
+        newLhs = newLhs.replace(" - 1*"," - ")
+        newRhs = newRhs.replace(" - 1*"," - ")
+
+        #add both sides to table
+        self.equTableLhs.append(newLhs)
+        self.equTableRhs.append(newRhs)
+        self.equTableText.append(newText)
+        if not self.mode == 'inv' and newLhs == self.symvar and newRhs == str(self.solution[0]):
+            self.equTableText.append(r'\ \mbox{ Hienoa! L&#246;ysin ratkaisun.}')
+        elif not self.mode == 'inv' and newRhs == self.symvar and newLhs == str(self.solution[0]):
+            self.equTableText.append(r'\ \mbox{ Hienoa! Ratkaisu on siis }'+self.symvar+r'='+str(self.solution[0])) 
+        self.equTableIndx += 1
+               
+            
+        
+    def getEquTable(self):
+        return self.equTableLhs, self.equTableRhs, self.equTableText
+    
+    def clearEquTable(self, mode='jyr', new = 0):
+        old_equ_lhs,  old_equ_rhs = self.equTableLhs[0], self.equTableRhs[0]
+        self.equTableLhs = []
+        self.equTableRhs = []
+        self.equTableText = []
+        self.equTableIndx = 0
+        if new == 0:
+            self.equTableLhs.append(old_equ_lhs)
+            self.equTableRhs.append(old_equ_rhs)
+        else:
+            LhsTmp, RhsTmp = create_equ(mode)
+            symLhsTmp = jyrsympify(LhsTmp)
+            symRhsTmp = jyrsympify(RhsTmp)
+            self.solution = solve(symLhsTmp-symRhsTmp)
+            if not len(symLhsTmp.free_symbols) == 0:
+                self.symvar = str(symLhsTmp.free_symbols.pop())
+            elif not len(symRhsTmp.free_symbols) == 0:
+                self.symvar = str(symRhsTmp.free_symbols.pop())
+
+            #create the equation table
+            self.equTableLhs = [LhsTmp]
+            self.equTableRhs = [RhsTmp]
+            self.record = u'-'
+            self.userEquIx = None
+    
+    def getLastEqu(self):
+        return self.equTableLhs[self.equTableIndx],self.equTableRhs[self.equTableIndx]
+    
+    #Method for quation table initialization
+    def initEquTable(self, k, mode='user',new_equ_lhs='', new_equ_rhs='', new_equ_text=''):
+        
+        if mode == 'user':
+            self.equTableLhs = []
+            self.equTableRhs = []
+            self.equTableLhs.append(self.userEquLhs[k])
+            self.equTableRhs.append(self.userEquRhs[k])
+            symLhsTmp = jyrsympify(self.userEquLhs[k])
+            symRhsTmp = jyrsympify(self.userEquRhs[k]) 
+            if not len(symLhsTmp.free_symbols) == 0:
+                self.symvar = str(symLhsTmp.free_symbols.pop())
+            elif not len(symRhsTmp.free_symbols) == 0:
+                self.symvar = str(symRhsTmp.free_symbols.pop())
+            else:
+                self.symvar = 'x'
+            self.userEquIx = k
+            self.solution = solve(jyrsympify(self.userEquLhs[k])-jyrsympify(self.userEquRhs[k]))
+            self.equTableText = []
+            self.equTableIndx = 0
+            self.record = self.userEquRecord[k]
+        
+        elif mode == 'new':
+            self.equTableLhs = []
+            self.equTableRhs = []
+            self.equTableText = []
+            self.equTableIndx = 0
+            self.userEquIx = None
+            self.record = u'-'
+            self.equTableLhs.append(new_equ_lhs)
+            self.equTableRhs.append(new_equ_rhs)
+            symLhsTmp = jyrsympify(new_equ_lhs)
+            symRhsTmp = jyrsympify(new_equ_rhs) 
+            if not len(symLhsTmp.free_symbols) == 0:
+                self.symvar = str(symLhsTmp.free_symbols.pop())
+            elif not len(symRhsTmp.free_symbols) == 0:
+                self.symvar = str(symRhsTmp.free_symbols.pop())
+            else:
+                self.symvar = 'x'
+            self.solution = solve(symLhsTmp-symRhsTmp)
+        
+        elif mode == 'file_import':
+            
+            self.equTableLhs = new_equ_lhs
+            self.equTableRhs = new_equ_rhs
+            self.equTableText = new_equ_text
+            self.equTableIndx = len(new_equ_lhs)-1
+            self.userEquIx = None
+            self.record = u'-'
+            symLhsTmp = jyrsympify(new_equ_lhs[0])
+            symRhsTmp = jyrsympify(new_equ_rhs[0]) 
+            if not len(symLhsTmp.free_symbols) == 0:
+                self.symvar = str(symLhsTmp.free_symbols.pop())
+            elif not len(symRhsTmp.free_symbols) == 0:
+                self.symvar = str(symRhsTmp.free_symbols.pop())
+            else:
+                self.symvar = 'x'
+            self.solution = solve(symLhsTmp-symRhsTmp)
+            
+            
+    def addUserEqu(self, equ_lhs_str, equ_rhs_str):
+        self.userEquLhs.append(equ_lhs_str)
+        self.userEquRhs.append(equ_rhs_str)
+        self.userEquRecord.append(u'-')
+        
+    def replaceUserEqu(self, equ_lhs_str, equ_rhs_str, k):
+        self.userEquLhs[k] = equ_lhs_str
+        self.userEquRhs[k] = equ_rhs_str
+        self.userEquRecord[k] = u'-'
+        
+    def removeUserEqu(self,k):
+        self.userEquLhs.pop(k)
+        self.userEquRhs.pop(k)
+        self.userEquRecord.pop(k)
+        
+    def getUserEqu(self,k):
+        return self.userEquLhs[k], self.userEquRhs[k]
+    
+    def getUserEqus(self):
+        return self.userEquLhs, self.userEquRhs
+        
+
+def create_equ(mode):
+    """
+    Taman voisi tehda jyrrista enemman tietava
+    Input-paramereina esim. termien lkm puolittain, vaikeusaste, joustavuus(kylla/ei) jne
+    
+    Vasemman ja oikean puolen lausekkeet muodostetaan erillisina stringeina
+    Allaolevassa toteutuksessa lausekkeet ovat listassa ja palautetaan sielta erikseen oikealle ja vasemmalle puolelle
+    """
+    if mode == 'jyr':
+        jyrsw = random.randrange(0,2,1)
+        rnd1 = random.randrange(-7,7,1)
+        rnd2 = rnd1*random.randrange(-3,3,1)
+        rnd3 = random.randrange(-5,5,1)
+        x = symbols('x')
+        rndex = Mul(rnd1,x+rnd3, evaluate=False)
+        termDbL = ['x+3*(x-3*(x+2))','2*x-4+4*(x-5)','3*x+2*(x+3)', '3*(x-7)+5',str(rndex)]
+        termDbR = ['3*(x+2)','x-7', '2-5*(x+3)','2*x-10',str(rnd2)]
+        termDbJyrL = ["3*(x+4)", "3*(x+3)", "3*(2*x+5)+5*(2*x+5)", "3*(x+4)+3*(x+4)", "2*(y-3)+5", "18", "3*(z-2)+4*(z-2)", "3*(z-2)+15"]
+        termDbJyrR = ["9", "2*(x+3)+4", "6", "6", "4*(y-3)", "6*(3*x-1)", "6*(z-2)", "2*(z-2)-12"]
+        
+        if jyrsw == 0:
+            rangeL, rangeR = len(termDbL), len(termDbR)
+            expL = termDbL[random.randrange(0,rangeL,1)]
+            expR = termDbR[random.randrange(0,rangeR,1)]
+        else:
+            rangeLR = len(termDbJyrL)
+            ix = random.randrange(0,rangeLR,1)
+            expL = termDbJyrL[ix]
+            expR = termDbJyrR[ix]          
+            
+    elif mode == 'simple':
+        termDbL = ['x-2','2*x+1','x+4', '2*x+2-x','x+2','4*x']
+        termDbR = [str(random.randrange(-7,7,1)),'-x-5','3*x+6', '5*x+2+4-2*x']
+        rangeL, rangeR = len(termDbL), len(termDbR)
+        expL = termDbL[random.randrange(0,rangeL,1)]
+        expR = termDbR[random.randrange(0,rangeR,1)]    
+        
+    return expL, expR
+ 
+ 
+    
+    
