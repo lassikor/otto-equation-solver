@@ -11,14 +11,14 @@
 
 
     
-	<title>Oiva yhtälönratkaisija</title>
+	<title>OTTO-yhtälönratkaisija</title>
 	<link rel="stylesheet" type="text/css" href="static/default.css">
 </head>
 <body>
 <div class="container wrapper">
   <div id="top">
     <ul id="menu">
-     <li><a href="/">JYR - joustavaa yhtälönratkaisua</a>
+     <li><a href="/">OTTO-yhtälönratkaisija</a>
     </ul>
   </div>
   <hr>
@@ -28,7 +28,7 @@
     <ul id="menulist">
      <li class="menuitem"><a href="#gen">Yleisiä ohjeita</a></li>
      <li class="menuitem"><a href="#basic">Yhtälön perusratkaisija</a></li>     
-     <li class="menuitem"><a href="#jyr">Yhtälön joustava ratkaisija</a></li>
+     <li class="menuitem"><a href="#adv">Yhtälön edistynyt ratkaisija</a></li>
      <li class="menuitem"><a href="#inv">Käänteinen yhtälönratkaisu</a></li>
      <li class="menuitem"><a href="#own">Omat yhtälöt</a></li>
     </ul>
@@ -71,9 +71,9 @@
        Mikäli yhtälön muuttujana on jokin muu kuin \(x\), toiminto muuttuu vastaavaan muotoon (esim. muotoon 'Yhdistä t-termit').
        Kannattaa myös huomata, että toiminnot 'Kerro termillä:' ja 'Jaa termillä:' pitävät sisällään myös automaattisen sievennyksen.</p>
                 
-      <h2 id="jyr">Yhtälön joustava ratkaisija</h2>
-      <p>Yhtälön joustavalla ratkaisijalla on mahdollista harjoitella vaativampaa yhtälöratkaisua hieman yksityiskohtaisemmin kuin yhtälön perusratkaisijalla.
-      Joustavalla ratkaisijalla on mahdollista ratkoa myös yhtälöitä, joissa on sulkulausekkeita.</p>
+      <h2 id="adv">Yhtälön edistynyt ratkaisija</h2>
+      <p>Yhtälön edistyneellä ratkaisijalla on mahdollista harjoitella vaativampaa yhtälöratkaisua hieman yksityiskohtaisemmin kuin yhtälön perusratkaisijalla.
+      Edistyneellä ratkaisijalla on mahdollista ratkoa myös yhtälöitä, joissa on sulkulausekkeita.</p>
       <p>Sulkujen rajaamat lausekkeet on sovelluksessa väritetty eri värein, jotta toimintoja pystytään kohdistamaan haluttuihin kohtiin.
       Mahdolliset toiminnot on jaettu kolmeen osaan sen mukaan, halutaanko muokata yhtälön vasenta puolta, oikeaa puolta vai molempia puolia yhtä aikaa.
       Yhtälön vasemmalle ja oikealle puolelle kohdistuvat toiminnot ovat samat. Nämä toiminnot ovat saatavilla 'Toiminto värille'-tekstin alta. Mahdollisia toimintoja ovat:</p>
@@ -113,7 +113,7 @@
       	 Luonnollinen tapa lähteä liikkeelle on syöttää vasemman puoleiseen kenttään tuntematonta lukua edustava kirjain (esim. x) ja oikean puoleiseen kenttään sitä vastaava lukuarvo (esim. 5).
          Kun haluttu ratkaisu on syötetty, yhtälöä pääsee rakentamaan klikkaamalla painiketta 'Rakenna yhtälö'.</p>
          
-       <p>Yhtälön rakentaminen toimii samalla tavalla kuin <a href="#jyr">joustavan yhtälön ratkaiseminen</a>.Yhtälön vasemmalle ja oikealle puolelle kohdistuvat toiminnot ovat samat. Nämä toiminnot ovat saatavilla 'Toiminto värille'-tekstin alta. Mahdollisia toimintoja ovat:</p>
+       <p>Yhtälön rakentaminen toimii samalla tavalla kuin <a href="#adv">edistynyt yhtälön ratkaiseminen</a>.Yhtälön vasemmalle ja oikealle puolelle kohdistuvat toiminnot ovat samat. Nämä toiminnot ovat saatavilla 'Toiminto värille'-tekstin alta. Mahdollisia toimintoja ovat:</p>
       <ul>
       <li>Yhdistä luvut <b>M</b></li>
       <li>Yhdistä x-termit <b>M</b></li>
@@ -129,9 +129,9 @@
       <li>Jaa termillä: <b>J</b></li>
       </ul>
       <p>'Toiminto'-pudotusvalikon vieressä on tekstikenttä, mihin syötetään toiminnossa tarvittava termi.</p>
-      <p>Kun haluttu yhtälö on muodostettu, se voidaan tallentaa omiin perusyhtälöihin painikkeella 'Tallenna perusyhtälönä' tai omiin joustaviin yhtälöihin painikkeella 'Tallenna joustavana yhtälönä.' 
+      <p>Kun haluttu yhtälö on muodostettu, se voidaan tallentaa omiin perusyhtälöihin painikkeella 'Tallenna perusyhtälönä' tai omiin joustaviin yhtälöihin painikkeella 'Tallenna edistynyta yhtälönä.' 
       <h2 id="own">Omat yhtälöt</h2>
-      <p>Sovelluksessa on mahdollista luoda myös omia yhtälöitä niin perusratkaisijalle kuin joustavallekin ratkaisijalle.
+      <p>Sovelluksessa on mahdollista luoda myös omia yhtälöitä niin perusratkaisijalle kuin edistyneellekin ratkaisijalle.
       Tämä onnistuu klikkaamalla vastaavassa yhtälönratkaisijassa vasemman valikon linkkiä 'Omat yhtälöt.'</p>
       <p>Omien yhtälöiden luominen onnistuu kirjoittamalla yhtälön vasemman ja oikean puolen niille varattuihin tekstikenttiin.
       Syöttäessä kannattaa muistaa, että kertolasku tulee merkitä aina lausekkeisiin. Tämän vuoksi esim. lauseke \(2x\) syötetään 2*x ja \(3(t-5)\) syötetään 3*(t-5). Yhtälö ei voi kuitenkaan sisältää useita eri tuntemattomia.

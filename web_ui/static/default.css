@@ -1,13 +1,20 @@
+:root {
+    --main-text-color: #165b12;
+    --block-bg-color: #F4F4F4;
+    --main-border-color: #d4d4d4;
+    --highlight-color: #F47F29;
+  }
+
 body {
     font: 100% Lucida Sans, Verdana;
     margin: 0px;
     line-height: 26px;
-    background-color: #C3DFFD;
-    color: #23408F;
+    background-color: white;
+    color: var(--main-text-color);
 }
 
 hr {
-    border-color: #F47F29;
+    border-color: var(--highlight-color);
     margin-top: 0em;
     margin-bottom: 0em;
     margin-left: auto;
@@ -45,15 +52,15 @@ ul#menu li {
 
 ul#menu li a {
     font-size: 150%;
-    background-color: #23408F;
-    color: #F4F4F4;
+    background-color: var(--main-text-color);
+    color: var(--block-bg-color);
     padding: 10px 20px;
     text-decoration: none;
     border-radius: 0px;
 }
 
 ul#menu li a:hover {
-    color: #F47F29;
+    color: var(--highlight-color);
 }
 
 #bottom,
@@ -63,7 +70,7 @@ ul#menu li a:hover {
 }
 
 #top {
-    background-color: #23408F;
+    background-color: var(--main-text-color);
     color: #ffffff;
     padding: 1px 10px;
 }
@@ -77,9 +84,9 @@ ul#menu li a:hover {
 #menu1,
 #menu2 {
     padding: 5px 10px 10px 0px;
-    background-color: #F4F4F4;
+    background-color: var(--block-bg-color);
     border-radius: 4px;
-    border: 1px solid #d4d4d4;
+    border: 1px solid var(--main-border-color);
 }
 
 #menu2 {
@@ -102,7 +109,7 @@ ul#menu li a:hover {
 
 .menuitem {
     /*  background-color: #f1f1f1; */
-    /*  border: 1px solid #d4d4d4; */
+    /*  border: 1px solid var(--main-border-color); */
     list-style-type: none;
     /*  text-align: center; */
     cursor: pointer;
@@ -112,7 +119,7 @@ ul#menu li a:hover {
 
 #menulist a,
 #menulist2 a {
-    color: #23408F;
+    color: var(--main-text-color);
     text-decoration: none;
     padding: 5px 0px 0px 5px;
     display: inline-block;
@@ -121,58 +128,58 @@ ul#menu li a:hover {
 ul#menulist a:hover,
 ul#menulist2 a:hover {
     text-decoration: none;
-    color: #F47F29;
+    color: var(--highlight-color);
 }
 
 #main {
     padding: 5px 20px 20px;
     margin: 20px 240px 20px 20px;
-    background-color: #F4F4F4;
-    color: #23408F;
+    background-color: var(--block-bg-color);
+    color: var(--main-text-color);
     border-radius: 4px;
     min-width: 400px;
-    border: 1px solid #d4d4d4;
+    border: 1px solid var(--main-border-color);
     overflow: auto;
 }
 
 #main_instr {
     padding: 5px 20px 20px;
     margin: 20px 20px 20px 20px;
-    background-color: #F4F4F4;
-    color: #23408F;
+    background-color: var(--block-bg-color);
+    color: var(--main-text-color);
     border-radius: 4px;
     min-width: 400px;
-    border: 1px solid #d4d4d4;
+    border: 1px solid var(--main-border-color);
     overflow: auto;
 }
 
 #main_solved {
     /*padding: 5px 20px 20px;*/
     margin: 20px 240px 20px 240px;
-    /*background-color: #F4F4F4;*/
-    color: #23408F;
+    /*background-color: var(--block-bg-color);*/
+    color: var(--main-text-color);
     /*border-radius: 4px;*/
     min-width: 400px;
-    /*border: 1px solid #d4d4d4;*/
+    /*border: 1px solid var(--main-border-color);*/
 }
 
 #equshow {
     padding: 5px 20px 20px;
     margin: 0px;
-    border: 1px solid #d4d4d4;
+    border: 1px solid var(--main-border-color);
     border-radius: 4px;
-    background-color: #F4F4F4;
+    background-color: var(--block-bg-color);
 }
 
 #main_cr {
     padding: 5px 20px 20px;
     margin: 20px 600px 500px 240px;
-    background-color: #F4F4F4;
-    color: #23408F;
+    background-color: var(--block-bg-color);
+    color: var(--main-text-color);
     border-radius: 4px;
     min-width: 300px;
     min-height: 250px;
-    border: 1px solid #d4d4d4;
+    border: 1px solid var(--main-border-color);
 }
 
 #equ {
@@ -191,7 +198,7 @@ select {
 #op_drop_l,
 #op_drop_r,
 #op_drop_lr {
-    color: #23408F;
+    color: var(--main-text-color);
 }
 
 #buttoncol {
@@ -199,30 +206,30 @@ select {
 }
 
 button {
-    color: #23408F;
+    color: var(--main-text-color);
     font-size: 90%;
 }
 
 #fakeBrowse {
-    color: #23408F;
+    color: var(--main-text-color);
     font-size: 90%;
 }
 
 button.icon_but {
     border: none;
-    background-color: #F4F4F4;
+    background-color: var(--block-bg-color);
 }
 
 button.icon_but:active {
     border: none;
     outline: none;
-    color: #F47F29;
+    color: var(--highlight-color);
 }
 
 button.icon_but:focus {
     border: none;
     outline: none;
-    color: #F47F29;
+    color: var(--highlight-color);
 }
 
 i {
@@ -246,8 +253,8 @@ i:hover {
 }
 
 #sidebar {
-    background-color: #F4F4F4;
-    color: #23408F;
+    background-color: var(--block-bg-color);
+    color: var(--main-text-color);
     padding: 0px 10px 20px;
     width: 180px;
     float: right;
@@ -258,13 +265,13 @@ i:hover {
     position: absolute;
     border-radius: 4px;
     margin: 20px;
-    border: 1px solid #d4d4d4;
+    border: 1px solid var(--main-border-color);
 }
 
 #sidebar_cr {
-    background-color: #F4F4F4;
+    background-color: var(--block-bg-color);
     ;
-    color: #23408F;
+    color: var(--main-text-color);
     padding: 0px 20px 20px;
     min-width: 520px;
     min-height: 250px;
@@ -274,13 +281,13 @@ i:hover {
     position: absolute;
     border-radius: 4px;
     margin: 20px;
-    border: 1px solid #d4d4d4;
+    border: 1px solid var(--main-border-color);
     overflow: auto;
 }
 
 #bottom {
     margin: 20px 0px;
-    border: 1px solid #d4d4d4;
+    border: 1px solid var(--main-border-color);
     background-color: #f1f1f1;
     text-align: center;
     padding: 0px;
@@ -288,7 +295,7 @@ i:hover {
 }
 
 #bottom a {
-    color: #23408F;
+    color: var(--main-text-color);
     text-decoration: none;
     padding: 0px 0px 0px 0px;
     display: inline-block;
@@ -296,7 +303,7 @@ i:hover {
 
 #bottom a:hover {
     text-decoration: none;
-    color: #F47F29;
+    color: var(--highlight-color);
 }
 
 #inp_expr_r,
