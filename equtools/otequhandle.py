@@ -1,20 +1,20 @@
 # -*- coding: utf8 -*-
-import jyrops
+import otops
 import random
 from sympy import latex, solve, Mul, symbols
-from jyrsympify16 import jyrsympify
+from otsympify import otsympify
 
 
 class EquTable(object):
     
     def __init__(self, mode = 'jyr'):
-        #operations in use. check jyrops.py
-        self.functions = {'lisaa':jyrops.addlr,
-                          'lisaa_ja_laske':jyrops.addlr_eval,
-                          'vahenna':jyrops.substrlr,
-                          'kerro':jyrops.multiplr,
-                          'kerro_lauseke':jyrops.multiplr_expr,
-                          'jaa':jyrops.dividelr}
+        #operations in use. check otops.py
+        self.functions = {'lisaa':otops.addlr,
+                          'lisaa_ja_laske':otops.addlr_eval,
+                          'vahenna':otops.substrlr,
+                          'kerro':otops.multiplr,
+                          'kerro_lauseke':otops.multiplr_expr,
+                          'jaa':otops.dividelr}
         
         self.func_texts = {'lisaa': r'\ \mbox{ Lis&#228;sin puolittain }',
                           'vahenna': r'\ \mbox{ V&#228;hensin puolittain }',
@@ -28,19 +28,19 @@ class EquTable(object):
                           'kerro_lauseke': r'& \ \ \mbox{K}',
                           'jaa': r'& \ \ \mbox{J}'}
       
-        self.mod_functions = {'poista_sulut':jyrops.open_braces,
-                              'yhteinen_tekija':jyrops.collect_comm_fact,
-                              'yhdista_termit':jyrops.collect_terms}
+        self.mod_functions = {'poista_sulut':otops.open_braces,
+                              'yhteinen_tekija':otops.collect_comm_fact,
+                              'yhdista_termit':otops.collect_terms}
 
         if not mode == 'inv': 
             LhsTmp, RhsTmp = create_equ(mode)
-            symLhsTmp = jyrsympify(LhsTmp)
-            symRhsTmp = jyrsympify(RhsTmp)
+            symLhsTmp = otsympify(LhsTmp)
+            symRhsTmp = otsympify(RhsTmp)
             self.solution = solve(symLhsTmp-symRhsTmp)
         else:
             LhsTmp, RhsTmp = '0','0'
-            symLhsTmp = jyrsympify(LhsTmp)
-            symRhsTmp = jyrsympify(RhsTmp)
+            symLhsTmp = otsympify(LhsTmp)
+            symRhsTmp = otsympify(RhsTmp)
 
         #create the equation table
         self.equTableLhs = [LhsTmp]
@@ -65,7 +65,7 @@ class EquTable(object):
         
         func = self.functions[op] #operation chosen
         newLhs, newRhs, errorF = func(mod_expr,self.equTableLhs[self.equTableIndx],self.equTableRhs[self.equTableIndx], evaluate = evaluate)
-        mod_expr_tex = latex(jyrsympify(mod_expr, evaluate = False))
+        mod_expr_tex = latex(otsympify(mod_expr, evaluate = False))
         if errorF == 1:
             newText = self.func_texts['virhe']+'.'
         elif op == 'jaa' or op == 'kerro':
@@ -110,7 +110,7 @@ class EquTable(object):
             if side == 'left':
                 newLhs, errorF = func(self.equTableLhs[self.equTableIndx], color, param1)
                 newRhs = self.equTableRhs[self.equTableIndx]
-                #param1 = latex(jyrsympify(param1, evaluate = False))
+                #param1 = latex(otsympify(param1, evaluate = False))
                 newText = r'\ {\color{'+color+r'}\mbox{ Otin yhteisen tekij&#228;n }'+param1+r'\mbox{ vasemmalta.}}&\ \ \mbox{M}'
             elif side == 'right':
                 newRhs, errorF = func(self.equTableRhs[self.equTableIndx], color, param1)
@@ -177,8 +177,8 @@ class EquTable(object):
             self.equTableRhs.append(old_equ_rhs)
         else:
             LhsTmp, RhsTmp = create_equ(mode)
-            symLhsTmp = jyrsympify(LhsTmp)
-            symRhsTmp = jyrsympify(RhsTmp)
+            symLhsTmp = otsympify(LhsTmp)
+            symRhsTmp = otsympify(RhsTmp)
             self.solution = solve(symLhsTmp-symRhsTmp)
             if not len(symLhsTmp.free_symbols) == 0:
                 self.symvar = str(symLhsTmp.free_symbols.pop())
@@ -202,8 +202,8 @@ class EquTable(object):
             self.equTableRhs = []
             self.equTableLhs.append(self.userEquLhs[k])
             self.equTableRhs.append(self.userEquRhs[k])
-            symLhsTmp = jyrsympify(self.userEquLhs[k])
-            symRhsTmp = jyrsympify(self.userEquRhs[k]) 
+            symLhsTmp = otsympify(self.userEquLhs[k])
+            symRhsTmp = otsympify(self.userEquRhs[k]) 
             if not len(symLhsTmp.free_symbols) == 0:
                 self.symvar = str(symLhsTmp.free_symbols.pop())
             elif not len(symRhsTmp.free_symbols) == 0:
@@ -211,7 +211,7 @@ class EquTable(object):
             else:
                 self.symvar = 'x'
             self.userEquIx = k
-            self.solution = solve(jyrsympify(self.userEquLhs[k])-jyrsympify(self.userEquRhs[k]))
+            self.solution = solve(otsympify(self.userEquLhs[k])-otsympify(self.userEquRhs[k]))
             self.equTableText = []
             self.equTableIndx = 0
             self.record = self.userEquRecord[k]
@@ -225,8 +225,8 @@ class EquTable(object):
             self.record = u'-'
             self.equTableLhs.append(new_equ_lhs)
             self.equTableRhs.append(new_equ_rhs)
-            symLhsTmp = jyrsympify(new_equ_lhs)
-            symRhsTmp = jyrsympify(new_equ_rhs) 
+            symLhsTmp = otsympify(new_equ_lhs)
+            symRhsTmp = otsympify(new_equ_rhs) 
             if not len(symLhsTmp.free_symbols) == 0:
                 self.symvar = str(symLhsTmp.free_symbols.pop())
             elif not len(symRhsTmp.free_symbols) == 0:
@@ -243,8 +243,8 @@ class EquTable(object):
             self.equTableIndx = len(new_equ_lhs)-1
             self.userEquIx = None
             self.record = u'-'
-            symLhsTmp = jyrsympify(new_equ_lhs[0])
-            symRhsTmp = jyrsympify(new_equ_rhs[0]) 
+            symLhsTmp = otsympify(new_equ_lhs[0])
+            symRhsTmp = otsympify(new_equ_rhs[0]) 
             if not len(symLhsTmp.free_symbols) == 0:
                 self.symvar = str(symLhsTmp.free_symbols.pop())
             elif not len(symRhsTmp.free_symbols) == 0:

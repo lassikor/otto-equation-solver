@@ -1,6 +1,6 @@
 from sympy import Add, Mul, Pow, Symbol, symbols, Rational, Integer, ratsimp, simplify
-from jyrlatex16 import latex
-from jyrsympify16 import jyrsympify, SympifyError
+from otlatex import latex
+from otsympify import otsympify, SympifyError
 from itertools import combinations
 x = symbols('x')
 
@@ -8,9 +8,9 @@ x = symbols('x')
 
 def addlr(inp_expr_str, orig_expr_l_str, orig_expr_r_str, evaluate=False):
     errorFlag = 0
-    inp_expr = jyrsympify(inp_expr_str, evaluate=evaluate)
-    orig_expr_l = jyrsympify(orig_expr_l_str, evaluate=evaluate)
-    orig_expr_r = jyrsympify(orig_expr_r_str, evaluate=evaluate)
+    inp_expr = otsympify(inp_expr_str, evaluate=evaluate)
+    orig_expr_l = otsympify(orig_expr_l_str, evaluate=evaluate)
+    orig_expr_r = otsympify(orig_expr_r_str, evaluate=evaluate)
     outp_expr_l = Add(orig_expr_l, inp_expr, evaluate=evaluate)
     outp_expr_r = Add(orig_expr_r, inp_expr, evaluate=evaluate)
     #breakpoint()
@@ -18,18 +18,18 @@ def addlr(inp_expr_str, orig_expr_l_str, orig_expr_r_str, evaluate=False):
 
 def addlr_eval(inp_expr_str, orig_expr_l_str, orig_expr_r_str, evaluate=False):
     errorFlag = 0
-    inp_expr = jyrsympify(inp_expr_str, evaluate=evaluate)
-    orig_expr_l = jyrsympify(orig_expr_l_str, evaluate=evaluate)
-    orig_expr_r = jyrsympify(orig_expr_r_str, evaluate=evaluate)
+    inp_expr = otsympify(inp_expr_str, evaluate=evaluate)
+    orig_expr_l = otsympify(orig_expr_l_str, evaluate=evaluate)
+    orig_expr_r = otsympify(orig_expr_r_str, evaluate=evaluate)
     outp_expr_l = Add(orig_expr_l, inp_expr)
     outp_expr_r = Add(orig_expr_r, inp_expr)
     return str(outp_expr_l), str(outp_expr_r), errorFlag
     
 def substrlr(inp_expr_str, orig_expr_l_str, orig_expr_r_str, evaluate=False):
     errorFlag = 0
-    inp_expr = jyrsympify(inp_expr_str, evaluate=evaluate)
-    orig_expr_l = jyrsympify(orig_expr_l_str, evaluate=evaluate)
-    orig_expr_r = jyrsympify(orig_expr_r_str, evaluate=evaluate)
+    inp_expr = otsympify(inp_expr_str, evaluate=evaluate)
+    orig_expr_l = otsympify(orig_expr_l_str, evaluate=evaluate)
+    orig_expr_r = otsympify(orig_expr_r_str, evaluate=evaluate)
     #breakpoint()
     if inp_expr.func == Add:
         neg_inp_expr = Mul(-1, inp_expr, evaluate=True)
@@ -42,10 +42,10 @@ def substrlr(inp_expr_str, orig_expr_l_str, orig_expr_r_str, evaluate=False):
 
 def multiplr_expr(inp_expr_str, orig_expr_l_str, orig_expr_r_str, evaluate=False):
     errorFlag = 0
-    inp_expr = jyrsympify(inp_expr_str, evaluate=evaluate)
+    inp_expr = otsympify(inp_expr_str, evaluate=evaluate)
     if not inp_expr == 0 and isinstance(inp_expr, (Integer, int, Rational)):     
-        orig_expr_l = jyrsympify(orig_expr_l_str, evaluate=evaluate)
-        orig_expr_r = jyrsympify(orig_expr_r_str, evaluate=evaluate)
+        orig_expr_l = otsympify(orig_expr_l_str, evaluate=evaluate)
+        orig_expr_r = otsympify(orig_expr_r_str, evaluate=evaluate)
         if isinstance(orig_expr_l,Add):
             outp_expr_l = Mul(orig_expr_l, inp_expr, evaluate=False)
         else:
@@ -64,9 +64,9 @@ def multiplr_expr(inp_expr_str, orig_expr_l_str, orig_expr_r_str, evaluate=False
 def multiplr(inp_expr_str, orig_expr_l_str, orig_expr_r_str, evaluate=False):
     #breakpoint()
     errorFlag = 0
-    inp_expr = simplify(jyrsympify(inp_expr_str, evaluate=True))
-    orig_expr_l = jyrsympify(orig_expr_l_str, evaluate=evaluate)
-    orig_expr_r = jyrsympify(orig_expr_r_str, evaluate=evaluate)
+    inp_expr = simplify(otsympify(inp_expr_str, evaluate=True))
+    orig_expr_l = otsympify(orig_expr_l_str, evaluate=evaluate)
+    orig_expr_r = otsympify(orig_expr_r_str, evaluate=evaluate)
     if not len(orig_expr_l.free_symbols) == 0:
         symvar = str(orig_expr_l.free_symbols.pop())
     elif not len(orig_expr_r.free_symbols) == 0:
@@ -137,7 +137,7 @@ def multiply_by_terms(new_args, inp_expr, term, symvar='x'):
 
 def dividelr(inp_expr_str, orig_expr_l_str, orig_expr_r_str, evaluate=False):
     errorFlag = 0
-    inp_expr = simplify(jyrsympify(inp_expr_str, evaluate=True))
+    inp_expr = simplify(otsympify(inp_expr_str, evaluate=True))
     if not inp_expr == 0 and isinstance(inp_expr, (Integer, int, Rational)):
         if isinstance(inp_expr, (Integer, int)):
             multerm = Rational(1, inp_expr)
@@ -156,7 +156,7 @@ def dividelr(inp_expr_str, orig_expr_l_str, orig_expr_r_str, evaluate=False):
 
 def open_braces(orig_expr_str, color):
     errorFlag = 0
-    orig_expr = jyrsympify(orig_expr_str, evaluate=False)
+    orig_expr = otsympify(orig_expr_str, evaluate=False)
     
     # attach colors for nodes with braces
     latex(orig_expr)
@@ -172,7 +172,7 @@ def open_braces(orig_expr_str, color):
     return str(mod_expr), errorFlag
 
 def collect_comm_fact(orig_expr_str, color, str_factor):    
-    orig_expr = jyrsympify(orig_expr_str, evaluate=False)
+    orig_expr = otsympify(orig_expr_str, evaluate=False)
 
     # attach colors for nodes with braces
     latex(orig_expr)
@@ -182,7 +182,7 @@ def collect_comm_fact(orig_expr_str, color, str_factor):
     return str(mod_expr), errorFlag
 
 def collect_terms(orig_expr_str, color, term_type):
-    orig_expr = jyrsympify(orig_expr_str, evaluate=False)
+    orig_expr = otsympify(orig_expr_str, evaluate=False)
     
     # attach colors for nodes with braces
     latex(orig_expr)

@@ -1,5 +1,5 @@
 """
-A Printer which converts an expression into its LaTeX equivalent.
+A Printer which converts an expression into its LaTeX equivalent. Slightly modified version from original
 """
 
 from __future__ import print_function, division
@@ -28,7 +28,7 @@ from mpmath.libmp import prec_to_dps
 from sympy import default_sort_key
 from sympy.utilities.iterables import has_variety
 
-from jyrsympify16 import SympifyError
+from otsympify import SympifyError
 #from __builtin__ import hasattr
 import re
 

@@ -1,4 +1,4 @@
-from jyrlatex16 import latex
+from otlatex import latex
 
 def inlineLatex(orig_expr):
     tex_expr = r'\('

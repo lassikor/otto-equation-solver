@@ -1,7 +1,7 @@
 # -*- coding: utf8 -*-
-from jyrsympify16 import jyrsympify, SympifyError
-from jyrlatex16 import colorlist_fi as colors
-from jyrlatex16 import latex
+from otsympify import otsympify, SympifyError
+from otlatex import colorlist_fi as colors
+from otlatex import latex
 
 def get_color_dropmenu(n,side):
     
