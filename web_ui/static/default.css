@@ -34,7 +34,7 @@ hr#rule {
 }
 
 .container {
-    xmin-width: 900px;
+    min-width: 900px;
 }
 
 .wrapper {
@@ -73,6 +73,7 @@ ul#menu li a:hover {
     background-color: var(--main-text-color);
     color: #ffffff;
     padding: 1px 10px;
+    text-align: center;
 }
 
 #menubar {

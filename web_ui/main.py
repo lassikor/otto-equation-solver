@@ -27,15 +27,15 @@ render = web.template.render(rootpath+'web_ui\\templates\\')
 #url mappings
 urls = ('/','index',
         '/ohjeet', 'ohjeet',
-        '/jyrview', 'jyrview',
+        '/advview', 'advview',
         '/simpleview', 'simpleview',
-        '/newjyrquestion','newjyrquestion',
-        '/oldjyrquestion','oldjyrquestion',
-        '/createjyrquestion','createjyrquestion',
+        '/newadvquestion','newadvquestion',
+        '/oldadvquestion','oldadvquestion',
+        '/createadvquestion','createadvquestion',
         '/newsimplequestion','newsimplequestion',
         '/oldsimplequestion','oldsimplequestion',
         '/createsimplequestion','createsimplequestion',
-        '/jyrquestionsolved','jyrquestionsolved',
+        '/advquestionsolved','advquestionsolved',
         '/simplequestionsolved','simplequestionsolved',
         '/inverseview','inverseview',
         '/oldinversequestion','oldinversequestion')
@@ -60,7 +60,7 @@ class index:
     def GET(self):
         return render.index()
 
-#mojyr front page    
+#instructions front page    
 class ohjeet:
     
     def GET(self):
@@ -157,34 +157,34 @@ def simpleview_render(err=0):
                               session.simplequT.equTableIndx, session.simplequT.record, session.simplequT.symvar,
                               errs[err])       
 
-class jyrview:
+class advview:
     
     def GET(self):
         if not hasattr(session,'equT'):
             session.equT = otequhandle.EquTable()
         
-        return jyrview_render()
+        return advview_render()
 
     
     def POST(self):
         
         if not hasattr(session,'equT'):
             session.equT = otequhandle.EquTable()
-            return jyrview_render('session_expired')
+            return advview_render('session_expired')
                
         webinp = web.input()
-        mode = 'jyr'
+        mode = 'adv'
         if webinp.postBut == "modequ":
             try:
                 sym_expr = otsympify(webinp.inp_expr_lr, evaluate = False)
                 
             except SympifyError:
-                return jyrview_render('expr_error')
+                return advview_render('expr_error')
             else:
                 op = webinp.op_drop_lr
                 str_expr = str(sym_expr)
                 session.equT.equTransf(op,str_expr)
-                return jyrview_render()
+                return advview_render()
             
         elif webinp.postBut == "upload_solution_file":
         
@@ -197,14 +197,14 @@ class jyrview:
                 sym_equ_lhs, sym_equ_rhs = otsympify(newEqusL),otsympify(newEqusR)
                 last_sym_equ_lhs, last_sym_equ_rhs = sym_equ_lhs[-1], sym_equ_rhs[-1]                
             except (SyntaxError,IOError, SympifyError,ValueError):
-                return jyrview_render('equ_error_load')
+                return advview_render('equ_error_load')
             else:
                 if not test_linpoly(last_sym_equ_lhs, mode) or not test_linpoly(last_sym_equ_rhs, mode)\
                 or not test_linpoly(last_sym_equ_lhs-last_sym_equ_rhs, mode):
-                    return jyrview_render('equ_error_load')
+                    return advview_render('equ_error_load')
                 else:           
                     session.equT.initEquTable(0,'file_import', newEqusL, newEqusR, newEqusText)
-                    return jyrview_render()
+                    return advview_render()
             
         elif webinp.postBut == "download_solution":
             web.header('Content-Type','application/json')
@@ -216,11 +216,11 @@ class jyrview:
       
         elif webinp.postBut == "mod_expr_l":
             side = 'left'
-            return jyrops_handler(webinp, side)  
+            return advops_handler(webinp, side)  
                                            
         elif webinp.postBut == "mod_expr_r":
             side = 'right'
-            return jyrops_handler(webinp, side)
+            return advops_handler(webinp, side)
         
 class inverseview:
     
@@ -249,8 +249,8 @@ class inverseview:
             except (SympifyError, IndexError):
                 return render.inverseview([],[],[],errs['expr_error'])
             else:
-                if not test_linpoly(sym_equ_lhs, 'jyr') or not test_linpoly(sym_equ_rhs, 'jyr')\
-                or not test_linpoly(sym_equ_lhs-sym_equ_rhs, 'jyr'):
+                if not test_linpoly(sym_equ_lhs, 'adv') or not test_linpoly(sym_equ_rhs, 'adv')\
+                or not test_linpoly(sym_equ_lhs-sym_equ_rhs, 'adv'):
                     return inverseview_render('equ_error_create')
                 else:
                     session.invequT.initEquTable(0,'new',str(sym_equ_lhs),str(sym_equ_rhs))
@@ -272,14 +272,14 @@ class inverseview:
             
         elif webinp.postBut == "mod_expr_l":
             side = 'left'
-            return jyrops_handler(webinp, side, 'inv')  
+            return advops_handler(webinp, side, 'inv')  
                                            
         elif webinp.postBut == "mod_expr_r":
             side = 'right'
-            return jyrops_handler(webinp, side, 'inv')
+            return advops_handler(webinp, side, 'inv')
         
-        elif webinp.postBut == "save_jyr_equ":
-            mode = 'jyr'
+        elif webinp.postBut == "save_adv_equ":
+            mode = 'adv'
             return save_invequ(mode)
             
         elif webinp.postBut == "save_simple_equ":
@@ -304,8 +304,8 @@ class inverseview:
             except (SyntaxError,IOError, SympifyError, ValueError):
                 return inverseview_render('equ_error_load')
             else:
-                if not test_linpoly(last_sym_equ_lhs, 'jyr') or not test_linpoly(last_sym_equ_rhs, 'jyr')\
-                or not test_linpoly(last_sym_equ_lhs-last_sym_equ_rhs, 'jyr'):
+                if not test_linpoly(last_sym_equ_lhs, 'adv') or not test_linpoly(last_sym_equ_rhs, 'adv')\
+                or not test_linpoly(last_sym_equ_lhs-last_sym_equ_rhs, 'adv'):
                     return inverseview_render('equ_error_load')
                 else:
                     session.invequT.initEquTable(0,'file_import', newEquL, newEquR, newEquText)
@@ -322,13 +322,13 @@ class inverseview:
     """
     Methods for supporting otequation handling and rendering
     """       
-def jyrview_render(err = 0):
+def advview_render(err = 0):
          
     equlhs_str, equrhs_str, equtext = session.equT.getEquTable()
     
     if not equtext == []:
         if not rgex.search(r'Hie', equtext[-1]) == None:
-            raise web.seeother("/jyrquestionsolved")
+            raise web.seeother("/advquestionsolved")
     equlhs, equrhs = otsympify(equlhs_str, evaluate=False), otsympify(equrhs_str, evaluate=False)
     last_equ_lhs, last_equ_rhs = equlhs[-1], equrhs[-1]
     num_colors_l = otops.get_colors_num(last_equ_lhs)
@@ -337,11 +337,11 @@ def jyrview_render(err = 0):
     dropmenu_color_r = webelements.get_color_dropmenu(num_colors_r, 'r')
     
     if err == 0:       
-        return render.jyrview(webtex.concEqutoAlign(equlhs, equrhs, equtext),
+        return render.advview(webtex.concEqutoAlign(equlhs, equrhs, equtext),
                               dropmenu_color_l, dropmenu_color_r,
                               session.equT.equTableIndx, session.equT.record,session.equT.symvar)
     else:
-        return render.jyrview(webtex.concEqutoAlign(equlhs, equrhs, equtext),
+        return render.advview(webtex.concEqutoAlign(equlhs, equrhs, equtext),
                               dropmenu_color_l, dropmenu_color_r,
                               session.equT.equTableIndx, session.equT.record, session.equT.symvar,
                               errs[err])           
@@ -368,11 +368,11 @@ def inverseview_render(err = 0):
                               dropmenu_color_l, dropmenu_color_r, session.invequT.symvar, errs[err])             
             
     
-def jyrops_handler(webinp, side, mode='jyr'):
+def advops_handler(webinp, side, mode='adv'):
     
-    if mode == 'jyr':
+    if mode == 'adv':
         equtable = session.equT
-        renderfunc = jyrview_render
+        renderfunc = advview_render
         
     elif mode == 'inv':
         equtable = session.invequT
@@ -430,40 +430,40 @@ def jyrops_handler(webinp, side, mode='jyr'):
             equtable.exprMods(op, inps['color'], side, str_fact)
             return renderfunc()
         
-class newjyrquestion:
+class newadvquestion:
     
     def GET(self):
         if not hasattr(session,'equT'):
             session.equT = otequhandle.EquTable()        
-        session.equT.clearEquTable('jyr',1)
+        session.equT.clearEquTable('adv',1)
         
-        raise web.seeother("/jyrview")
+        raise web.seeother("/advview")
     
-class oldjyrquestion:
+class oldadvquestion:
     
     def GET(self):
         if not hasattr(session,'equT'):
             session.equT = otequhandle.EquTable()                
-        session.equT.clearEquTable('jyr',0)
+        session.equT.clearEquTable('adv',0)
         
-        raise web.seeother("/jyrview")
+        raise web.seeother("/advview")
     
-class createjyrquestion:
+class createadvquestion:
     
     def GET(self):
         if not hasattr(session,'equT'):
             session.equT = otequhandle.EquTable()
-        return createquestion_render('jyr',2)
+        return createquestion_render('adv',2)
     
     def POST(self):
         if not hasattr(session,'equT'):
             session.equT = otequhandle.EquTable()
-            return createquestion_render('jyr',5)                   
+            return createquestion_render('adv',5)                   
         webinp = web.input()
-        mode = 'jyr'
+        mode = 'adv'
         equtable = session.equT
-        redirect = "/jyrview"
-        redirect2 = "/createjyrquestion"
+        redirect = "/advview"
+        redirect2 = "/createadvquestion"
         return createquestion_handler(webinp, mode, equtable, redirect, redirect2)
         
 class createsimplequestion:
@@ -637,11 +637,11 @@ def save_invequ(mode):
         equtable = session.simplequT
         redirect = '/createsimplequestion'
         
-    elif mode == 'jyr':        
+    elif mode == 'adv':        
         if not hasattr(session,'equT'):
             session.equT = otequhandle.EquTable()
         equtable = session.equT
-        redirect = '/createjyrquestion'
+        redirect = '/createadvquestion'
             
     sym_equ_lhs = otsympify(session.invequT.equTableLhs[-1],evaluate=False)
     sym_equ_rhs = otsympify(session.invequT.equTableRhs[-1], evaluate=False)
@@ -659,8 +659,8 @@ def save_invequ(mode):
                 
 def createquestion_render(mode, err=0, new_equ_lhs='', new_equ_rhs=''):
         
-    if mode == 'jyr':
-        renderfunc = render.createjyrquestion
+    if mode == 'adv':
+        renderfunc = render.createadvquestion
         equtable = session.equT
     elif mode == 'simple':
         renderfunc = render.createsimplequestion
@@ -694,18 +694,18 @@ def createquestion_render(mode, err=0, new_equ_lhs='', new_equ_rhs=''):
                           webelements.get_userequ_table(user_equlhs, user_equrhs),errs['session_expired'])               
 
         
-class jyrquestionsolved:
+class advquestionsolved:
     
     def GET(self):
         
-        return render_questionsolved('jyr')
+        return render_questionsolved('adv')
         
     def POST(self):
         #catch inputs
         webinp = web.input()
         
         #check what the user has tried to do
-        return handleFileIO(webinp, 'jyr')
+        return handleFileIO(webinp, 'adv')
         
                      
 class newsimplequestion:
@@ -742,10 +742,10 @@ class simplequestionsolved:
 
 def render_questionsolved(mode,err=0):
     
-    if mode == 'jyr':
+    if mode == 'adv':
         equtable = session.equT
-        renderfunc = render.jyrquestionsolved
-        redirect = "/jyrview"
+        renderfunc = render.advquestionsolved
+        redirect = "/advview"
     elif mode == 'simple':
         equtable = session.simplequT
         renderfunc = render.simplequestionsolved
@@ -778,9 +778,9 @@ def render_questionsolved(mode,err=0):
                           equtable.record, errs['equ_error_load'])
 
 def handleFileIO(webinp, mode):
-    if mode == 'jyr':
+    if mode == 'adv':
         equtable = session.equT
-        redirect2 = "/jyrview"
+        redirect2 = "/advview"
     elif mode == 'simple':
         equtable = session.simplequT
         redirect2 = "/simpleview"

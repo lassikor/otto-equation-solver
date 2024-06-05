@@ -4,7 +4,24 @@ from otsympify import otsympify, SympifyError
 from itertools import combinations
 x = symbols('x')
 
-
+def cleanzeros(inp_expr_str, evaluate=False):
+    breakpoint()
+    inp_expr  = otsympify(inp_expr_str, evaluate=evaluate)   
+    if isinstance(inp_expr, Add):
+        args_old = list(inp_expr.args)
+        if 0 in args_old:
+            zero_ix = args_old.index(0)
+            args_new = args_old
+            args_new.remove(0)
+            if len(args_new)==1:
+                return str(args_new[0])
+            else:
+                outp_expr = Add(*args_new, evaluate=evaluate)
+                return str(outp_expr)
+        else:
+            return inp_expr_str
+    else:
+        return inp_expr_str
 
 def addlr(inp_expr_str, orig_expr_l_str, orig_expr_r_str, evaluate=False):
     errorFlag = 0
@@ -213,7 +230,7 @@ class handleTree(object):
         self.find_path_color(a, [], -1)
         latex(a)
         self.symvar = symvar
-        
+     #   
     def merge_terms(self, color, term_id):
         errorFlag = 0
         if color == 'black' and self.expr.func == Add:
@@ -517,7 +534,7 @@ class handleTree(object):
     
     def common_factor_mul(self, args_old, args_new, factor):
         fact_term_list = []
-        #breakpoint()
+        breakpoint()
         for term in args_old:
             if term.func == Mul:
                 mul_terms = term.as_ordered_factors()
@@ -531,14 +548,23 @@ class handleTree(object):
                         break
                 if mul_terms == new_mul_terms:
                     args_new.append(term)
-                            
+            # elif isinstance(term, (int, Integer, Rational)):
+            #     divid = ratsimp(Mul(term, Pow(factor, -1), evaluate=True))
+            #     if isinstance(divid, (int, Integer)):
+            #         new_mul_terms[i] = divid
+            #         term = Mul(*new_mul_terms, evaluate=True)
+            #         fact_term_list.append(term)
+            #         break             
             elif term.as_coefficient(factor) == None:
                 args_new.append(term)
             else:
                 fact_term_list.append(term.as_coefficient(factor))
         if not fact_term_list == []:        
             new_term = simplify(Add(*fact_term_list, evaluate=True))
-            new_term = Mul(new_term, factor, evaluate=False) 
+            if new_term == 0 or new_term == 1 or new_term == -1: #terms eliminate each other or trivial multiplication
+                new_term = Mul(new_term, factor, evaluate=True)
+            else:
+                new_term = Mul(new_term, factor, evaluate=False) 
             args_new.append(new_term)
                     
         expr = Add(*args_new, evaluate=False)

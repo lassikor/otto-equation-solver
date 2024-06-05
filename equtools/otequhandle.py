@@ -7,7 +7,7 @@ from otsympify import otsympify
 
 class EquTable(object):
     
-    def __init__(self, mode = 'jyr'):
+    def __init__(self, mode = 'adv'):
         #operations in use. check otops.py
         self.functions = {'lisaa':otops.addlr,
                           'lisaa_ja_laske':otops.addlr_eval,
@@ -60,7 +60,7 @@ class EquTable(object):
         else:
             self.symvar = 'x'
             
-    #method for equation transformations    
+    #method for equation transformations   
     def equTransf(self, op, mod_expr, evaluate = False):
         
         func = self.functions[op] #operation chosen
@@ -68,19 +68,17 @@ class EquTable(object):
         mod_expr_tex = latex(otsympify(mod_expr, evaluate = False))
         if errorF == 1:
             newText = self.func_texts['virhe']+'.'
-        elif op == 'jaa' or op == 'kerro':
-            newText = self.func_texts[op]+mod_expr_tex+'.'+self.func_ids[op]+mod_expr_tex+r'\ \ \mbox{M}'
         else:
-            newText = self.func_texts[op]+mod_expr_tex+'.'+self.func_ids[op]+mod_expr_tex
+            newText = self.func_texts[op]+mod_expr_tex+'.'
 
         #check if there is zero addition or -1 multiplication and remove it
-        newLhs = newLhs.replace(" + 0","")
-        newLhs = newLhs.replace("0 + ","")
-        newRhs = newRhs.replace(" + 0","")
-        newRhs = newRhs.replace("0 + ","")
+        #breakpoint()
+        newLhs = otops.cleanzeros(newLhs)
+        newRhs = otops.cleanzeros(newRhs)   
         newLhs = newLhs.replace(" - 1*"," - ")
         newRhs = newRhs.replace(" - 1*"," - ")
-
+        newLhs = newLhs.replace("1*(","(")
+        newRhs = newRhs.replace("1*(","(")
         #add both sides to table
         self.equTableLhs.append(newLhs)
         self.equTableRhs.append(newRhs)
@@ -100,56 +98,58 @@ class EquTable(object):
             if side == 'left':
                 newLhs, errorF = func(self.equTableLhs[self.equTableIndx], color)
                 newRhs = self.equTableRhs[self.equTableIndx]
-                newText = r'\ {\color{'+color+r'}\mbox{ Poistin sulut vasemmalta.}}&\ \ \mbox{M}'
+                newText = r'\ {\color{'+color+r'}\mbox{ Poistin sulut vasemmalta.}}'
             elif side == 'right':
                 newRhs, errorF = func(self.equTableRhs[self.equTableIndx], color)
                 newLhs = self.equTableLhs[self.equTableIndx]
-                newText = r'\ {\color{'+color+r'}\mbox{ Poistin sulut oikealta.}}&\ \ \mbox{M}'
+                newText = r'\ {\color{'+color+r'}\mbox{ Poistin sulut oikealta.}}'
                 
         elif op == 'yhteinen_tekija':
             if side == 'left':
                 newLhs, errorF = func(self.equTableLhs[self.equTableIndx], color, param1)
                 newRhs = self.equTableRhs[self.equTableIndx]
                 #param1 = latex(otsympify(param1, evaluate = False))
-                newText = r'\ {\color{'+color+r'}\mbox{ Otin yhteisen tekij&#228;n }'+param1+r'\mbox{ vasemmalta.}}&\ \ \mbox{M}'
+                newText = r'\ {\color{'+color+r'}\mbox{ Otin yhteisen tekij&#228;n }'+param1+r'\mbox{ vasemmalta.}}'
             elif side == 'right':
                 newRhs, errorF = func(self.equTableRhs[self.equTableIndx], color, param1)
                 newLhs = self.equTableLhs[self.equTableIndx]
-                newText = r'\ {\color{'+color+r'}\mbox{ Otin yhteisen tekij&#228;n }'+param1+r'\mbox{ oikealta.}}&\ \ \mbox{M}'
+                newText = r'\ {\color{'+color+r'}\mbox{ Otin yhteisen tekij&#228;n }'+param1+r'\mbox{ oikealta.}}'
                 
         elif op == 'yhdista_termit':
             if side == 'left':
                 newLhs, errorF = func(self.equTableLhs[self.equTableIndx], color, param1)
                 newRhs = self.equTableRhs[self.equTableIndx]
                 if param1 == 'const':
-                    newText = r'\ {\color{'+color+r'}\mbox{ Yhdistin luvut vasemmalta.}}&\ \ \mbox{M}'
+                    newText = r'\ {\color{'+color+r'}\mbox{ Yhdistin luvut vasemmalta.}}'
                 else:
-                    newText = r'\ {\color{'+color+r'}\mbox{ Yhdistin \('+self.symvar+r'\)-termit vasemmalta.}}&\ \ \mbox{M}'
+                    newText = r'\ {\color{'+color+r'}\mbox{ Yhdistin \('+self.symvar+r'\)-termit vasemmalta.}}'
                     
             elif side == 'right':
                 newRhs, errorF = func(self.equTableRhs[self.equTableIndx], color, param1)
                 newLhs = self.equTableLhs[self.equTableIndx]
                 if param1 == 'const':
-                    newText = r'\ {\color{'+color+r'}\mbox{ Yhdistin luvut oikealta.}}&\ \ \mbox{M}'
+                    newText = r'\ {\color{'+color+r'}\mbox{ Yhdistin luvut oikealta.}} '
                 else:
-                    newText = r'\ {\color{'+color+r'}\mbox{ Yhdistin \('+self.symvar+r'\)-termit oikealta.}}&\ \ \mbox{M}'
+                    newText = r'\ {\color{'+color+r'}\mbox{ Yhdistin \('+self.symvar+r'\)-termit oikealta.}}'
                     
             elif side == 'both':
                 newRhs, errorF = func(self.equTableRhs[self.equTableIndx], color, param1)
                 newLhs, errorF = func(self.equTableLhs[self.equTableIndx], color, param1)
                 if param1 == 'const':
-                    newText = r'\ {\color{'+color+r'}\mbox{ Yhdistin luvut.}}&\ \ \mbox{M}'
+                    newText = r'\ {\color{'+color+r'}\mbox{ Yhdistin luvut.}}'
                 else:
-                    newText = r'\ {\color{'+color+r'}\mbox{ Yhdistin \(x\)-termit.}}&\ \ \mbox{M}'
+                    newText = r'\ {\color{'+color+r'}\mbox{ Yhdistin \(x\)-termit.}}'
                 
-        
-        #check if there is zero addition or -1 multiplication and remove it
-        newLhs = newLhs.replace(" + 0","")
-        newLhs = newLhs.replace("0 + ","")
-        newRhs = newRhs.replace(" + 0","")
-        newRhs = newRhs.replace("0 + ","")
+  
+        #clean zeros
+        newLhs = otops.cleanzeros(newLhs)
+        newRhs = otops.cleanzeros(newRhs)    
+
         newLhs = newLhs.replace(" - 1*"," - ")
         newRhs = newRhs.replace(" - 1*"," - ")
+        #breakpoint()
+        #newLhs = newLhs.replace("1*(","(")
+        #newRhs = newRhs.replace("1*(","(")
 
         #add both sides to table
         self.equTableLhs.append(newLhs)
@@ -166,7 +166,7 @@ class EquTable(object):
     def getEquTable(self):
         return self.equTableLhs, self.equTableRhs, self.equTableText
     
-    def clearEquTable(self, mode='jyr', new = 0):
+    def clearEquTable(self, mode=' adv', new = 0):
         old_equ_lhs,  old_equ_rhs = self.equTableLhs[0], self.equTableRhs[0]
         self.equTableLhs = []
         self.equTableRhs = []
@@ -278,14 +278,12 @@ class EquTable(object):
 
 def create_equ(mode):
     """
-    Taman voisi tehda jyrrista enemman tietava
-    Input-paramereina esim. termien lkm puolittain, vaikeusaste, joustavuus(kylla/ei) jne
-    
+
     Vasemman ja oikean puolen lausekkeet muodostetaan erillisina stringeina
     Allaolevassa toteutuksessa lausekkeet ovat listassa ja palautetaan sielta erikseen oikealle ja vasemmalle puolelle
     """
-    if mode == 'jyr':
-        jyrsw = random.randrange(0,2,1)
+    if mode == 'adv':
+        advsw = random.randrange(0,2,1)
         rnd1 = random.randrange(-7,7,1)
         rnd2 = rnd1*random.randrange(-3,3,1)
         rnd3 = random.randrange(-5,5,1)
@@ -293,18 +291,18 @@ def create_equ(mode):
         rndex = Mul(rnd1,x+rnd3, evaluate=False)
         termDbL = ['x+3*(x-3*(x+2))','2*x-4+4*(x-5)','3*x+2*(x+3)', '3*(x-7)+5',str(rndex)]
         termDbR = ['3*(x+2)','x-7', '2-5*(x+3)','2*x-10',str(rnd2)]
-        termDbJyrL = ["3*(x+4)", "3*(x+3)", "3*(2*x+5)+5*(2*x+5)", "3*(x+4)+3*(x+4)", "2*(y-3)+5", "18", "3*(z-2)+4*(z-2)", "3*(z-2)+15"]
-        termDbJyrR = ["9", "2*(x+3)+4", "6", "6", "4*(y-3)", "6*(3*x-1)", "6*(z-2)", "2*(z-2)-12"]
+        termDbadvL = ["3*(x+4)", "3*(x+3)", "3*(2*x+5)+5*(2*x+5)", "3*(x+4)+3*(x+4)", "2*(y-3)+5", "18", "3*(z-2)+4*(z-2)", "3*(z-2)+15"]
+        termDbadvR = ["9", "2*(x+3)+4", "6", "6", "4*(y-3)", "6*(3*x-1)", "6*(z-2)", "2*(z-2)-12"]
         
-        if jyrsw == 0:
+        if advsw == 0:
             rangeL, rangeR = len(termDbL), len(termDbR)
             expL = termDbL[random.randrange(0,rangeL,1)]
             expR = termDbR[random.randrange(0,rangeR,1)]
         else:
-            rangeLR = len(termDbJyrL)
+            rangeLR = len(termDbadvL)
             ix = random.randrange(0,rangeLR,1)
-            expL = termDbJyrL[ix]
-            expR = termDbJyrR[ix]          
+            expL = termDbadvL[ix]
+            expR = termDbadvR[ix]          
             
     elif mode == 'simple':
         termDbL = ['x-2','2*x+1','x+4', '2*x+2-x','x+2','4*x']
