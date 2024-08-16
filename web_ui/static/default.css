@@ -3,6 +3,7 @@
     --block-bg-color: #F4F4F4;
     --main-border-color: #d4d4d4;
     --highlight-color: #F47F29;
+    --button-font-size: 1em;
   }
 
 body {
@@ -34,7 +35,7 @@ hr#rule {
 }
 
 .container {
-    min-width: 900px;
+    min-width: 50%;
 }
 
 .wrapper {
@@ -193,7 +194,12 @@ fieldset {
 }
 
 select {
-    font-size: 90%;
+    /*font-size: 90%;*/
+    font-size:var(--button-font-size);
+    padding:0.5em;
+    border-radius: 4px;
+    border: 1px solid var(--main-border-color);
+    width: 10em;
 }
 
 #op_drop_l,
@@ -202,18 +208,56 @@ select {
     color: var(--main-text-color);
 }
 
-#buttoncol {
-    padding: 10px 0px;
+.buttoncol {
+    padding: 10px 5px;
+
 }
 
 button {
     color: var(--main-text-color);
-    font-size: 90%;
+    font-size:var(--button-font-size);
+
+}
+
+select {
+    background-color: #fff;
+}
+.inp_field{
+    padding:0.75em;
+    background-color: #Fff;
+    border-radius: 4px;
+    border: 1px solid var(--main-border-color);
+    width:10.5em;
+
+}
+
+.colBut{
+    padding:0.5em;
+    background-color: #Fff;
+    border-radius: 4px;
+    border: 1px solid var(--main-border-color);
+    width:10em;
+
+}
+.colBut:hover{
+    background-color: var(--main-border-color);
+}
+
+.colBut2{
+    padding:0.5em;
+    background-color: #Fff;
+    border-radius: 4px;
+    border: 1px solid var(--main-border-color);
+    min-width:6.5em;
+    min-height: 3em;
+}
+.colBut2:hover{
+    background-color: var(--main-border-color);
 }
 
 #fakeBrowse {
     color: var(--main-text-color);
-    font-size: 90%;
+    font-size:var(--button-font-size);
 }
 
 button.icon_but {

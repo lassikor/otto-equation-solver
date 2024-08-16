@@ -5,7 +5,7 @@ from itertools import combinations
 x = symbols('x')
 
 def cleanzeros(inp_expr_str, evaluate=False):
-    breakpoint()
+    #breakpoint()
     inp_expr  = otsympify(inp_expr_str, evaluate=evaluate)   
     if isinstance(inp_expr, Add):
         args_old = list(inp_expr.args)

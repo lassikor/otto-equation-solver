@@ -9,28 +9,28 @@ class EquTable(object):
     
     def __init__(self, mode = 'adv'):
         #operations in use. check otops.py
-        self.functions = {'lisaa':otops.addlr,
-                          'lisaa_ja_laske':otops.addlr_eval,
-                          'vahenna':otops.substrlr,
-                          'kerro':otops.multiplr,
-                          'kerro_lauseke':otops.multiplr_expr,
-                          'jaa':otops.dividelr}
+        self.functions = {'add':otops.addlr,
+                          'add_eval':otops.addlr_eval,
+                          'subs':otops.substrlr,
+                          'mul':otops.multiplr,
+                          'mul_expr':otops.multiplr_expr,
+                          'div':otops.dividelr}
         
-        self.func_texts = {'lisaa': r'\ \mbox{ Lis&#228;sin puolittain }',
-                          'vahenna': r'\ \mbox{ V&#228;hensin puolittain }',
-                          'kerro': r'\ \mbox{ Kerroin puolittain sievent&#228;en termill&#228; }',
-                          'jaa': r'\ \mbox{ Jaoin puolittain sievent&#228;en termill&#228; }',
-                          'kerro_lauseke': r'\ \mbox{ Kerroin puolittain termill&#228; }',
-                          'virhe': r'\ \mbox{ Jakajan tai kertojan pit&#228;&#228; olla jokin luku }\neq 0'}
-        self.func_ids = {'lisaa': r'& \ \ \mbox{L}',
-                          'vahenna': r'& \ \ \mbox{V}',
-                          'kerro': r'& \ \ \mbox{K}',
-                          'kerro_lauseke': r'& \ \ \mbox{K}',
-                          'jaa': r'& \ \ \mbox{J}'}
+        self.func_texts = {'add': r'\ \mbox{ Lis&#228;sin puolittain }',
+                          'subs': r'\ \mbox{ V&#228;hensin puolittain }',
+                          'mul': r'\ \mbox{ Kerroin puolittain sievent&#228;en termill&#228; }',
+                          'div': r'\ \mbox{ Jaoin puolittain sievent&#228;en termill&#228; }',
+                          'mul_expr': r'\ \mbox{ Kerroin puolittain termill&#228; }',
+                          'err': r'\ \mbox{ Jakajan tai kertojan pit&#228;&#228; olla jokin luku }\neq 0'}
+        # self.func_ids = {'add': r'& \ \ \mbox{L}',
+        #                   'subs': r'& \ \ \mbox{V}',
+        #                   'mul': r'& \ \ \mbox{K}',
+        #                   'mul_expr': r'& \ \ \mbox{K}',
+        #                   'div': r'& \ \ \mbox{J}'}
       
-        self.mod_functions = {'poista_sulut':otops.open_braces,
-                              'yhteinen_tekija':otops.collect_comm_fact,
-                              'yhdista_termit':otops.collect_terms}
+        self.mod_functions = {'remove_braces':otops.open_braces,
+                              'common_factor':otops.collect_comm_fact,
+                              'merge_terms':otops.collect_terms}
 
         if not mode == 'inv': 
             LhsTmp, RhsTmp = create_equ(mode)
@@ -67,7 +67,7 @@ class EquTable(object):
         newLhs, newRhs, errorF = func(mod_expr,self.equTableLhs[self.equTableIndx],self.equTableRhs[self.equTableIndx], evaluate = evaluate)
         mod_expr_tex = latex(otsympify(mod_expr, evaluate = False))
         if errorF == 1:
-            newText = self.func_texts['virhe']+'.'
+            newText = self.func_texts['err']+'.'
         else:
             newText = self.func_texts[op]+mod_expr_tex+'.'
 
@@ -91,10 +91,10 @@ class EquTable(object):
     
     #Method for equation modifications   
     def exprMods(self, op, color, side, param1):
-        
+        breakpoint()
         func = self.mod_functions[op] #operation chosen
-        
-        if op == 'poista_sulut':
+       
+        if op == 'remove_braces':
             if side == 'left':
                 newLhs, errorF = func(self.equTableLhs[self.equTableIndx], color)
                 newRhs = self.equTableRhs[self.equTableIndx]
@@ -104,7 +104,7 @@ class EquTable(object):
                 newLhs = self.equTableLhs[self.equTableIndx]
                 newText = r'\ {\color{'+color+r'}\mbox{ Poistin sulut oikealta.}}'
                 
-        elif op == 'yhteinen_tekija':
+        elif op == 'common_factor':
             if side == 'left':
                 newLhs, errorF = func(self.equTableLhs[self.equTableIndx], color, param1)
                 newRhs = self.equTableRhs[self.equTableIndx]
@@ -115,7 +115,7 @@ class EquTable(object):
                 newLhs = self.equTableLhs[self.equTableIndx]
                 newText = r'\ {\color{'+color+r'}\mbox{ Otin yhteisen tekij&#228;n }'+param1+r'\mbox{ oikealta.}}'
                 
-        elif op == 'yhdista_termit':
+        elif op == 'merge_terms':
             if side == 'left':
                 newLhs, errorF = func(self.equTableLhs[self.equTableIndx], color, param1)
                 newRhs = self.equTableRhs[self.equTableIndx]
@@ -305,7 +305,7 @@ def create_equ(mode):
             expR = termDbadvR[ix]          
             
     elif mode == 'simple':
-        termDbL = ['x-2','2*x+1','x+4', '2*x+2-x','x+2','4*x']
+        termDbL = ['x-2','2*x+1','x+4', '2*x+2-x','x+2','4*x', '5*x+3', '20*x-10*x+1']
         termDbR = [str(random.randrange(-7,7,1)),'-x-5','3*x+6', '5*x+2+4-2*x']
         rangeL, rangeR = len(termDbL), len(termDbR)
         expL = termDbL[random.randrange(0,rangeL,1)]

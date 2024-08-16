@@ -88,24 +88,23 @@ $def with (inp_expr, dropmenu_color_l, dropmenu_color_r, num_ops, record, symvar
        <fieldset>
         <legend>Muokkaa vasenta puolta</legend>
         <table>
-         <tr>
-          <td>Toiminto värille</td>
-          <td>$:dropmenu_color_l</td>
-         </tr>
-         <tr>
-          <td><select id="op_drop_l" name="op_drop_l">
-            <option value="yhdista_luvut_l">Yhdistä luvut</option>
-            <option value="yhdista_xtermit_l">Yhdistä $:symvar-termit</option>
-            <option value="poista_sulut_l">Poista sulut</option>
-            <option value="yhteinen_tekija_l">Ota yht. tekijä</option>
-          </select></td>
-          <td>Tekijä: <input type="text" id="inp_expr_l" name="inp_expr_l" size="6" value="1" /></td>
-         </tr>
-         <tr>
-          <td colspan="2" align="center" id="buttoncol">
-           <button id="postBut" value="mod_expr_l" name="postBut">Tee toiminto</button>
-          </td>
-         </tr>
+          <tr>
+            <td colspan="3">Toiminto värille $:dropmenu_color_l</td>
+           </tr>
+           <tr>
+            <td  class="buttoncol"><button id="buttonMergeNumbers_l" value="mod_expr_mn_left" name="postBut" class="colBut2" title="Yhdistä luvut">\(1+1\rightarrow 2\)</button></td><td  class="buttoncol"><button id="buttonMergeVariables_l" value="mod_expr_mx_left" name="postBut" class="colBut2" title="Yhdistä $:symvar-termit ">\($:symvar + $:symvar \rightarrow 2x\)</button></td><td> <button id="buttonRemoveBraces_l" value="mod_expr_rb_left" name="postBut" class="colBut2" title="Poista sulut">\(($:symvar)\rightarrow $:symvar\)</button></td>
+          </tr>
+           <tr>
+            <td colspan="3" class="buttoncol"><button id="buttonCommonFactor_l" value="mod_expr_cf_left" name="postBut" class="colBut" title="Ota yhteinen tekijä">Ota yhteinen tekijä</button>
+              <!-- <select id="op_drop_r" name="op_drop_r">
+              <option value="yhdista_luvut_r">Yhdistä luvut</option>
+              <option value="yhdista_xtermit_r">Yhdistä $:symvar-termit</option>
+              <option value="poista_sulut_r">Poista sulut</option>
+              <option value="yhteinen_tekija_r">Ota yht. tekijä</option>
+            </select> -->
+  
+            <input type="text" id="inpExpr_l" name="inp_expr_l" size="6" value="1" class="inp_field"/></td>
+           </tr>
         </table>
        </fieldset>
       </form>
@@ -144,24 +143,27 @@ $def with (inp_expr, dropmenu_color_l, dropmenu_color_r, num_ops, record, symvar
         <legend>Muokkaa oikeaa puolta</legend>
         <table>
          <tr>
-          <td>Toiminto värille</td>
-          <td>$:dropmenu_color_r</td>
+          <td colspan="3">Toiminto värille $:dropmenu_color_r</td>
          </tr>
          <tr>
-          <td><select id="op_drop_r" name="op_drop_r">
+          <td  class="buttoncol"><button id="buttonMergeNumbers_r" value="mod_expr_mn_right" name="postBut" class="colBut2" title="Yhdistä luvut">\(1+1\rightarrow 2\)</button></td><td  class="buttoncol"><button id="buttonMergeVariables_r" value="mod_expr_mx_right" name="postBut" class="colBut2" title="Yhdistä $:symvar-termit ">\($:symvar + $:symvar \rightarrow 2x\)</button></td><td> <button id="buttonRemoveBraces_r" value="mod_expr_rb_right" name="postBut" class="colBut2" title="Poista sulut">\(($:symvar)\rightarrow $:symvar\)</button></td>
+        </tr>
+         <tr>
+          <td colspan="3" class="buttoncol"><button id="buttonCommonFactor_r" value="mod_expr_cf_right" name="postBut" class="colBut" title="Ota yhteinen tekijä">Ota yhteinen tekijä</button>
+            <!-- <select id="op_drop_r" name="op_drop_r">
             <option value="yhdista_luvut_r">Yhdistä luvut</option>
             <option value="yhdista_xtermit_r">Yhdistä $:symvar-termit</option>
             <option value="poista_sulut_r">Poista sulut</option>
             <option value="yhteinen_tekija_r">Ota yht. tekijä</option>
-          </select></td>
+          </select> -->
 
-          <td>Tekijä: <input type="text" id="inp_expr_r" name="inp_expr_r" size="6" value="1" /></td>
+          <input type="text" id="inpExpr_r" name="inp_expr_r" size="6" value="1" class="inp_field"/></td>
          </tr>
-         <tr>
+         <!-- <tr>
           <td colspan="2" align="center" id="buttoncol">
            <button id="postBut" value="mod_expr_r" name="postBut">Tee toiminto</button>
           </td>
-         </tr>
+         </tr>-->
         </table>
        </fieldset>
       </form>
@@ -184,10 +186,10 @@ $def with (inp_expr, dropmenu_color_l, dropmenu_color_r, num_ops, record, symvar
      <input type="text" id="filename" readonly="true" size="15" />
     </div>
     <div>
-     <button id="postBut" name="postBut" value="upload_solution_file">Tuo ratkaisu</button>
+     <button id="buttonUploadFile" name="postBut" value="upload_solution_file">Tuo ratkaisu</button>
     </div>
    <h3>Vie ratkaisu tiedostoon</h3>
-    <button id="postBut" name="postBut" value="download_solution">Vie ratkaisu</button>
+    <button id="buttonDownloadFile" name="postBut" value="download_solution">Vie ratkaisu</button>
    </form>
   </div>
  </div>

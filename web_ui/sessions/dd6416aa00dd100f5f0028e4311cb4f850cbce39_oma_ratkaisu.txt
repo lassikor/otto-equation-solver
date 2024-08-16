@@ -1,1 +1,0 @@
-[["x+4", "(x + 4) + 5", "x + 9", "(x + 9) - 9"], ["-x-5", "(-x - 5) + 5", "-x", "-x - 9"], ["\\ \\mbox{ Lis&#228;sin puolittain }5.& \\ \\ \\mbox{L}5", "\\ {\\color{black}\\mbox{ Yhdistin luvut.}}&\\ \\ \\mbox{M}", "\\ \\mbox{ V&#228;hensin puolittain }9.& \\ \\ \\mbox{V}9"]]

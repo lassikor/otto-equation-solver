@@ -26,7 +26,7 @@ render = web.template.render(rootpath+'web_ui\\templates\\')
 
 #url mappings
 urls = ('/','index',
-        '/ohjeet', 'ohjeet',
+        '/instr_fi', 'instr_fi',
         '/advview', 'advview',
         '/simpleview', 'simpleview',
         '/newadvquestion','newadvquestion',
@@ -64,7 +64,7 @@ class index:
 class ohjeet:
     
     def GET(self):
-        return render.ohjeet()
+        return render.instr_fi()
     
 #simple equation solving training page        
 class simpleview:
@@ -86,31 +86,29 @@ class simpleview:
         
         #check what the user has tried to do
         if webinp.postBut == "modequ":
-            if not webinp.op_drop_lr in ['yhdista_luvut', 'yhdista_xtermit']:
-    
-                try:
-                    sym_expr = otsympify(webinp.inp_expr_lr, evaluate=False)
+            try:
+                sym_expr = otsympify(webinp.inp_expr_lr, evaluate=False)
                 
-                except SympifyError:
-                    return simpleview_render('expr_error')
+            except SympifyError:
+                return simpleview_render('expr_error')
             
-                else:
-                    if webinp.op_drop_lr in ['kerro', 'jaa'] and (not isinstance(sym_expr, (Integer, int, Rational)) or sym_expr == 0):
-                        return simpleview_render('muldiv_error')
-                    op = webinp.op_drop_lr
-                    str_expr = str(sym_expr)
-                    session.simplequT.equTransf(op,str_expr)
-                    return simpleview_render()
-            
-            elif webinp.op_drop_lr == 'yhdista_luvut':
-                op = 'yhdista_termit'
-                session.simplequT.exprMods(op, 'black', 'both', 'const')
+            else:
+                if webinp.op_drop_lr in ['mul', 'div'] and (not isinstance(sym_expr, (Integer, int, Rational)) or sym_expr == 0):
+                    return simpleview_render('muldiv_error')
+                op = webinp.op_drop_lr
+                str_expr = str(sym_expr)
+                session.simplequT.equTransf(op,str_expr)
                 return simpleview_render()
+            
+        elif webinp.postBut == 'modequ_j':
+            op = 'merge_terms'
+            session.simplequT.exprMods(op, 'black', 'both', 'const')
+            return simpleview_render()
         
-            elif webinp.op_drop_lr == 'yhdista_xtermit':
-                op = 'yhdista_termit'
-                session.simplequT.exprMods(op, 'black', 'both', 'xterm')
-                return simpleview_render()
+        elif webinp.postBut == 'modequ_x':
+            op = 'merge_terms'
+            session.simplequT.exprMods(op, 'black', 'both', 'xterm')
+            return simpleview_render()
         
         elif webinp.postBut == "upload_solution_file":
         
@@ -158,22 +156,23 @@ def simpleview_render(err=0):
                               errs[err])       
 
 class advview:
-    
+    #load page
     def GET(self):
         if not hasattr(session,'equT'):
             session.equT = otequhandle.EquTable()
-        
         return advview_render()
 
-    
+    #handle form
     def POST(self):
-        
+        #breakpoint()
         if not hasattr(session,'equT'):
             session.equT = otequhandle.EquTable()
             return advview_render('session_expired')
                
         webinp = web.input()
         mode = 'adv'
+
+        #if equation's both sides are modified
         if webinp.postBut == "modequ":
             try:
                 sym_expr = otsympify(webinp.inp_expr_lr, evaluate = False)
@@ -186,6 +185,7 @@ class advview:
                 session.equT.equTransf(op,str_expr)
                 return advview_render()
             
+        #if solutiom is uploaded    
         elif webinp.postBut == "upload_solution_file":
         
             f = web.input(upload_solution={})
@@ -205,7 +205,8 @@ class advview:
                 else:           
                     session.equT.initEquTable(0,'file_import', newEqusL, newEqusR, newEqusText)
                     return advview_render()
-            
+                
+        #if solution is downloaded    
         elif webinp.postBut == "download_solution":
             web.header('Content-Type','application/json')
             web.header('Content-disposition', 'attachment; filename=oma_ratkaisu.txt')
@@ -213,14 +214,17 @@ class advview:
             with open(rootpath+'/web_ui/sessions/'+sessid+'_oma_ratkaisu.txt','w') as outfile:
                 json.dump([session.equT.equTableLhs, session.equT.equTableRhs, session.equT.equTableText],outfile)
             return open(rootpath+'/web_ui/sessions/'+sessid+'_oma_ratkaisu.txt').read()
-      
-        elif webinp.postBut == "mod_expr_l":
-            side = 'left'
-            return advops_handler(webinp, side)  
-                                           
-        elif webinp.postBut == "mod_expr_r":
+
+        #if only one side is modified
+        elif webinp.postBut.find("right") > -1:
             side = 'right'
             return advops_handler(webinp, side)
+
+        elif webinp.postBut.find("left") > -1:
+            side = 'left'
+            return advops_handler(webinp, side)
+        else:
+            return advview_render()
         
 class inverseview:
     
@@ -232,7 +236,6 @@ class inverseview:
             return render.inverseview([],[],[],[])
         else:
             return inverseview_render()
-
     
     def POST(self):
         if not hasattr(session,'invequT'):
@@ -270,11 +273,11 @@ class inverseview:
                 session.invequT.equTransf(op,str_expr)
                 return inverseview_render()
             
-        elif webinp.postBut == "mod_expr_l":
+        elif webinp.postBut.find("left") > -1:
             side = 'left'
             return advops_handler(webinp, side, 'inv')  
                                            
-        elif webinp.postBut == "mod_expr_r":
+        elif webinp.postBut.find("right") > -1:
             side = 'right'
             return advops_handler(webinp, side, 'inv')
         
@@ -358,14 +361,12 @@ def inverseview_render(err = 0):
     dropmenu_color_r = webelements.get_color_dropmenu(num_colors_r, 'r')
     
     if err == 0:        
-        return render.inverseview(webtex.concEqutoAlign(equlhs, equrhs, equtext),
-                          dropmenu_color_l, dropmenu_color_r,session.invequT.symvar)
+        return render.inverseview(webtex.concEqutoAlign(equlhs, equrhs, equtext), dropmenu_color_l, dropmenu_color_r,session.invequT.symvar)
     elif err == 'session_expired':
         return render.inverseview([],[],[],errs['session_expired'])
     
     else:
-        return render.inverseview(webtex.concEqutoAlign(equlhs, equrhs, equtext),
-                              dropmenu_color_l, dropmenu_color_r, session.invequT.symvar, errs[err])             
+        return render.inverseview(webtex.concEqutoAlign(equlhs, equrhs, equtext), dropmenu_color_l, dropmenu_color_r, session.invequT.symvar, errs[err])             
             
     
 def advops_handler(webinp, side, mode='adv'):
@@ -376,55 +377,46 @@ def advops_handler(webinp, side, mode='adv'):
         
     elif mode == 'inv':
         equtable = session.invequT
-        renderfunc = inverseview_render
-        
+        renderfunc = inverseview_render   
     if side == 'left':
             
-        inps = {'op_drop': webinp.op_drop_l,
+        inps = {'postBut': webinp.postBut,
                 'color': webinp.color_drop_l,
-                'inp_expr': webinp.inp_expr_l,
-                'yhdista_luvut': 'yhdista_luvut_l',
-                'yhdista_xtermit': 'yhdista_xtermit_l',
-                'poista_sulut': 'poista_sulut_l',
-                'yhteinen_tekija': 'yhteinen_tekija_l'}
+                'inp_expr': webinp.inp_expr_l}
                     
     elif side == 'right':
             
-        inps = {'op_drop': webinp.op_drop_r,
+        inps = {'postBut': webinp.postBut,
                 'color': webinp.color_drop_r,
-                'inp_expr': webinp.inp_expr_r,
-                'yhdista_luvut': 'yhdista_luvut_r',
-                'yhdista_xtermit': 'yhdista_xtermit_r',
-                'poista_sulut': 'poista_sulut_r',
-                'yhteinen_tekija': 'yhteinen_tekija_r'}
+                'inp_expr': webinp.inp_expr_r}
                     
-    if inps['op_drop'] == inps['yhdista_luvut']:
-        op = 'yhdista_termit'
+    if inps['postBut'].find("mod_expr_mn") > -1:
+        op = 'merge_terms'
+        breakpoint()
         equtable.exprMods(op, inps['color'], side, 'const')
         return renderfunc()
             
-    elif inps['op_drop'] == inps['yhdista_xtermit']:
-        op = 'yhdista_termit'
+    elif inps['postBut'].find("mod_expr_mx") > -1:
+        op = 'merge_terms'
         equtable.exprMods(op, inps['color'], side, 'xterm')
         return renderfunc()
             
-    elif inps['op_drop'] == inps['poista_sulut']:
-        op = 'poista_sulut'
+    elif inps['postBut'].find("mod_expr_rb") > -1:
+        op = 'remove_braces'
         equtable.exprMods(op, inps['color'], side, 'dum')
         return renderfunc()
             
-    elif inps['op_drop'] == inps['yhteinen_tekija']:
-        op = 'yhteinen_tekija'
+    elif inps['postBut'].find("mod_expr_cf"):
+        op = 'common_factor'
                 
         try:
             sym_fact = otsympify(inps['inp_expr'], evaluate=False)
                     
         except SympifyError:
                 return renderfunc(err=1)
-
-            
+  
         else:
-            if ratsimp(sym_fact)==0:
+            if ratsimp(sym_fact) == 0:
                 return renderfunc('zero_comm_fact')
             str_fact = str(sym_fact)
             equtable.exprMods(op, inps['color'], side, str_fact)

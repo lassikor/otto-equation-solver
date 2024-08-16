@@ -32,7 +32,7 @@ $def with (inp_expr, num_ops, record, symvar,err=[])
   textinput.value = new_filetext;
  }
  function instr() {
-  window.open("/ohjeet#basic","Ohjeet","width=800, height=530");
+  window.open("/instr_fi#basic","Ohjeet","width=800, height=530");
  }
 </script>
 <title>OTTO-yhtälönratkaisija</title>
@@ -51,12 +51,12 @@ $def with (inp_expr, num_ops, record, symvar,err=[])
    <div id="menu1">
     <h3>Sovellus</h3>
     <ul id="menulist">
-     <li class="menuitem"><a href="/oldsimplequestion">Aloita alusta</a>
-     <li class="menuitem"><a href="/newsimplequestion">Arvo uusi yhtälö</a>
-     <li class="menuitem"><a href="/inverseview">Rakenna yhtälö</a>     
-     <li class="menuitem"><a href="/createsimplequestion">Omat yhtälöt</a>
-     <li class="menuitem"><a href="/advview">Edistynyt ratkaisija</a>
-     <li class="menuitem"><a onclick="instr()">Ohjeet</a>
+     <li class="menuitem"><a href="/oldsimplequestion">Aloita alusta</a></li>
+     <li class="menuitem"><a href="/newsimplequestion">Arvo uusi yhtälö</a></li>
+     <li class="menuitem"><a href="/inverseview">Rakenna yhtälö</a></li>
+     <li class="menuitem"><a href="/createsimplequestion">Omat yhtälöt</a></li>
+     <li class="menuitem"><a href="/advview">Edistynyt ratkaisija</a></li>
+     <li class="menuitem"><a onclick="instr()">Ohjeet</a></li>
     </ul>
    </div>
    <div id="menu2">
@@ -83,25 +83,28 @@ $def with (inp_expr, num_ops, record, symvar,err=[])
     	
     	<tr>
               <label for="op_drop_lr">Toiminto:</label>
-    	<td>
+    	<td class="buttoncol">
     		<select id="op_drop_lr" name="op_drop_lr">
-  				<option value="lisaa">Lisää termi:</option>
-  				<option value="vahenna">Vähennä termi:</option>
-  				<option value="kerro">Kerro termillä:</option>
-  				<option value="jaa">Jaa termillä:</option>
-  				<option value="yhdista_luvut">Yhdistä luvut</option>
-  				<option value="yhdista_xtermit">Yhdistä $:symvar-termit</option>
+  				<option value="add">Lisää termi</option>
+  				<option value="subs">Vähennä termi</option>
+  				<option value="mul">Kerro termillä</option>
+  				<option value="div">Jaa termillä</option>
 			</select>
 		</td>
-		<td>
-			<input type="text" id="inp_expr_lr" name="inp_expr_lr" value="0" />
+		<td class="buttoncol">
+			<input type="text" id="inp_expr_lr" name="inp_expr_lr" value="0" class="inp_field" />
 		</td>
+    <td class="buttoncol">
+      <button id="buttonExecute" value="modequ" name="postBut" class="colBut">Tee toiminto
+      </button>
+    </td>
 		</tr>
-    	<tr>
-    	<td id="buttoncol" colspan="2">
-    		<button id="postBut" value="modequ" name="postBut">Tee toiminto
-    		</button>
-    	</td>
+    <tr>
+      <td class="buttoncol"><button id="buttonMergeNumbers" value="modequ_j" name="postBut" class="colBut">Yhdistä luvut</button></td>
+      <td class="buttoncol"><button id="buttonMergeVariables" value="modequ_x" name="postBut" class="colBut">Yhdistä $:symvar-termit</button></td>
+    </tr>
+    <tr>
+
     	</tr>
 		</table>
 		</fieldset>
