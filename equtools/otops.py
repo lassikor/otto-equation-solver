@@ -5,7 +5,6 @@ from itertools import combinations
 x = symbols('x')
 
 def cleanzeros(inp_expr_str, evaluate=False):
-    #breakpoint()
     inp_expr  = otsympify(inp_expr_str, evaluate=evaluate)   
     if isinstance(inp_expr, Add):
         args_old = list(inp_expr.args)
@@ -23,6 +22,23 @@ def cleanzeros(inp_expr_str, evaluate=False):
     else:
         return inp_expr_str
 
+def cleanzeros_sym(inp_expr, evaluate=False):
+    if isinstance(inp_expr, Add):
+        args_old = list(inp_expr.args)
+        if 0 in args_old:
+            zero_ix = args_old.index(0)
+            args_new = args_old
+            args_new.remove(0)
+            if len(args_new)==1:
+                return args_new[0]
+            else:
+                outp_expr = Add(*args_new, evaluate=evaluate)
+                return outp_expr
+        else:
+            return inp_expr
+    else:
+        return inp_expr
+
 def addlr(inp_expr_str, orig_expr_l_str, orig_expr_r_str, evaluate=False):
     errorFlag = 0
     inp_expr = otsympify(inp_expr_str, evaluate=evaluate)
@@ -30,7 +46,6 @@ def addlr(inp_expr_str, orig_expr_l_str, orig_expr_r_str, evaluate=False):
     orig_expr_r = otsympify(orig_expr_r_str, evaluate=evaluate)
     outp_expr_l = Add(orig_expr_l, inp_expr, evaluate=evaluate)
     outp_expr_r = Add(orig_expr_r, inp_expr, evaluate=evaluate)
-    #breakpoint()
     return str(outp_expr_l), str(outp_expr_r), errorFlag
 
 def addlr_eval(inp_expr_str, orig_expr_l_str, orig_expr_r_str, evaluate=False):
@@ -47,7 +62,6 @@ def substrlr(inp_expr_str, orig_expr_l_str, orig_expr_r_str, evaluate=False):
     inp_expr = otsympify(inp_expr_str, evaluate=evaluate)
     orig_expr_l = otsympify(orig_expr_l_str, evaluate=evaluate)
     orig_expr_r = otsympify(orig_expr_r_str, evaluate=evaluate)
-    #breakpoint()
     if inp_expr.func == Add:
         neg_inp_expr = Mul(-1, inp_expr, evaluate=True)
     else:
@@ -79,7 +93,6 @@ def multiplr_expr(inp_expr_str, orig_expr_l_str, orig_expr_r_str, evaluate=False
         return orig_expr_l_str, orig_expr_r_str, errorFlag
 
 def multiplr(inp_expr_str, orig_expr_l_str, orig_expr_r_str, evaluate=False):
-    #breakpoint()
     errorFlag = 0
     inp_expr = simplify(otsympify(inp_expr_str, evaluate=True))
     orig_expr_l = otsympify(orig_expr_l_str, evaluate=evaluate)
@@ -337,7 +350,6 @@ class handleTree(object):
 
     def inc_common_factor(self, color, str_factor):
         from sympy import sympify
-        #breakpoint()
         errorFlag = 0
         factor = sympify(str_factor, evaluate=False)
         if factor == 1 or factor == -1:
@@ -415,8 +427,8 @@ class handleTree(object):
         errorFlag = 0
         if color == 'black':
             return self.expr, 1
-        
         else:
+
             br_path = list(self.color_dict[color])
             arg_path = list(br_path)
             arg_path.reverse()
@@ -424,7 +436,6 @@ class handleTree(object):
             fun_chain.reverse()
             arg_chain.reverse()
             expr = arg_to_open
-
         
             for i in range(len(fun_chain)):
                 arg_list = list(arg_chain[i])
@@ -440,8 +451,9 @@ class handleTree(object):
                         tmp_expr = 0
                         for term in arg_w_br.args:
                             tmp_expr = Add(tmp_expr, Mul(multipl, term, evaluate=True), evaluate=False)
+                            tmp_expr = cleanzeros_sym(tmp_expr,False)
                             # tmp_expr = Mul(arg_list[0],arg_list[1],evaluate=True)
-                        if len(arg_list) == 2:  # if there are only to terms to multiply the result is lifted directly to next level in tree
+                        if len(arg_list) == 2:  # if there are only two terms to multiply the result is lifted directly to next level in tree
                             expr = tmp_expr
                         else:  # else do the multiplication of the term with braces and the other term
                             upd_arg_list = list(arg_list)
@@ -455,6 +467,7 @@ class handleTree(object):
                         
                             # do the computations remaining
                             expr = Mul(*upd_arg_list, evaluate=False)
+                        br_i = i
                     else:  # if the term with braces is not the first one
                         arg_w_br = arg_list[arg_path[i]]
                         multipl_list = list(arg_list)
@@ -463,7 +476,14 @@ class handleTree(object):
                         # multipl =  arg_list[arg_path[i]-1]
                         tmp_expr = 0
                         for term in arg_w_br.args:
-                            tmp_expr = Add(tmp_expr, Mul(multipl, term, evaluate=True), evaluate=False)
+                            if term.is_Mul:
+                                new_term_list = list(term.args)   
+                                new_term_list[0]=Mul(multipl,new_term_list[0],evaluate=True)
+                                tmp_expr = Add(tmp_expr, Mul(*new_term_list, evaluate=False), evaluate=False)
+                                tmp_expr = cleanzeros_sym(tmp_expr,False)
+                            else:
+                                tmp_expr = Add(tmp_expr, Mul(multipl, term, evaluate=True), evaluate=False)
+                                tmp_expr = cleanzeros_sym(tmp_expr,False)
                             # tmp_expr = Mul(arg_list[arg_path[i]-1],arg_list[arg_path[i]],evaluate = True)
 #                         if len(arg_list) == 2:
 #                             expr = tmp_expr
@@ -474,11 +494,15 @@ class handleTree(object):
 #                             upd_arg_list.insert(arg_path[i]-1,tmp_expr)
 #                             expr = Mul(*upd_arg_list,evaluate = False)
                         expr = tmp_expr
+                        br_i = i
                 elif fun_chain[i] == Add:
                     expr = Add(*arg_list, evaluate=False)
             
                 elif fun_chain[i] == Mul:
-                    expr = Mul(*arg_list, evaluate=False)
+                    if i-1 == br_i:
+                        expr = Mul(*arg_list, evaluate=True)
+                    else:
+                        expr = Mul(*arg_list, evaluate=False)
                 
                 else:
                     expr = self.expr 
@@ -534,7 +558,6 @@ class handleTree(object):
     
     def common_factor_mul(self, args_old, args_new, factor):
         fact_term_list = []
-        breakpoint()
         for term in args_old:
             if term.func == Mul:
                 mul_terms = term.as_ordered_factors()

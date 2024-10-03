@@ -91,7 +91,7 @@ class EquTable(object):
     
     #Method for equation modifications   
     def exprMods(self, op, color, side, param1):
-        breakpoint()
+       # breakpoint()
         func = self.mod_functions[op] #operation chosen
        
         if op == 'remove_braces':

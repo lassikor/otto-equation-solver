@@ -46,7 +46,8 @@ web.config.session_parameters['cookie_path'] = '\\'
 session = web.session.Session(app, web.session.DiskStore(rootpath+'web_ui\\sessions'))
 #session.kill()
 errs = {'own_equs_full': u'<script>window.alert("Vain kymmenen omaa yhtälöä sallittu!")</script>',
-        'expr_error':u'<script>window.alert("Syöttämäsi lauseketta ei voitu muodostaa! Unohditko näppäillä kertomerkin?")</script>',        
+        'expr_error':u'<script>window.alert("Syöttämääsi lauseketta ei voitu muodostaa! Unohditko näppäillä kertomerkin?")</script>',
+        'inp_expr_error': u'<script>window.alert("Syöttämäsi lauseke ei kelpaa. Vain lineaariset lausekkeet kelpaavat!")</script>',        
         'equ_error':u'<script>window.alert("Syöttämääsi yhtälöä ei voitu muodostaa!")</script>',
         'equ_error_load':u'<script>window.alert("Tuomasi tiedosto ei kelpaa!")</script>',
         'equ_error_create':u'<script>window.alert("Muodostamasi yhtälö ei kelpaa!")</script>',
@@ -74,16 +75,17 @@ class simpleview:
         #generate new equation table if missing
         if not hasattr(session,'simplequT'):
             session.simplequT = otequhandle.EquTable('simple')
-                
+            session.sidebarStatus = 0    
         return simpleview_render()
     
     def POST(self):
         if not hasattr(session,'simplequT'):
             session.simplequT = otequhandle.EquTable('simple')
+            session.sidebarStatus = 0
             return simpleview_render('session_expired')     
         #catch inputs
         webinp = web.input()
-        
+        session.sidebarStatus = webinp.sidebarStatus
         #check what the user has tried to do
         if webinp.postBut == "modequ":
             try:
@@ -149,10 +151,10 @@ def simpleview_render(err=0):
     
     if err == 0:
         return render.simpleview(webtex.concEqutoAlign(equlhs, equrhs, equtext),
-                                 session.simplequT.equTableIndx, session.simplequT.record, session.simplequT.symvar)
+                                 session.simplequT.equTableIndx, session.simplequT.record, session.simplequT.symvar, session.sidebarStatus)
     else:
         return render.simpleview(webtex.concEqutoAlign(equlhs, equrhs, equtext),
-                              session.simplequT.equTableIndx, session.simplequT.record, session.simplequT.symvar,
+                              session.simplequT.equTableIndx, session.simplequT.record, session.simplequT.symvar,  session.sidebarStatus,
                               errs[err])       
 
 class advview:
@@ -160,16 +162,18 @@ class advview:
     def GET(self):
         if not hasattr(session,'equT'):
             session.equT = otequhandle.EquTable()
+            session.sidebarStatus = 0
         return advview_render()
 
     #handle form
     def POST(self):
-        #breakpoint()
         if not hasattr(session,'equT'):
             session.equT = otequhandle.EquTable()
+            session.sidebarStatus = 0
             return advview_render('session_expired')
                
         webinp = web.input()
+        session.sidebarStatus = webinp.sidebarStatus
         mode = 'adv'
 
         #if equation's both sides are modified
@@ -180,6 +184,8 @@ class advview:
             except SympifyError:
                 return advview_render('expr_error')
             else:
+                if not test_linpoly(sym_expr, mode):
+                    return advview_render('inp_expr_error')
                 op = webinp.op_drop_lr
                 str_expr = str(sym_expr)
                 session.equT.equTransf(op,str_expr)
@@ -266,7 +272,9 @@ class inverseview:
             except SympifyError:
                 return inverseview_render('expr_error')
             else:
-                if webinp.op_drop_lr in ['kerro_lauseke', 'jaa'] and (not isinstance(sym_expr, (Integer, int, Rational)) or sym_expr == 0):
+                if not test_linpoly(sym_expr, mode):
+                    return inverseview_render('inp_expr_error')
+                if webinp.op_drop_lr in ['mul_expr', 'div'] and (not isinstance(sym_expr, (Integer, int, Rational)) or sym_expr == 0):
                         return inverseview_render('muldiv_error')
                 op = webinp.op_drop_lr
                 str_expr = str(sym_expr)
@@ -342,11 +350,11 @@ def advview_render(err = 0):
     if err == 0:       
         return render.advview(webtex.concEqutoAlign(equlhs, equrhs, equtext),
                               dropmenu_color_l, dropmenu_color_r,
-                              session.equT.equTableIndx, session.equT.record,session.equT.symvar)
+                              session.equT.equTableIndx, session.equT.record,session.equT.symvar,session.sidebarStatus)
     else:
         return render.advview(webtex.concEqutoAlign(equlhs, equrhs, equtext),
                               dropmenu_color_l, dropmenu_color_r,
-                              session.equT.equTableIndx, session.equT.record, session.equT.symvar,
+                              session.equT.equTableIndx, session.equT.record, session.equT.symvar,session.sidebarStatus,
                               errs[err])           
   
 
@@ -370,7 +378,6 @@ def inverseview_render(err = 0):
             
     
 def advops_handler(webinp, side, mode='adv'):
-    
     if mode == 'adv':
         equtable = session.equT
         renderfunc = advview_render
@@ -392,7 +399,6 @@ def advops_handler(webinp, side, mode='adv'):
                     
     if inps['postBut'].find("mod_expr_mn") > -1:
         op = 'merge_terms'
-        breakpoint()
         equtable.exprMods(op, inps['color'], side, 'const')
         return renderfunc()
             
@@ -406,9 +412,8 @@ def advops_handler(webinp, side, mode='adv'):
         equtable.exprMods(op, inps['color'], side, 'dum')
         return renderfunc()
             
-    elif inps['postBut'].find("mod_expr_cf"):
-        op = 'common_factor'
-                
+    elif inps['postBut'].find("mod_expr_cf") > -1:
+        op = 'common_factor'      
         try:
             sym_fact = otsympify(inps['inp_expr'], evaluate=False)
                     
@@ -416,6 +421,8 @@ def advops_handler(webinp, side, mode='adv'):
                 return renderfunc(err=1)
   
         else:
+            if not test_linpoly(sym_fact, mode):
+                return renderfunc('inp_expr_error')
             if ratsimp(sym_fact) == 0:
                 return renderfunc('zero_comm_fact')
             str_fact = str(sym_fact)

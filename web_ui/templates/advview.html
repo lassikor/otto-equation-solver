@@ -1,4 +1,4 @@
-$def with (inp_expr, dropmenu_color_l, dropmenu_color_r, num_ops, record, symvar, err=[])
+$def with (inp_expr, dropmenu_color_l, dropmenu_color_r, num_ops, record, symvar, sidebarStatus, err=[])
 
 <!DOCTYPE html>
 <head>
@@ -42,11 +42,62 @@ $def with (inp_expr, dropmenu_color_l, dropmenu_color_r, num_ops, record, symvar
 	function instr() {
 		window.open("/ohjeet#adv","Ohjeet","width=800, height=530");
 	}
+
+  function setSidebarStatus(){
+  document.getElementById("sidebarStatus1").value = $sidebarStatus;
+  document.getElementById("sidebarStatus2").value = $sidebarStatus;
+  document.getElementById("sidebarStatus3").value = $sidebarStatus;
+  document.getElementById("sidebarStatus4").value = $sidebarStatus;
+  }
+  
+  function openNav() {
+    document.getElementById("advSidebar").style.visibility = "visible";
+    document.getElementById("advSidebar").style.width = "240px";
+    document.getElementById("advSidebar").style.margin = "20px 0px";
+    document.getElementById("advSidebar").style.padding = "0px 10px 20px";
+    document.getElementById("main").style.marginRight = "280px";
+    document.getElementById("sidebarbtn").style.visibility = "hidden";
+    document.getElementById("advSidebar").style.borderWidth = "1px";
+    document.getElementById("sidebarStatus1").value = "0";
+    document.getElementById("sidebarStatus2").value = "0";
+    document.getElementById("sidebarStatus3").value = "0";
+    document.getElementById("sidebarStatus4").value = "0";
+  }
+
+function closeNav() {
+  document.getElementById("advSidebar").style.width = "0";
+  document.getElementById("advSidebar").style.padding = "0 0 20px";
+  document.getElementById("advSidebar").style.margin = "20px -2px";
+  document.getElementById("advSidebar").style.borderWidth = "0";
+  document.getElementById("main").style.marginRight = "40px";
+  document.getElementById("sidebarbtn").style.visibility = "visible";
+  document.getElementById("sidebarStatus1").value = "1";
+  document.getElementById("sidebarStatus2").value = "1";
+  document.getElementById("sidebarStatus3").value = "1";
+  document.getElementById("sidebarStatus4").value = "1";
+}
 </script>
 <title>OTTO-yhtälönratkaisija</title>
 <link rel="stylesheet" type="text/css" href="static/default.css">
+$if sidebarStatus == '1':
+  <style>
+    #advSidebar{
+      visibility: hidden;
+      width: 0;
+    }
+    #main{
+      margin-right:40px; 
+    }
+  </style>
+$else:
+  <style>
+    #advSidebar{
+      visibility: visible;
+    }
+  </style>
+
 </head>
-<body>
+<body onload="setSidebarStatus()">
 <div class="container wrapper">
  <div id="top">
   <ul id="menu">
@@ -74,18 +125,14 @@ $def with (inp_expr, dropmenu_color_l, dropmenu_color_r, num_ops, record, symvar
     </ul>
    </div>
   </div>
-  <div id="main">
+  <div id="main" style="display: flex; flex-wrap: wrap;">
    <h2>Ratkaise yhtälö (edistynyt)</h2>
-   <table>
-    <tr>
-     <td colspan="3">
-      <div id="equ" style="visibility: hidden; font-size: 120%;" align="left">$:inp_expr</div>
-     </td>
-    </tr>
-    <tr>
-     <td>
+
+      <div id="equ" style="width:100%; visibility: hidden; font-size: 120%; text-align:left;">$:inp_expr</div>
+
+      
       <form name="l_oprs" method="post">
-       <fieldset>
+       <fieldset class="adv-funcForms">
         <legend>Muokkaa vasenta puolta</legend>
         <table>
           <tr>
@@ -96,50 +143,41 @@ $def with (inp_expr, dropmenu_color_l, dropmenu_color_r, num_ops, record, symvar
           </tr>
            <tr>
             <td colspan="3" class="buttoncol"><button id="buttonCommonFactor_l" value="mod_expr_cf_left" name="postBut" class="colBut" title="Ota yhteinen tekijä">Ota yhteinen tekijä</button>
-              <!-- <select id="op_drop_r" name="op_drop_r">
-              <option value="yhdista_luvut_r">Yhdistä luvut</option>
-              <option value="yhdista_xtermit_r">Yhdistä $:symvar-termit</option>
-              <option value="poista_sulut_r">Poista sulut</option>
-              <option value="yhteinen_tekija_r">Ota yht. tekijä</option>
-            </select> -->
-  
             <input type="text" id="inpExpr_l" name="inp_expr_l" size="6" value="1" class="inp_field"/></td>
            </tr>
         </table>
+        <input type="hidden" id="sidebarStatus1" name="sidebarStatus" value="0">
        </fieldset>
       </form>
-     </td>
 
-     <td>
       <form name="lr_oprs" method="post">
-       <fieldset>
+       <fieldset class="adv-funcForms">
         <legend>Muokkaa puolittain</legend>
         <table>
-
          <tr>
           <td>Toiminto:</td>
          </tr>
          <tr>
           <td><select id="op_drop_lr" name="op_drop_lr">
-            <option value="lisaa">Lisää termi:</option>
-            <option value="vahenna">Vähennä termi:</option>
-            <option value="kerro">Kerro termillä:</option>
-            <option value="jaa">Jaa termillä:</option>
+            <option value="add">Lisää termi</option>
+            <option value="subs">Vähennä termi</option>
+            <option value="mul">Kerro termillä</option>
+            <option value="div">Jaa termillä</option>
           </select></td>
-          <td><input type="text" id="inp_expr_lr" name="inp_expr_lr" size="9" value="0" /></td>
+          <td><input type="text" id="inp_expr_lr" name="inp_expr_lr" size="8" value="0" class="inp_field"/></td>
          </tr>
          <tr>
-          <td colspan="2" align="center" id="buttoncol">
-           <button id="postBut" value="modequ" name="postBut">Tee toiminto</button>
+          <td class="buttoncol" colspan="2" style="text-align:center;" id="buttonExecute_lr">
+           <button id="postBut" value="modequ" name="postBut" class="colBut">Tee toiminto</button>
           </td>
          </tr>
         </table>
+        <input type="hidden" id="sidebarStatus2" name="sidebarStatus" value="0">
        </fieldset>
       </form>
-     </td>
-     <td>
+
       <form name="r_oprs" method="post">
-       <fieldset>
+       <fieldset class="adv-funcForms">
         <legend>Muokkaa oikeaa puolta</legend>
         <table>
          <tr>
@@ -150,28 +188,16 @@ $def with (inp_expr, dropmenu_color_l, dropmenu_color_r, num_ops, record, symvar
         </tr>
          <tr>
           <td colspan="3" class="buttoncol"><button id="buttonCommonFactor_r" value="mod_expr_cf_right" name="postBut" class="colBut" title="Ota yhteinen tekijä">Ota yhteinen tekijä</button>
-            <!-- <select id="op_drop_r" name="op_drop_r">
-            <option value="yhdista_luvut_r">Yhdistä luvut</option>
-            <option value="yhdista_xtermit_r">Yhdistä $:symvar-termit</option>
-            <option value="poista_sulut_r">Poista sulut</option>
-            <option value="yhteinen_tekija_r">Ota yht. tekijä</option>
-          </select> -->
-
           <input type="text" id="inpExpr_r" name="inp_expr_r" size="6" value="1" class="inp_field"/></td>
          </tr>
-         <!-- <tr>
-          <td colspan="2" align="center" id="buttoncol">
-           <button id="postBut" value="mod_expr_r" name="postBut">Tee toiminto</button>
-          </td>
-         </tr>-->
         </table>
+        <input type="hidden" id="sidebarStatus3" name="sidebarStatus" value="0">
        </fieldset>
       </form>
-     </td>
-    </tr>
-   </table>
   </div>
-  <div id="sidebar">
+    <div id="sidebarbtn" style="font-size:30px;cursor:pointer;" onclick="openNav()">&#9776;</div>
+    <div class="sidebar" id="advSidebar" >
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
    <h3>Tietoja</h3>
    <p>Toimintoja nyt: $num_ops</p>
    <p>Paras suoritus: $record</p>
@@ -190,11 +216,14 @@ $def with (inp_expr, dropmenu_color_l, dropmenu_color_r, num_ops, record, symvar
     </div>
    <h3>Vie ratkaisu tiedostoon</h3>
     <button id="buttonDownloadFile" name="postBut" value="download_solution">Vie ratkaisu</button>
+    <input type="hidden" id="sidebarStatus4" name="sidebarStatus" value="0">
    </form>
   </div>
  </div>
    $if not err == []:
     $:err
+ </div>
+
 </div>
 </body>
 </html>

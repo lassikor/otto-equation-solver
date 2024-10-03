@@ -43,6 +43,25 @@ $def with (inp_expr, num_ops, record, err=[])
   function instr() {
    window.open("/ohjeet","Ohjeet","width=800, height=600");
   }
+  function openNav() {
+  document.getElementById("advSidebar").style.width = "240px";
+  document.getElementById("advSidebar").style.margin = "20px 0px";
+  document.getElementById("advSidebar").style.padding = "0px 10px 20px";
+  document.getElementById("main_solved").style.marginRight = "280px";
+  document.getElementById("bottom").style.marginRight = "0px";
+  document.getElementById("sidebarbtn").style.visibility = "hidden";
+  document.getElementById("advSidebar").style.borderWidth = "1px";
+}
+
+function closeNav() {
+  document.getElementById("advSidebar").style.width = "0";
+  document.getElementById("advSidebar").style.padding = "0 0 20px";
+  document.getElementById("advSidebar").style.margin = "20px -2px";
+  document.getElementById("advSidebar").style.borderWidth = "0";
+  document.getElementById("main_solved").style.marginRight = "40px";
+  document.getElementById("bottom").style.marginRight = "0px";
+  document.getElementById("sidebarbtn").style.visibility = "visible";
+}
 </script>
 <title>OTTO-yhtälönratkaisija</title>
 <link rel="stylesheet" type="text/css" href="static/default.css">
@@ -87,12 +106,15 @@ $def with (inp_expr, num_ops, record, err=[])
     </tr>
    </table>
     </div>
+    <div id="sidebarbtn" style="font-size:30px;cursor:pointer;" onclick="openNav()">&#9776;</div>
+
     $if num_ops == record:
       <div id="bottom"><h2>Mahtavaa, teit ennätyksesi!</h2><p>Käytit $record toimintoa.</p><p>Kokeile saatko parannettua tulostasi: <a href="/oldadvquestion">Yritä uudelleen</a></p></div>
     $else:
       <div id="bottom"><p>Käytit $num_ops toimintoa.</p><p>Kokeile saatko parannettua tulostasi: <a href="/oldadvquestion">Yritä uudelleen</a></p></div>
    </div>
-  <div id="sidebar">
+  <div class="sidebar" id="advSidebar">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
    <h3>Tietoja</h3>
    <p>Teit toimintoja: $num_ops</p>
    <p>Paras suoritus: $record</p>

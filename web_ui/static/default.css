@@ -1,18 +1,24 @@
 :root {
-    --main-text-color: #165b12;
+    --main-text-color: #073763;
     --block-bg-color: #F4F4F4;
     --main-border-color: #d4d4d4;
-    --highlight-color: #F47F29;
+    --highlight-color: #59caf7;
     --button-font-size: 1em;
   }
 
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
 body {
-    font: 100% Lucida Sans, Verdana;
+    /*font: 100%  Sans, Verdana;*/
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
     margin: 0px;
     line-height: 26px;
     background-color: white;
     color: var(--main-text-color);
 }
+
 
 hr {
     border-color: var(--highlight-color);
@@ -33,6 +39,15 @@ hr#rule {
     border-width: 1px;
     border-style: ridge;
 }
+
+.hero-image {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("/static/hankekuva1.jpg");
+    height: 200px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+  }
 
 .container {
     min-width: 50%;
@@ -135,13 +150,15 @@ ul#menulist2 a:hover {
 
 #main {
     padding: 5px 20px 20px;
-    margin: 20px 240px 20px 20px;
+    margin: 20px 280px 20px 20px;
     background-color: var(--block-bg-color);
     color: var(--main-text-color);
     border-radius: 4px;
     min-width: 400px;
+    min-height: 480px;
     border: 1px solid var(--main-border-color);
     overflow: auto;
+    transition: 0.5s;
 }
 
 #main_instr {
@@ -157,11 +174,12 @@ ul#menulist2 a:hover {
 
 #main_solved {
     /*padding: 5px 20px 20px;*/
-    margin: 20px 240px 20px 240px;
+    margin: 20px 280px 20px 240px;
     /*background-color: var(--block-bg-color);*/
     color: var(--main-text-color);
     /*border-radius: 4px;*/
     min-width: 400px;
+    transition: 0.5s;
     /*border: 1px solid var(--main-border-color);*/
 }
 
@@ -187,6 +205,10 @@ ul#menulist2 a:hover {
 #equ {
     color: black;
     padding: 20px;
+}
+
+.adv-funcForms{
+    min-height:200px;
 }
 
 fieldset {
@@ -227,7 +249,7 @@ select {
     background-color: #Fff;
     border-radius: 4px;
     border: 1px solid var(--main-border-color);
-    width:10.5em;
+    width:10em;
 
 }
 
@@ -297,25 +319,49 @@ i:hover {
     margin: 20px;
 }
 
-#sidebar {
+.sidebar {
     background-color: var(--block-bg-color);
     color: var(--main-text-color);
+    height: 480px;
     padding: 0px 10px 20px;
-    width: 180px;
-    float: right;
-    float: top;
+    width: 240px;
+    /*position: fixed;*/
+    z-index: 1;
+    /*float: right;
+    float: top;*/
     /*bottom: 0;*/
     top: 0;
     right: 0;
+    overflow-x: hidden;
+    transition: 0.5s;
     position: absolute;
-    border-radius: 4px;
-    margin: 20px;
+    white-space: nowrap;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    margin: 20px 0px;
     border: 1px solid var(--main-border-color);
 }
 
-#sidebar_cr {
+.sidebar .closebtn {
+    position: absolute;
+    top: 0;
+    left: 180px;
+    font-size: 36px;
+    margin-left: 50px;
+    color: var(--main-text-color);
+    text-decoration: none;
+}
+  
+#sidebarbtn {
+    position: absolute;
+    top: 20px;
+    right: 0px;
+    padding:5px;
+    background-color: var(--main-bg-color);
+    color: var(--main-text-color);
+}
+.sidebar_cr {
     background-color: var(--block-bg-color);
-    ;
     color: var(--main-text-color);
     padding: 0px 20px 20px;
     min-width: 520px;
