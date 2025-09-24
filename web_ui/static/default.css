@@ -193,13 +193,15 @@ ul#menulist2 a:hover {
 
 #main_cr {
     padding: 5px 20px 20px;
-    margin: 20px 600px 500px 240px;
+    margin: 20px 500px 20px 20px;
     background-color: var(--block-bg-color);
     color: var(--main-text-color);
     border-radius: 4px;
     min-width: 300px;
-    min-height: 250px;
+    min-height: 300px;
     border: 1px solid var(--main-border-color);
+    overflow: auto;
+    transition: 0.5s;
 }
 
 #equ {
@@ -364,7 +366,7 @@ i:hover {
     background-color: var(--block-bg-color);
     color: var(--main-text-color);
     padding: 0px 20px 20px;
-    min-width: 520px;
+    min-width: 420px;
     min-height: 250px;
     /*bottom: 0;*/
     top: 0;

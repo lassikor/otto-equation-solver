@@ -29,10 +29,10 @@ $def with (new_equation, equ_lhs_str, equ_rhs_str, user_equs, err=[])
   	textinput.value = new_filetext;
  	}
  	function instr() {
- 	  window.open("/ohjeet#own","Ohjeet","width=800, height=600");
+ 	  window.open("/instr_fi#own","Ohjeet","width=800", "height=600");
  	}
 </script>
-<title>Oiva yhtälönratkaisija</title>
+<title>OTTO-yhtälönratkaisija</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="static/default.css">
@@ -62,36 +62,36 @@ $def with (new_equation, equ_lhs_str, equ_rhs_str, user_equs, err=[])
     <h3>Linkkejä</h3>
     <ul id="menulist2">
      <li class="menuitem"><a href="/">Etusivu</a></li>
-
+    
     </ul>
    </div>
   </div>
   <form name="create_equ" method="post" enctype="multipart/form-data" action="">
    <div id="main_cr">
+    <div>
     <h2>Syötä uusi yhtälö perusratkaisijalle</h2>
     <table>
      <tr>
-      <td align="right"><input type="text" id="inp_equ_lhs" name="inp_equ_lhs" size="15"
-       value="$:equ_lhs_str" /></td>
-      <td>\(=\)</td>
-      <td align="left"><input type="text" id="inp_equ_rhs" name="inp_equ_rhs" size="15"
-       value="$:equ_rhs_str" /></td>
+      <td><input class="inp_field" type="text" id="inp_equ_lhs" value="$:equ_lhs_str" name="inp_equ_lhs" size="15"/></td>
+      <td>=</td>
+      <td><input class="inp_field" type="text" id="inp_equ_rhs" value="$:equ_rhs_str" name="inp_equ_rhs" size="15"  /></td>
      </tr>
      <tr>
-      <td colspan="3" align="right"><div id="equ" style="visibility: hidden; font-size: 133%;">$:new_equation</div></td>
+      <td colspan="3"><div id="equ" style="visibility: hidden; font-size: 120%; text-align:left;">$:new_equation</div></td>
      </tr>
      <tr>
-      <td colspan="3" align="center" id="buttoncol">
-       <button id="postBut" value="show_equ" name="postBut">Näytä yhtälö</button>
-       <button id="postBut" value="save_equ" name="postBut">Tallenna yhtälö</button>
-       <button id="postBut" value="solve_equ_x" name="postBut">Ratkaise yhtälö</button>
+      <td colspan="3"  id="buttoncol">
+       <button class ="colBut2" id="postBut" value="show_equ" name="postBut">Näytä yhtälö</button>
+       <button class ="colBut2" id="postBut" value="save_equ" name="postBut">Tallenna yhtälö</button>
+       <button class ="colBut2" id="postBut" value="solve_equ_x" name="postBut">Ratkaise yhtälö</button>
       </td>
      </tr>
     </table>
    </div>
-  <div id="sidebar_cr">
+   </div>
+  <div class = "sidebar_cr" id="sidebar_cr">
    <h2>Omat yhtälöt perusratkaisijalle</h2>
-   <div id="user_equs" style="visibility: hidden; font-size: 133%;">$:user_equs</div>
+   <div id="user_equs" style="visibility: hidden; font-size: 120%; width:100%; text-align:left;">$:user_equs</div>
    <h3>Tuo yhtälöitä ohjelmaan</h3>
     <div>
      <input class="upload" type="file" name="upload_equs" id="upload_equs" style="display:none" onChange="Handlechange();"/>
@@ -107,6 +107,5 @@ $def with (new_equation, equ_lhs_str, equ_rhs_str, user_equs, err=[])
  </div>
    $if not err == []:
     $:err 
-</div>
 </body>
 </html>

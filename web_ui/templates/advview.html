@@ -1,4 +1,5 @@
-$def with (inp_expr, dropmenu_color_l, dropmenu_color_r, num_ops, record, symvar, sidebarStatus, err=[])
+$def with (inp_expr, dropmenu_color_l, dropmenu_color_r, num_ops, record, symvar, sidebarStatus, but_str, err=[])
+
 
 <!DOCTYPE html>
 <head>
@@ -130,7 +131,6 @@ $else:
 
       <div id="equ" style="width:100%; visibility: hidden; font-size: 120%; text-align:left;">$:inp_expr</div>
 
-      
       <form name="l_oprs" method="post">
        <fieldset class="adv-funcForms">
         <legend>Muokkaa vasenta puolta</legend>
@@ -139,7 +139,9 @@ $else:
             <td colspan="3">Toiminto värille $:dropmenu_color_l</td>
            </tr>
            <tr>
-            <td  class="buttoncol"><button id="buttonMergeNumbers_l" value="mod_expr_mn_left" name="postBut" class="colBut2" title="Yhdistä luvut">\(1+1\rightarrow 2\)</button></td><td  class="buttoncol"><button id="buttonMergeVariables_l" value="mod_expr_mx_left" name="postBut" class="colBut2" title="Yhdistä $:symvar-termit ">\($:symvar + $:symvar \rightarrow 2x\)</button></td><td> <button id="buttonRemoveBraces_l" value="mod_expr_rb_left" name="postBut" class="colBut2" title="Poista sulut">\(($:symvar)\rightarrow $:symvar\)</button></td>
+            <td  class="buttoncol"><button id="buttonMergeNumbers_l" value="mod_expr_mn_left" name="postBut" class="colBut2" title="Yhdistä luvut">$:but_str["but_nj_str"]</button></td>
+            <td  class="buttoncol"><button id="buttonMergeVariables_l" value="mod_expr_mx_left" name="postBut" class="colBut2" title="Yhdistä $:symvar-termit ">$:but_str["but_xj_str"]</button></td>
+            <td> <button id="buttonRemoveBraces_l" value="mod_expr_rb_left" name="postBut" class="colBut2" title="Poista sulut">$:but_str["but_rp_str"]</button></td>
           </tr>
            <tr>
             <td colspan="3" class="buttoncol"><button id="buttonCommonFactor_l" value="mod_expr_cf_left" name="postBut" class="colBut" title="Ota yhteinen tekijä">Ota yhteinen tekijä</button>
@@ -164,7 +166,7 @@ $else:
             <option value="mul">Kerro termillä</option>
             <option value="div">Jaa termillä</option>
           </select></td>
-          <td><input type="text" id="inp_expr_lr" name="inp_expr_lr" size="8" value="0" class="inp_field"/></td>
+          <td><input type="text" id="inp_expr_lr" name="inp_expr_lr" size="6" value="0" class="inp_field"/></td>
          </tr>
          <tr>
           <td class="buttoncol" colspan="2" style="text-align:center;" id="buttonExecute_lr">
@@ -184,7 +186,7 @@ $else:
           <td colspan="3">Toiminto värille $:dropmenu_color_r</td>
          </tr>
          <tr>
-          <td  class="buttoncol"><button id="buttonMergeNumbers_r" value="mod_expr_mn_right" name="postBut" class="colBut2" title="Yhdistä luvut">\(1+1\rightarrow 2\)</button></td><td  class="buttoncol"><button id="buttonMergeVariables_r" value="mod_expr_mx_right" name="postBut" class="colBut2" title="Yhdistä $:symvar-termit ">\($:symvar + $:symvar \rightarrow 2x\)</button></td><td> <button id="buttonRemoveBraces_r" value="mod_expr_rb_right" name="postBut" class="colBut2" title="Poista sulut">\(($:symvar)\rightarrow $:symvar\)</button></td>
+          <td  class="buttoncol"><button id="buttonMergeNumbers_r" value="mod_expr_mn_right" name="postBut" class="colBut2" title="Yhdistä luvut">$:but_str["but_nj_str"]</button></td><td  class="buttoncol"><button id="buttonMergeVariables_r" value="mod_expr_mx_right" name="postBut" class="colBut2" title="Yhdistä $:symvar-termit ">$:but_str["but_xj_str"]</button></td><td> <button id="buttonRemoveBraces_r" value="mod_expr_rb_right" name="postBut" class="colBut2" title="Poista sulut">$:but_str["but_rp_str"]</button></td>
         </tr>
          <tr>
           <td colspan="3" class="buttoncol"><button id="buttonCommonFactor_r" value="mod_expr_cf_right" name="postBut" class="colBut" title="Ota yhteinen tekijä">Ota yhteinen tekijä</button>
