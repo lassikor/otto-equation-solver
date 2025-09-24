@@ -1,0 +1,18 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "Python Debugger: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "cwd": "C:\\Users\\lassikor\\OneDrive - University of Oulu and Oamk\\projects\\otto-equation-solver\\web_ui\\",
+            "program": " 'C:\\Users\\lassikor\\OneDrive - University of Oulu and Oamk\\projects\\otto-equation-solver\\web_ui\\main.py' " ,
+            "args": "127.0.0.1",
+            "console": "integratedTerminal"
+        }
+    ]
+}
