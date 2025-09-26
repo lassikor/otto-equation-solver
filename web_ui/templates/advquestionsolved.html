@@ -113,26 +113,28 @@ function closeNav() {
     $else:
       <div id="bottom"><p>Käytit $num_ops toimintoa.</p><p>Kokeile saatko parannettua tulostasi: <a href="/oldadvquestion">Yritä uudelleen</a></p></div>
    </div>
-  <div class="sidebar" id="advSidebar">
+  <div id="sidebarbtn" style="font-size:30px;cursor:pointer;" onclick="openNav()">&#9776;</div>
+    <div class="sidebar" id="advSidebar" >
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
    <h3>Tietoja</h3>
-   <p>Teit toimintoja: $num_ops</p>
+   <p>Toimintoja nyt: $num_ops</p>
    <p>Paras suoritus: $record</p>
    <h3>Tuo ratkaisu ohjelmaan</h3>
    <form name="upload_solution_form" method="post" enctype="multipart/form-data" action="">
     <div>
      <input type="file" class="upload" name="upload_solution" id="upload_solution"
-      style="display: none" onChange="Handlechange();" /> <input type="button"
+      style="display: none" onChange="Handlechange();" /> <input type="button" class="colBut"
       value="Valitse tiedosto" id="fakeBrowse" onclick="HandleBrowseClick();"/>
     </div>
     <div>
-     <input type="text" id="filename" readonly="true" size="15" />
+     <input class ="inp_field" type="text" id="filename" readonly="true" style="width: 10.4em;" />
     </div>
     <div>
-     <button id="postBut" name="postBut" value="upload_solution_file">Tuo ratkaisu</button>
+     <button class="colBut" id="buttonUploadFile" name="postBut" value="upload_solution_file">Tuo ratkaisu</button>
     </div>
    <h3>Vie ratkaisu tiedostoon</h3>
-    <button id="postBut" name="postBut" value="download_solution">Vie ratkaisu</button>
+    <button class="colBut" id="buttonDownloadFile" name="postBut" value="download_solution">Vie ratkaisu</button>
+    <input type="hidden" id="sidebarStatus4" name="sidebarStatus" value="0">
    </form>
   </div>
  </div>

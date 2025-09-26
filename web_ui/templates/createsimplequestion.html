@@ -1,111 +1,120 @@
 $def with (new_equation, equ_lhs_str, equ_rhs_str, user_equs, err=[])
 <!DOCTYPE html>
+
 <head>
-<meta charset="UTF-8">
-<script type="text/javascript" 
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
-<script type="text/x-mathjax-config">
+  <meta charset="UTF-8">
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+  <script type="text/x-mathjax-config">
   	MathJax.Hub.Config({ TeX: { extensions: ["color.js"] }});
 	MathJax.Hub.Config({"HTML-CSS": {preferredFont: "STIX"}});	
 </script>
 
-<script>
-	MathJax.Hub.Queue(function() {
-		document.getElementById('user_equs').style.visibility = "";
-		document.getElementById('equ').style.visibility = "";
-	});
-</script>
-<script type="text/javascript" language="JavaScript">
- 	function HandleBrowseClick() {
-  	var fileinput = document.getElementById("upload_equs");
-  	fileinput.click();
- 	}
- 	function Handlechange() {
-  	var fileinput = document.getElementById("upload_equs");
-  	var filetext = fileinput.value;
-  	var new_filetext = filetext.replace("C:\\fakepath\\", "");
-  	var textinput = document.getElementById("filename");
-  	textinput.value = new_filetext;
- 	}
- 	function instr() {
- 	  window.open("/instr_fi#own","Ohjeet","width=800", "height=600");
- 	}
-</script>
-<title>OTTO-yhtälönratkaisija</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="static/default.css">
-
+  <script>
+    MathJax.Hub.Queue(function () {
+      document.getElementById('user_equs').style.visibility = "";
+      document.getElementById('equ').style.visibility = "";
+    });
+  </script>
+  <script type="text/javascript" language="JavaScript">
+    function HandleBrowseClick() {
+      var fileinput = document.getElementById("upload_equs");
+      fileinput.click();
+    }
+    function Handlechange() {
+      var fileinput = document.getElementById("upload_equs");
+      var filetext = fileinput.value;
+      var new_filetext = filetext.replace("C:\\fakepath\\", "");
+      var textinput = document.getElementById("filename");
+      textinput.value = new_filetext;
+    }
+    function instr() {
+      window.open("/instr_fi#own", "Ohjeet", "width=800", "height=600");
+    }
+  </script>
+  <title>OTTO-yhtälönratkaisija</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="static/default.css">
 </head>
+
 <body>
-<div class="container wrapper">
- <div id="top">
-  <ul id="menu">
-   <li><a href="/">OTTO-yhtälönratkaisija</a>
-  </ul>
- </div>
- <hr>
- <div class="wrapper">
-  <div id="menubar">
-   <div id="menu1">
-    <h3>Sovellus</h3>
-    <ul id="menulist">
-     <li class="menuitem"><a href="/simpleview">Perusratkaisija</a>
-     <li class="menuitem"><a href="/advview">Edistynyt ratkaisija</a>
-     <li class="menuitem"><a href="/inverseview">Rakenna yhtälö</a>    
-     <li class="menuitem"><a href="/createadvquestion">Joustavan ratkaisijan omat yhtälöt</a>
-     <li class="menuitem"><a onclick="instr()">Ohjeet</a>
-    </ul>
-   </div>
-   <div id="menu2">
-    <h3>Linkkejä</h3>
-    <ul id="menulist2">
-     <li class="menuitem"><a href="/">Etusivu</a></li>
-    
-    </ul>
-   </div>
-  </div>
-  <form name="create_equ" method="post" enctype="multipart/form-data" action="">
-   <div id="main_cr">
-    <div>
-    <h2>Syötä uusi yhtälö perusratkaisijalle</h2>
-    <table>
-     <tr>
-      <td><input class="inp_field" type="text" id="inp_equ_lhs" value="$:equ_lhs_str" name="inp_equ_lhs" size="15"/></td>
-      <td>=</td>
-      <td><input class="inp_field" type="text" id="inp_equ_rhs" value="$:equ_rhs_str" name="inp_equ_rhs" size="15"  /></td>
-     </tr>
-     <tr>
-      <td colspan="3"><div id="equ" style="visibility: hidden; font-size: 120%; text-align:left;">$:new_equation</div></td>
-     </tr>
-     <tr>
-      <td colspan="3"  id="buttoncol">
-       <button class ="colBut2" id="postBut" value="show_equ" name="postBut">Näytä yhtälö</button>
-       <button class ="colBut2" id="postBut" value="save_equ" name="postBut">Tallenna yhtälö</button>
-       <button class ="colBut2" id="postBut" value="solve_equ_x" name="postBut">Ratkaise yhtälö</button>
-      </td>
-     </tr>
-    </table>
-   </div>
-   </div>
-  <div class = "sidebar_cr" id="sidebar_cr">
-   <h2>Omat yhtälöt perusratkaisijalle</h2>
-   <div id="user_equs" style="visibility: hidden; font-size: 120%; width:100%; text-align:left;">$:user_equs</div>
-   <h3>Tuo yhtälöitä ohjelmaan</h3>
-    <div>
-     <input class="upload" type="file" name="upload_equs" id="upload_equs" style="display:none" onChange="Handlechange();"/>
-     <input type="button" value="Valitse tiedosto" id="fakeBrowse" onclick="HandleBrowseClick();" /></div>
-     <div><input type="text" id="filename" readonly="true" size="15" /></div>
-     <div><button id="postBut" name="postBut" value="file_upload">Tuo yhtälöt</button>
+  <div class="container wrapper">
+    <div id="top">
+      <ul id="menu">
+        <li><a href="/">OTTO-yhtälönratkaisija</a>
+      </ul>
     </div>
-   <h3>Vie omat yhtälöt tiedostoon</h3>
-    <button id="postBut" name="postBut" value="file_download">Vie yhtälöt</button>
-   
-  </div>
-  </form>
- </div>
-   $if not err == []:
-    $:err 
+    <hr>
+    <div class="wrapper">
+      <div id="menubar">
+        <div id="menu1">
+          <h3>Sovellus</h3>
+          <ul id="menulist">
+            <li class="menuitem"><a href="/simpleview">Perusratkaisija</a>
+            <li class="menuitem"><a href="/advview">Edistynyt ratkaisija</a>
+            <li class="menuitem"><a href="/inverseview">Rakenna yhtälö</a>
+            <li class="menuitem"><a href="/createadvquestion">Edistyneen ratkaisijan omat yhtälöt</a>
+            <li class="menuitem"><a onclick="instr()">Ohjeet</a>
+          </ul>
+        </div>
+        <div id="menu2">
+          <h3>Linkkejä</h3>
+          <ul id="menulist2">
+            <li class="menuitem"><a href="/">Etusivu</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <form name="create_equ" method="post" enctype="multipart/form-data" action="">
+        <div id="main_cr">
+          
+            <h2>Syötä uusi yhtälö perusratkaisijalle</h2>
+            <table>
+              <tr>
+                <td><input class="inp_field" type="text" id="inp_equ_lhs" value="$:equ_lhs_str" name="inp_equ_lhs"
+                    size="15" /></td>
+                <td>\(=\)</td>
+                <td><input class="inp_field" type="text" id="inp_equ_rhs" value="$:equ_rhs_str" name="inp_equ_rhs"
+                    size="15" /></td>
+              </tr>
+              <tr>
+                <td colspan="3">
+                  <div id="equ" style="visibility: hidden; font-size: 120%; text-align:left;">$:new_equation</div>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="3" id="buttoncol">
+                  <button class="colBut2" id="postBut" value="show_equ" name="postBut">Näytä yhtälö</button>
+                  <button class="colBut2" id="postBut" value="save_equ" name="postBut">Tallenna yhtälö</button>
+                  <button class="colBut2" id="postBut" value="solve_equ_x" name="postBut">Ratkaise yhtälö</button>
+                </td>
+              </tr>
+            </table>
+         
+        </div>
+
+        <div class="sidebar_cr" id="sidebar_cr">
+          <h2>Omat yhtälöt perusratkaisijalle</h2>
+          <div id="user_equs" style="visibility: hidden; font-size: 120%; width:100%; text-align:left;">$:user_equs
+          </div>
+          <h3>Tuo yhtälöitä ohjelmaan</h3>
+          <div>
+            <input class="upload" type="file" name="upload_equs" id="upload_equs" style="display:none" onChange="Handlechange();" />
+            <input class="colBut" type="button" value="Valitse tiedosto" id="fakeBrowse" onclick="HandleBrowseClick();" />
+          </div>
+          <div><input class="inp_field" type="text" id="filename" readonly="true" size="15" /></div>
+          <div><button class="colBut" id="postBut" name="postBut" value="file_upload">Tuo yhtälöt</button>
+          </div>
+          <h3>Vie omat yhtälöt tiedostoon</h3>
+          <button class="colBut" id="postBut" name="postBut" value="file_download">Vie yhtälöt</button>
+
+        </div>
+      </form>
+    </div>
+    $if not err == []:
+    $:err
 </body>
+
 </html>

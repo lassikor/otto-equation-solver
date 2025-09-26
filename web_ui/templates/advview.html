@@ -207,21 +207,22 @@ $else:
    <form name="upload_solution_form" method="post" enctype="multipart/form-data" action="">
     <div>
      <input type="file" class="upload" name="upload_solution" id="upload_solution"
-      style="display: none" onChange="Handlechange();" /> <input type="button"
+      style="display: none" onChange="Handlechange();" /> <input type="button" class="colBut"
       value="Valitse tiedosto" id="fakeBrowse" onclick="HandleBrowseClick();"/>
     </div>
     <div>
-     <input type="text" id="filename" readonly="true" size="15" />
+     <input class ="inp_field" type="text" id="filename" readonly="true" style="width: 10.4em;" />
     </div>
     <div>
-     <button id="buttonUploadFile" name="postBut" value="upload_solution_file">Tuo ratkaisu</button>
+     <button class="colBut" id="buttonUploadFile" name="postBut" value="upload_solution_file">Tuo ratkaisu</button>
     </div>
    <h3>Vie ratkaisu tiedostoon</h3>
-    <button id="buttonDownloadFile" name="postBut" value="download_solution">Vie ratkaisu</button>
+    <button class="colBut" id="buttonDownloadFile" name="postBut" value="download_solution">Vie ratkaisu</button>
     <input type="hidden" id="sidebarStatus4" name="sidebarStatus" value="0">
    </form>
   </div>
  </div>
+
    $if not err == []:
     $:err
  </div>

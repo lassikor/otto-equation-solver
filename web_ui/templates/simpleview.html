@@ -1,4 +1,4 @@
-$def with (inp_expr, num_ops, record, symvar, sidebarStatus, err=[])
+$def with (inp_expr, num_ops, record, symvar, sidebarStatus, but_str, err=[])
 <!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
@@ -138,7 +138,7 @@ $else:
 			</select>
 		</td>
 		<td class="buttoncol">
-			<input type="text" id="inp_expr_lr" name="inp_expr_lr" value="0" class="inp_field" />
+			<input type="text" id="inp_expr_lr" name="inp_expr_lr" value="0" class="inp_field" style="width: 6.5em;" />
 		</td>
     <td class="buttoncol">
       <button id="buttonExecute" value="modequ" name="postBut" class="colBut">Tee toiminto
@@ -146,8 +146,8 @@ $else:
     </td>
 		</tr>
     <tr>
-      <td class="buttoncol"><button id="buttonMergeNumbers" value="modequ_j" name="postBut" class="colBut" >Yhdistä luvut</button></td>
-      <td class="buttoncol"><button id="buttonMergeVariables" value="modequ_x" name="postBut" class="colBut" >Yhdistä $:symvar-termit</button></td>
+      <td colspan="3" class="buttoncol" style="text-align: center;"><button id="buttonMergeNumbers" value="modequ_j" name="postBut" class="colBut2" title="Yhdistä luvut" >$:but_str["but_nj_str"]</button> 
+      <button id="buttonMergeVariables" value="modequ_x" name="postBut" class="colBut2" title="Yhdistä $:symvar-termit">$:but_str["but_xj_str"]</button></td>
     </tr>
     <tr>
 
@@ -173,17 +173,17 @@ $else:
    <form name="upload_solution_form" method="post" enctype="multipart/form-data" action="">
     <div>
      <input type="file" class="upload" name="upload_solution" id="upload_solution"
-      style="display: none" onChange="Handlechange();" /> <input type="button"
+      style="display: none" onChange="Handlechange();" /> <input class="colBut" type="button"
       value="Valitse tiedosto" id="fakeBrowse" onclick="HandleBrowseClick();"/>
     </div>
     <div>
-     <input type="text" id="filename" readonly="true" size="15" />
+     <input class = "inp_field" type="text" id="filename" readonly="true" style="width: 10.4em;" />
     </div>
     <div>
-     <button id="postBut" name="postBut" value="upload_solution_file">Tuo ratkaisu</button>
+     <button class="colBut" id="buttonUpload" name="postBut" value="upload_solution_file">Tuo ratkaisu</button>
     </div>
    <h3>Vie ratkaisu tiedostoon</h3>
-    <button id="postBut" name="postBut" value="download_solution">Vie ratkaisu</button>
+    <button class="colBut" id="buttonDownload" name="postBut" value="download_solution">Vie ratkaisu</button>
     <input type="hidden" id="sidebarStatus" name="sidebarStatus" value="0">
    </form>
   </div>

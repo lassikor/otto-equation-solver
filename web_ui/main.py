@@ -143,21 +143,6 @@ class simpleview:
                 json.dump([session.simplequT.equTableLhs, session.simplequT.equTableRhs, session.simplequT.equTableText],outfile)
             return open(rootpath+'/web_ui/sessions/'+sessid+'_oma_ratkaisu.txt').read()        
             
-def simpleview_render(err=0):
-        
-    equlhs_str, equrhs_str, equtext = session.simplequT.getEquTable()
-    if not equtext == []:
-        if not rgex.search(r'Hie', equtext[-1]) == None:
-            raise web.seeother("/simplequestionsolved")
-    equlhs, equrhs = otsympify(equlhs_str, evaluate = False), otsympify(equrhs_str, evaluate = False)
-    
-    if err == 0:
-        return render.simpleview(webtex.concEqutoAlign(equlhs, equrhs, equtext),
-                                 session.simplequT.equTableIndx, session.simplequT.record, session.simplequT.symvar, session.sidebarStatus)
-    else:
-        return render.simpleview(webtex.concEqutoAlign(equlhs, equrhs, equtext),
-                              session.simplequT.equTableIndx, session.simplequT.record, session.simplequT.symvar,  session.sidebarStatus,
-                              errs[err])       
 
 class advview:
     #load page
@@ -338,10 +323,137 @@ class inverseview:
             with open(rootpath+'/web_ui/sessions/'+sessid+'_oma_yhtalo.txt','w') as outfile:
                 json.dump([[session.invequT.equTableLhs[-1]], [session.invequT.equTableRhs[-1]]],outfile)
             return open(rootpath+'/web_ui/sessions/'+sessid+'_oma_yhtalo.txt').read()
+
+      
+class newadvquestion:
+    
+    def GET(self):
+        if not hasattr(session,'equT'):
+            session.equT = otequhandle.EquTable()        
+        session.equT.clearEquTable('adv',1)
         
-    """
-    Methods for supporting otequation handling and rendering
-    """
+        raise web.seeother("/advview")
+    
+class oldadvquestion:
+    
+    def GET(self):
+        if not hasattr(session,'equT'):
+            session.equT = otequhandle.EquTable()                
+        session.equT.clearEquTable('adv',0)
+        
+        raise web.seeother("/advview")
+    
+class createadvquestion:
+    
+    def GET(self):
+        if not hasattr(session,'equT'):
+            session.equT = otequhandle.EquTable()
+        return createquestion_render('adv',2)
+    
+    def POST(self):
+        if not hasattr(session,'equT'):
+            session.equT = otequhandle.EquTable()
+            return createquestion_render('adv',5)                   
+        webinp = web.input()
+        mode = 'adv'
+        equtable = session.equT
+        redirect = "/advview"
+        redirect2 = "/createadvquestion"
+        return createquestion_handler(webinp, mode, equtable, redirect, redirect2)
+        
+class createsimplequestion:
+    
+    def GET(self):
+        if not hasattr(session,'simplequT'):
+            session.simplequT = otequhandle.EquTable('simple')
+        return createquestion_render('simple',err=2)
+    
+    def POST(self):
+        if not hasattr(session,'simplequT'):
+            session.simplequT = otequhandle.EquTable('simple')
+            return createquestion_render('simple', err=5)             
+                   
+        webinp = web.input()
+        mode = 'simple'
+        equtable = session.simplequT
+        redirect = "/simpleview"
+        redirect2 = "/createsimplequestion"
+        return createquestion_handler(webinp, mode, equtable, redirect, redirect2)
+        
+              
+class advquestionsolved:
+    
+    def GET(self):
+        
+        return questionsolved_render('adv')
+        
+    def POST(self):
+        #catch inputs
+        webinp = web.input()
+        
+        #check what the user has tried to do
+        return handleFileIO(webinp, 'adv')
+        
+                     
+class newsimplequestion:
+    
+    def GET(self):
+        session.simplequT.clearEquTable('simple',1)    
+        raise web.seeother("/simpleview")
+    
+class oldsimplequestion:
+    
+    def GET(self):
+        session.simplequT.clearEquTable('simple',0)    
+        raise web.seeother("/simpleview")
+    
+class oldinversequestion:
+    
+    def GET(self):
+        if hasattr(session, 'invequT'):
+            session.invequT.clearEquTable()         
+        raise web.seeother("/inverseview")
+        
+class simplequestionsolved:
+    
+    def GET(self):
+        
+        return questionsolved_render('simple')
+    
+    def POST(self):
+        #catch inputs
+        webinp = web.input()
+        
+        #check what the user has tried to do
+        return handleFileIO(webinp, 'simple')
+        
+"""
+Methods for supporting otequation handling and rendering
+"""
+
+def simpleview_render(err=0):
+    #variable used
+    svar = session.simplequT.symvar
+    #button strings
+    but_str = webelements.get_button_strings(svar)  
+        
+    equlhs_str, equrhs_str, equtext = session.simplequT.getEquTable()
+    if not equtext == []:
+        if not rgex.search(r'Hie', equtext[-1]) == None:
+            raise web.seeother("/simplequestionsolved")
+
+    #symbolize strings        
+    equlhs, equrhs = otsympify(equlhs_str, evaluate = False), otsympify(equrhs_str, evaluate = False)
+    
+    #render page
+    if err == 0:
+        return render.simpleview(webtex.concEqutoAlign(equlhs, equrhs, equtext),
+                                 session.simplequT.equTableIndx, session.simplequT.record, session.simplequT.symvar, session.sidebarStatus, but_str)
+    else:
+        return render.simpleview(webtex.concEqutoAlign(equlhs, equrhs, equtext),
+                              session.simplequT.equTableIndx, session.simplequT.record, session.simplequT.symvar,  session.sidebarStatus, but_str,
+                              errs[err])       
+
 #render advanced solver page       
 def advview_render(err = 0):
     #variable used
@@ -350,6 +462,9 @@ def advview_render(err = 0):
     #equation table for viewing
     equlhs_str, equrhs_str, equtext = session.equT.getEquTable()
     
+    if not hasattr(session,'equT.sidebarStatus'):
+        session.sidebarStatus = 0
+
     #button strings
     but_str = webelements.get_button_strings(svar)  
     
@@ -406,122 +521,92 @@ def inverseview_render(err = 0):
     
     else:
         return render.inverseview(webtex.concEqutoAlign(equlhs, equrhs, equtext), dropmenu_color_l, dropmenu_color_r, svar, but_str, errs[err])             
+
+#render question creation page           
+def createquestion_render(mode, err=0, new_equ_lhs ='', new_equ_rhs=''):
+
+    #detect equation type    
+    if mode == 'adv':
+        renderfunc = render.createadvquestion
+        equtable = session.equT
+    elif mode == 'simple':
+        renderfunc = render.createsimplequestion
+        equtable = session.simplequT
+
+    #get equations already created    
+    user_equlhs_str, user_equrhs_str = equtable.getUserEqus()
+    #tidy strings if multiplied by -1
+    new_equ_lhs_str = str(new_equ_lhs)
+    new_equ_rhs_str = str(new_equ_rhs)
+    new_equ_lhs_str = new_equ_lhs_str.replace(" - 1*"," - ")
+    new_equ_rhs_str = new_equ_rhs_str.replace(" - 1*"," - ")
+
+    #make symbolic representations    
+    user_equlhs = otsympify(user_equlhs_str, evaluate = False)
+    user_equrhs = otsympify(user_equrhs_str, evaluate = False)
+        
+    if err == 0:
             
-""" def createadv_render(new_equation, equ_lhs_str, equ_rhs_str, user_equs, err=[]):
-    return render.createadvquestion(new_equation, equ_lhs_str, equ_rhs_str, user_equs, err)
+        return renderfunc(webtex.concEqutoAlign([new_equ_lhs], [new_equ_rhs]),
+                          new_equ_lhs_str, new_equ_rhs_str,
+                          webelements.get_userequ_table(user_equlhs, user_equrhs))                   
+    elif err == 1:
+        return renderfunc('','','',
+                          webelements.get_userequ_table(user_equlhs, user_equrhs),errs['equ_error'])
+    elif err == 2:
+        return renderfunc('',new_equ_lhs_str,new_equ_rhs_str,
+                          webelements.get_userequ_table(user_equlhs, user_equrhs))
+        
+    elif err == 3:
+        return renderfunc('',new_equ_lhs_str,new_equ_rhs_str,
+                          webelements.get_userequ_table(user_equlhs, user_equrhs),errs['own_equs_full'])
+    elif err == 4:
+        return renderfunc('',new_equ_lhs_str,new_equ_rhs_str,
+                          webelements.get_userequ_table(user_equlhs, user_equrhs),errs['equ_error_load'])
+    elif err == 5:
+        return renderfunc('',new_equ_lhs_str,new_equ_rhs_str,
+                          webelements.get_userequ_table(user_equlhs, user_equrhs),errs['session_expired'])
 
-def createsimple_render(new_equation, equ_lhs_str, equ_rhs_str, user_equs, err=[]):
-    return render.createsimplequestion(new_equation, equ_lhs_str, equ_rhs_str, user_equs, err)
-    """
-
-def advops_handler(webinp, side, mode='adv'):
+#render question solved page
+def questionsolved_render(mode,err=0):
+    
     if mode == 'adv':
         equtable = session.equT
-        renderfunc = advview_render
-        
-    elif mode == 'inv':
-        equtable = session.invequT
-        renderfunc = inverseview_render   
-    if side == 'left':
-            
-        inps = {'postBut': webinp.postBut,
-                'color': webinp.color_drop_l,
-                'inp_expr': webinp.inp_expr_l}
-                    
-    elif side == 'right':
-            
-        inps = {'postBut': webinp.postBut,
-                'color': webinp.color_drop_r,
-                'inp_expr': webinp.inp_expr_r}
-                    
-    if inps['postBut'].find("mod_expr_mn") > -1:
-        op = 'merge_terms'
-        equtable.exprMods(op, inps['color'], side, 'const')
-        return renderfunc()
-            
-    elif inps['postBut'].find("mod_expr_mx") > -1:
-        op = 'merge_terms'
-        equtable.exprMods(op, inps['color'], side, 'xterm')
-        return renderfunc()
-            
-    elif inps['postBut'].find("mod_expr_rb") > -1:
-        op = 'remove_braces'
-        equtable.exprMods(op, inps['color'], side, 'dum')
-        return renderfunc()
-            
-    elif inps['postBut'].find("mod_expr_cf") > -1:
-        op = 'common_factor'      
-        try:
-            sym_fact = otsympify(inps['inp_expr'], evaluate=False)
-                    
-        except SympifyError:
-                return renderfunc('expr_error')
-  
-        else:
-            if not test_linpoly(sym_fact, mode):
-                return renderfunc('inp_expr_error')
-            if ratsimp(sym_fact) == 0:
-                return renderfunc('zero_comm_fact')
-            str_fact = str(sym_fact)
-            equtable.exprMods(op, inps['color'], side, str_fact)
-            return renderfunc()
-        
-class newadvquestion:
-    
-    def GET(self):
-        if not hasattr(session,'equT'):
-            session.equT = otequhandle.EquTable()        
-        session.equT.clearEquTable('adv',1)
-        
-        raise web.seeother("/advview")
-    
-class oldadvquestion:
-    
-    def GET(self):
-        if not hasattr(session,'equT'):
-            session.equT = otequhandle.EquTable()                
-        session.equT.clearEquTable('adv',0)
-        
-        raise web.seeother("/advview")
-    
-class createadvquestion:
-    
-    def GET(self):
-        if not hasattr(session,'equT'):
-            session.equT = otequhandle.EquTable()
-        return createquestion_render('adv',2)
-    
-    def POST(self):
-        if not hasattr(session,'equT'):
-            session.equT = otequhandle.EquTable()
-            return createquestion_render('adv',5)                   
-        webinp = web.input()
-        mode = 'adv'
-        equtable = session.equT
+        renderfunc = render.advquestionsolved
         redirect = "/advview"
-        redirect2 = "/createadvquestion"
-        return createquestion_handler(webinp, mode, equtable, redirect, redirect2)
-        
-class createsimplequestion:
-    
-    def GET(self):
-        if not hasattr(session,'simplequT'):
-            session.simplequT = otequhandle.EquTable('simple')
-        return createquestion_render('simple',err=2)
-    
-    def POST(self):
-        if not hasattr(session,'simplequT'):
-            session.simplequT = otequhandle.EquTable('simple')
-            return createquestion_render('simple', err=5)             
-                   
-        webinp = web.input()
-        mode = 'simple'
+    elif mode == 'simple':
         equtable = session.simplequT
+        renderfunc = render.simplequestionsolved
         redirect = "/simpleview"
-        redirect2 = "/createsimplequestion"
-        return createquestion_handler(webinp, mode, equtable, redirect, redirect2)
+    equlhs_str, equrhs_str, equtext = equtable.getEquTable()
+    equlhs, equrhs = otsympify(equlhs_str, evaluate = False), otsympify(equrhs_str, evaluate = False)
+    
+    if equtext == []:
+        raise web.seeother(redirect)
+    elif rgex.search(r'Hie', equtext[-1]) == None:   
+        raise web.seeother(redirect)
         
-       
+    if err == 0:    
+        if isinstance(equtable.record,str):
+            equtable.record = equtable.equTableIndx
+            if not equtable.userEquIx == None:
+                equtable.userEquRecord[equtable.userEquIx] = equtable.equTableIndx
+            return renderfunc(webtex.concEqutoAlign(equlhs, equrhs, equtext),
+                                        equtable.equTableIndx, equtable.record)
+        elif equtable.record > equtable.equTableIndx :
+            equtable.record = equtable.equTableIndx
+            
+            return renderfunc(webtex.concEqutoAlign(equlhs, equrhs, equtext),
+                                        equtable.equTableIndx, equtable.record)
+        else:
+            return renderfunc(webtex.concEqutoAlign(equlhs, equrhs, equtext),
+                                        equtable.equTableIndx, equtable.record)
+    elif err == 2:
+        return renderfunc(webtex.concEqutoAlign(equlhs, equrhs, equtext),equtable.equTableIndx,
+                          equtable.record, errs['equ_error_load'])
+
+
+#supporting functions for solver operations
 def createquestion_handler(webinp, mode, equtable, redirect, redirect2):
 
     if webinp.postBut == "file_upload":
@@ -693,133 +778,60 @@ def save_invequ(mode):
     else:
         return inverseview_render('own_equs_full')                      
                 
-def createquestion_render(mode, err=0, new_equ_lhs ='', new_equ_rhs=''):
 
-    #detect equation type    
-    if mode == 'adv':
-        renderfunc = render.createadvquestion
-        equtable = session.equT
-    elif mode == 'simple':
-        renderfunc = render.createsimplequestion
-        equtable = session.simplequT
-
-    #get equations already created    
-    user_equlhs_str, user_equrhs_str = equtable.getUserEqus()
-    #tidy strings if multiplied by -1
-    new_equ_lhs_str = str(new_equ_lhs)
-    new_equ_rhs_str = str(new_equ_rhs)
-    new_equ_lhs_str = new_equ_lhs_str.replace(" - 1*"," - ")
-    new_equ_rhs_str = new_equ_rhs_str.replace(" - 1*"," - ")
-
-    #make symbolic representations    
-    user_equlhs = otsympify(user_equlhs_str, evaluate = False)
-    user_equrhs = otsympify(user_equrhs_str, evaluate = False)
-        
-    if err == 0:
-            
-        return renderfunc(webtex.concEqutoAlign([new_equ_lhs], [new_equ_rhs]),
-                          new_equ_lhs_str, new_equ_rhs_str,
-                          webelements.get_userequ_table(user_equlhs, user_equrhs))                   
-    elif err == 1:
-        return renderfunc('','','',
-                          webelements.get_userequ_table(user_equlhs, user_equrhs),errs['equ_error'])
-    elif err == 2:
-        return renderfunc('',new_equ_lhs_str,new_equ_rhs_str,
-                          webelements.get_userequ_table(user_equlhs, user_equrhs))
-        
-    elif err == 3:
-        return renderfunc('',new_equ_lhs_str,new_equ_rhs_str,
-                          webelements.get_userequ_table(user_equlhs, user_equrhs),errs['own_equs_full'])
-    elif err == 4:
-        return renderfunc('',new_equ_lhs_str,new_equ_rhs_str,
-                          webelements.get_userequ_table(user_equlhs, user_equrhs),errs['equ_error_load'])
-    elif err == 5:
-        return renderfunc('',new_equ_lhs_str,new_equ_rhs_str,
-                          webelements.get_userequ_table(user_equlhs, user_equrhs),errs['session_expired'])               
-
-        
-class advquestionsolved:
-    
-    def GET(self):
-        
-        return render_questionsolved('adv')
-        
-    def POST(self):
-        #catch inputs
-        webinp = web.input()
-        
-        #check what the user has tried to do
-        return handleFileIO(webinp, 'adv')
-        
-                     
-class newsimplequestion:
-    
-    def GET(self):
-        session.simplequT.clearEquTable('simple',1)    
-        raise web.seeother("/simpleview")
-    
-class oldsimplequestion:
-    
-    def GET(self):
-        session.simplequT.clearEquTable('simple',0)    
-        raise web.seeother("/simpleview")
-    
-class oldinversequestion:
-    
-    def GET(self):
-        if hasattr(session, 'invequT'):
-            session.invequT.clearEquTable()         
-        raise web.seeother("/inverseview")
-        
-class simplequestionsolved:
-    
-    def GET(self):
-        
-        return questionsolved_render('simple')
-    
-    def POST(self):
-        #catch inputs
-        webinp = web.input()
-        
-        #check what the user has tried to do
-        return handleFileIO(webinp, 'simple')
-
-def questionsolved_render(mode,err=0):
-    
+#handle advanced solver and inverse solver operations
+def advops_handler(webinp, side, mode='adv'):
     if mode == 'adv':
         equtable = session.equT
-        renderfunc = render.advquestionsolved
-        redirect = "/advview"
-    elif mode == 'simple':
-        equtable = session.simplequT
-        renderfunc = render.simplequestionsolved
-        redirect = "/simpleview"
-    equlhs_str, equrhs_str, equtext = equtable.getEquTable()
-    equlhs, equrhs = otsympify(equlhs_str, evaluate = False), otsympify(equrhs_str, evaluate = False)
-    
-    if equtext == []:
-        raise web.seeother(redirect)
-    elif rgex.search(r'Hie', equtext[-1]) == None:   
-        raise web.seeother(redirect)
+        renderfunc = advview_render
         
-    if err == 0:    
-        if isinstance(equtable.record,str):
-            equtable.record = equtable.equTableIndx
-            if not equtable.userEquIx == None:
-                equtable.userEquRecord[equtable.userEquIx] = equtable.equTableIndx
-            return renderfunc(webtex.concEqutoAlign(equlhs, equrhs, equtext),
-                                        equtable.equTableIndx, equtable.record)
-        elif equtable.record > equtable.equTableIndx :
-            equtable.record = equtable.equTableIndx
+    elif mode == 'inv':
+        equtable = session.invequT
+        renderfunc = inverseview_render   
+    if side == 'left':
             
-            return renderfunc(webtex.concEqutoAlign(equlhs, equrhs, equtext),
-                                        equtable.equTableIndx, equtable.record)
+        inps = {'postBut': webinp.postBut,
+                'color': webinp.color_drop_l,
+                'inp_expr': webinp.inp_expr_l}
+                    
+    elif side == 'right':
+            
+        inps = {'postBut': webinp.postBut,
+                'color': webinp.color_drop_r,
+                'inp_expr': webinp.inp_expr_r}
+                    
+    if inps['postBut'].find("mod_expr_mn") > -1:
+        op = 'merge_terms'
+        equtable.exprMods(op, inps['color'], side, 'const')
+        return renderfunc()
+            
+    elif inps['postBut'].find("mod_expr_mx") > -1:
+        op = 'merge_terms'
+        equtable.exprMods(op, inps['color'], side, 'xterm')
+        return renderfunc()
+            
+    elif inps['postBut'].find("mod_expr_rb") > -1:
+        op = 'remove_braces'
+        equtable.exprMods(op, inps['color'], side, 'dum')
+        return renderfunc()
+            
+    elif inps['postBut'].find("mod_expr_cf") > -1:
+        op = 'common_factor'      
+        try:
+            sym_fact = otsympify(inps['inp_expr'], evaluate=False)
+                    
+        except SympifyError:
+                return renderfunc('expr_error')
+  
         else:
-            return renderfunc(webtex.concEqutoAlign(equlhs, equrhs, equtext),
-                                        equtable.equTableIndx, equtable.record)
-    elif err == 2:
-        return renderfunc(webtex.concEqutoAlign(equlhs, equrhs, equtext),equtable.equTableIndx,
-                          equtable.record, errs['equ_error_load'])
+            if not test_linpoly(sym_fact, mode):
+                return renderfunc('inp_expr_error')
+            if ratsimp(sym_fact) == 0:
+                return renderfunc('zero_comm_fact')
+            str_fact = str(sym_fact)
+            equtable.exprMods(op, inps['color'], side, str_fact)
+            return renderfunc()
+
 
 def handleFileIO(webinp, mode):
     if mode == 'adv':
@@ -839,7 +851,7 @@ def handleFileIO(webinp, mode):
             newEqusText = uplEquArray[2]
             otsympify(newEqusL),otsympify(newEqusR)            
         except (SyntaxError,IOError, SympifyError, ValueError):
-            return render_questionsolved(mode, 2)
+            return questionsolved_render(mode, 2)
         else:
             equtable.clearEquTable()
             equtable.equTableLhs = newEqusL
