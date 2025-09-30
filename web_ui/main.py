@@ -75,7 +75,7 @@ class index:
         return render.index()
 
 #instructions front page    
-class ohjeet:
+class instr_fi:
     
     def GET(self):
         return render.instr_fi()
