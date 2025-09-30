@@ -69,7 +69,7 @@ class ohjeet:
     def GET(self):
         return render.instr_fi()
     
-#simple equation solving training page        
+#simple equation solving training page handling      
 class simpleview:
 
     def GET(self):
@@ -84,10 +84,12 @@ class simpleview:
         if not hasattr(session,'simplequT'):
             session.simplequT = otequhandle.EquTable('simple')
             session.sidebarStatus = 0
-            return simpleview_render('session_expired')     
+            return simpleview_render('session_expired')
+
         #catch inputs
         webinp = web.input()
         session.sidebarStatus = webinp.sidebarStatus
+
         #check what the user has tried to do
         if webinp.postBut == "modequ":
             try:
@@ -143,8 +145,9 @@ class simpleview:
                 json.dump([session.simplequT.equTableLhs, session.simplequT.equTableRhs, session.simplequT.equTableText],outfile)
             return open(rootpath+'/web_ui/sessions/'+sessid+'_oma_ratkaisu.txt').read()        
             
-
+#advanced equation solving training page handling
 class advview:
+
     #load page
     def GET(self):
         if not hasattr(session,'equT'):
@@ -218,14 +221,15 @@ class advview:
             return advops_handler(webinp, side)
         else:
             return advview_render()
-        
+
+#equation creation page handling        
 class inverseview:
     
     def GET(self):
         #init button strings
         but_str = webelements.get_button_strings()
 
-        #Check if the equation is not established
+        #check if the equation is not established
         if not hasattr(session,'invequT'):
             session.invequT = otequhandle.EquTable('inv')
             return render.inverseview([],[],[],[],but_str)
@@ -242,6 +246,7 @@ class inverseview:
         webinp = web.input()
         mode = 'adv'
         
+        #user starts creation
         if webinp.postBut == "start":
             try:
                 sym_equ_lhs = otsympify(webinp.inp_equ_lhs, evaluate = False)
@@ -324,7 +329,7 @@ class inverseview:
                 json.dump([[session.invequT.equTableLhs[-1]], [session.invequT.equTableRhs[-1]]],outfile)
             return open(rootpath+'/web_ui/sessions/'+sessid+'_oma_yhtalo.txt').read()
 
-      
+#classes for other pages handling      
 class newadvquestion:
     
     def GET(self):
@@ -438,7 +443,7 @@ def simpleview_render(err=0):
     but_str = webelements.get_button_strings(svar)
     
     if not hasattr(session,'sidebarStatus'):
-    session.sidebarStatus = 0  
+        session.sidebarStatus = 0  
         
     equlhs_str, equrhs_str, equtext = session.simplequT.getEquTable()
     if not equtext == []:
