@@ -54,21 +54,21 @@
       <h2 id="basic">Yhtälön perusratkaisija</h2>
       <p>Yhtälön perusratkaisijalla on mahdollista harjoitella yhtälöratkaisua ja sovelluksen käyttöä helposti lähestyttävällä tavalla.
       Perusratkaisijalla on mahdollista ratkoa yhtälöitä, joissa ei ole sulkulausekkeita.
-      Kaikki toiminnot, joilla ratkaisijaa ohjataan, kohdistuvat yhtälön molemmille puolille ja ovat saatavilla 'Toiminto'-pudostusvalikon alta. Mahdollisia toimintoja ovat:</p>
+      Kaikki toiminnot, joilla ratkaisijaa ohjataan, kohdistuvat yhtälön molemmille puolille ja ovat saatavilla 'Toiminto'-pudostusvalikon alta tai painikkeista. Mahdollisia toimintoja ovat:</p>
       <ul>
-      <li>Lisää termi: <b>L</b></li>
-      <li>Vähennä termi: <b>V</b></li>
-      <li>Kerro termillä: <b>K</b></li>
-      <li>Jaa termillä: <b>J</b></li>
-      <li>Yhdistä luvut <b>M</b></li>
-      <li>Yhdistä x-termit <b>M</b></li>
+      <li>Lisää termi</li>
+      <li>Vähennä termi</li>
+      <li>Kerro termillä</li>
+      <li>Jaa termillä</li>
+      <li>Yhdistä luvut (painike)</li>
+      <li>Yhdistä \(x\)-termit (painike)</li>
       </ul>
       <p>'Toiminto'-pudotusvalikon vieressä on tekstikenttä, mihin syötetään toiminnossa tarvittava termi.
        Jos halutaan esimerkiksi vähentää yhtälöstä puolittain \(2x\), pudotusvalikosta valitaan toiminto 'Vähennä termi:' ja viereiseen tekstikenttään syötetään 2*x. 
        Valitun toiminnon saa suoritettua klikkaamalla painiketta 'Tee toiminto'. 
-       Toiminnoista 'Yhdistä luvut:' ja 'Yhdistä x-termit' eivät vaadi mitää syötettä tekstikenttään. 
+       Toiminnat 'Yhdistä luvut:' ja 'Yhdistä x-termit' eivät vaadi mitää syötettä tekstikenttään ja tapahtuvat heti, kun toimintoa vastaavaa painiketta painetaan.. 
        'Yhdistä luvut'-toiminto laskee yhtälön molemmilta puolilta luvut yhteen ja 'Yhdistä x-termit' vastaavasti termit, jotka sisältävät muuttujia. 
-       Mikäli yhtälön muuttujana on jokin muu kuin \(x\), toiminto muuttuu vastaavaan muotoon (esim. muotoon 'Yhdistä t-termit').
+       Mikäli yhtälön muuttujana on jokin muu kuin \(x\), toiminto muuttuu vastaavaan muotoon (esim. muotoon 'Yhdistä \(t\)-termit').
        Kannattaa myös huomata, että toiminnot 'Kerro termillä:' ja 'Jaa termillä:' pitävät sisällään myös automaattisen sievennyksen.</p>
                 
       <h2 id="adv">Yhtälön edistynyt ratkaisija</h2>
@@ -76,16 +76,15 @@
       Edistyneellä ratkaisijalla on mahdollista ratkoa myös yhtälöitä, joissa on sulkulausekkeita.</p>
       <p>Sulkujen rajaamat lausekkeet on sovelluksessa väritetty eri värein, jotta toimintoja pystytään kohdistamaan haluttuihin kohtiin.
       Mahdolliset toiminnot on jaettu kolmeen osaan sen mukaan, halutaanko muokata yhtälön vasenta puolta, oikeaa puolta vai molempia puolia yhtä aikaa.
-      Yhtälön vasemmalle ja oikealle puolelle kohdistuvat toiminnot ovat samat. Nämä toiminnot ovat saatavilla 'Toiminto värille'-tekstin alta. Mahdollisia toimintoja ovat:</p>
+      Yhtälön vasemmalle ja oikealle puolelle kohdistuvat toiminnot ovat samat. Nämä toiminnot ovat saatavilla 'Toiminto värille'-tekstin alta erillisistä painikkeista. Mahdollisia toimintoja ovat:</p>
       <ul>
-      <li>Yhdistä luvut <b>M</b></li>
-      <li>Yhdistä x-termit <b>M</b></li>
-      <li>Poista sulut <b>M</b></li>
-      <li>Ota yht. tekijä <b>M</b></li>
+      <li>Yhdistä luvut </li>
+      <li>Yhdistä x-termit </li>
+      <li>Poista sulut </li>
+      <li>Ota yht. tekijä </li>
       </ul>
       <p>Nämä toiminnot voidaan kohdistaa lausekkeessa esiintyvien värien mukaisiin kohtiin. Haluttua kohtaa vastaava väri valitaan pudotusvalikosta 'Toiminto värille'-tekstin vierestä. 
-      Jos halutaan esimerkiksi kertoa lausekkeesta punaisella värjätty sulkulauseke auki, värivalikosta valitaan väri punainen ja toiminnoksi 'Poista sulut'. 
-      Tämä jälkeen klikataan painiketta 'Tee toiminto' vastaavasta muokkausosasta.</p>
+      Jos halutaan esimerkiksi kertoa lausekkeesta punaisella värjätty sulkulauseke auki, värivalikosta valitaan väri punainen ja klikataan 'Poista sulut' -painiketta. </p>
       <p>Tämän valikon toiminnoista vain 'Ota yht. tekijä' vaatii syötetteen tekstikenttään. 
       Tämän toiminnon avulla lausekkeesta on mahdollista yhdistellä lausekkeita, joissa on samoja termejä. 
       Esimerkki: Yhtälön vasen puoli on \(\require{color} 2{\color{red} (x+2)}-2 {\color{blue} (x+2)}\). Nämä termit saadaan helpoiten kumoamaan toisensa toimimalla seuraavasti:</p>
@@ -93,17 +92,17 @@
       <li>Valitse 'Muokkaa vasenta puolta'-osasta väriksi musta ja toiminnoksi 'Ota yht. tekijä'.</li>
       <li>Syötä 'Tekijä'-kenttään x+2 ja klikkaa painiketta 'Tee toiminto'.</li>
       <li>Tuloksena on lauseke \(\require{color} 0{\color{red} (x+2)}\).</li>
-      <li>Valitse 'Muokkaa vasenta puolta'-osasta väriksi punainen ja toiminnoksi 'Poista sulut'.</li>
-      <li>Klikkaamalla 'Tee toiminto'-painiketta, vasen puoli sievenee nollaksi.</li>
+      <li>Valitse 'Muokkaa vasenta puolta'-osasta väriksi punainen ja klikkaa 'Poista sulut' -painiketta.</li>
+      <li>Vasen puoli sievenee nollaksi.</li>
       </ol>
-      <p>'Yhdistä luvut'-toiminto laskee värin mukaan valitun lausekkeen luvut yhteen ja 'Yhdistä x-termit' vastaavasti termit, jotka sisältävät muuttujia. 
-      Mikäli yhtälön muuttujana on jokin muu kuin \(x\), toiminto muuttuu vastaavaan muotoon (esim. muotoon 'Yhdistä t-termit'). </p>
+      <p>'Yhdistä luvut'-painikkeen painaminen laskee värin mukaan valitun lausekkeen luvut yhteen ja 'Yhdistä \(x\)-termit' vastaavasti termit, jotka sisältävät muuttujia. 
+      Mikäli yhtälön muuttujana on jokin muu kuin \(x\), toiminto muuttuu vastaavaan muotoon (esim. muotoon 'Yhdistä \(t\)-termit'). </p>
       <p>Yhtälöä voidaan muokata myös puolittain kohdassa 'Muokkaa puolittain'. Tällöin käytössä ovat toiminnot</p>
       <ul>
-      <li>Lisää termi: <b>L</b></li>
-      <li>Vähennä termi: <b>V</b></li>
-      <li>Kerro termillä: <b>K</b></li>
-      <li>Jaa termillä: <b>J</b></li>
+      <li>Lisää termi</li>
+      <li>Vähennä termi</li>
+      <li>Kerro termillä</li>
+      <li>Jaa termillä</li>
       </ul>
       <p>'Toiminto'-pudotusvalikon vieressä on tekstikenttä, mihin syötetään toiminnossa tarvittava termi.
        Jos halutaan esimerkiksi vähentää yhtälöstä puolittain \(2x\), pudotusvalikosta valitaan toiminto 'Vähennä termi:' ja viereiseen tekstikenttään syötetään 2*x. 
@@ -115,21 +114,21 @@
          
        <p>Yhtälön rakentaminen toimii samalla tavalla kuin <a href="#adv">edistynyt yhtälön ratkaiseminen</a>.Yhtälön vasemmalle ja oikealle puolelle kohdistuvat toiminnot ovat samat. Nämä toiminnot ovat saatavilla 'Toiminto värille'-tekstin alta. Mahdollisia toimintoja ovat:</p>
       <ul>
-      <li>Yhdistä luvut <b>M</b></li>
-      <li>Yhdistä x-termit <b>M</b></li>
-      <li>Poista sulut <b>M</b></li>
-      <li>Ota yht. tekijä <b>M</b></li>
+      <li>Yhdistä luvut</li>
+      <li>Yhdistä x-termit</li>
+      <li>Poista sulut</li>
+      <li>Ota yht. tekijä</li>
       </ul>
       <p>Nämä toiminnot voidaan kohdistaa lausekkeessa esiintyvien värien mukaisiin kohtiin. </p>
       <p>Yhtälöä voidaan muokata myös puolittain kohdassa 'Muokkaa puolittain'. Tällöin käytössä ovat toiminnot</p>
       <ul>
-      <li>Lisää termi: <b>L</b></li>
-      <li>Vähennä termi: <b>V</b></li>
-      <li>Kerro termillä: <b>K</b></li>
-      <li>Jaa termillä: <b>J</b></li>
+      <li>Lisää termi</li>
+      <li>Vähennä termi</li>
+      <li>Kerro termillä</li>
+      <li>Jaa termillä</li>
       </ul>
       <p>'Toiminto'-pudotusvalikon vieressä on tekstikenttä, mihin syötetään toiminnossa tarvittava termi.</p>
-      <p>Kun haluttu yhtälö on muodostettu, se voidaan tallentaa omiin perusyhtälöihin painikkeella 'Tallenna perusyhtälönä' tai omiin joustaviin yhtälöihin painikkeella 'Tallenna edistynyta yhtälönä.' 
+      <p>Kun haluttu yhtälö on muodostettu, se voidaan tallentaa omiin perusyhtälöihin painikkeella 'Tallenna perusyhtälönä' tai omiin joustaviin yhtälöihin painikkeella 'Tallenna edistyneenä yhtälönä.' 
       <h2 id="own">Omat yhtälöt</h2>
       <p>Sovelluksessa on mahdollista luoda myös omia yhtälöitä niin perusratkaisijalle kuin edistyneellekin ratkaisijalle.
       Tämä onnistuu klikkaamalla vastaavassa yhtälönratkaisijassa vasemman valikon linkkiä 'Omat yhtälöt.'</p>

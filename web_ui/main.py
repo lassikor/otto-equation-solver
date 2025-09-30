@@ -435,7 +435,10 @@ def simpleview_render(err=0):
     #variable used
     svar = session.simplequT.symvar
     #button strings
-    but_str = webelements.get_button_strings(svar)  
+    but_str = webelements.get_button_strings(svar)
+    
+    if not hasattr(session,'sidebarStatus'):
+    session.sidebarStatus = 0  
         
     equlhs_str, equrhs_str, equtext = session.simplequT.getEquTable()
     if not equtext == []:
@@ -462,7 +465,7 @@ def advview_render(err = 0):
     #equation table for viewing
     equlhs_str, equrhs_str, equtext = session.equT.getEquTable()
     
-    if not hasattr(session,'equT.sidebarStatus'):
+    if not hasattr(session,'sidebarStatus'):
         session.sidebarStatus = 0
 
     #button strings

@@ -1,145 +1,163 @@
 $def with (inp_expr, num_ops, record, err=[])
 <!DOCTYPE html>
+
 <head>
-<meta charset="UTF-8">
+  <meta charset="UTF-8">
 
-<script type="text/javascript"
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+  </script>
 
-<script type="text/x-mathjax-config">
+  <script type="text/x-mathjax-config">
   	MathJax.Hub.Config({ TeX: { extensions: ["color.js"] }});
-	MathJax.Hub.Config({"HTML-CSS": {preferredFont: "STIX"}});
-</script>
+	  MathJax.Hub.Config({"HTML-CSS": {preferredFont: "STIX"}});
+  </script>
 
-<script>
-   MathJax.Hub.Queue(
-     function () {
- 		var w = window.innerWidth;
-		document.getElementById('equ').style.visibility = "";
-		if (w < 1000)
-		  document.getElementById('equ').style.fontSize="80%";
-		else if (w < 1200)
-		  document.getElementById('equ').style.fontSize="100%";
-		else if (w < 1400)
-	      document.getElementById('equ').style.fontSize="120%";   
-		else
-		  document.getElementById('equ').style.fontSize="133%";		    	 
-     }
-     );
-</script>
-<script type="text/javascript" language="JavaScript">
-  function HandleBrowseClick() {
-   var fileinput = document.getElementById("upload_solution");
-   fileinput.click();
-  }
-  function Handlechange() {
-   var fileinput = document.getElementById("upload_solution");
-   var filetext = fileinput.value;
-   var new_filetext = filetext.replace("C:\\fakepath\\", "");
-   var textinput = document.getElementById("filename");
-   textinput.value = new_filetext;
-  }
-  function instr() {
-   window.open("/ohjeet","Ohjeet","width=800, height=600");
-  }
-  function openNav() {
-  document.getElementById("advSidebar").style.width = "240px";
-  document.getElementById("advSidebar").style.margin = "20px 0px";
-  document.getElementById("advSidebar").style.padding = "0px 10px 20px";
-  document.getElementById("main_solved").style.marginRight = "280px";
-  document.getElementById("bottom").style.marginRight = "0px";
-  document.getElementById("sidebarbtn").style.visibility = "hidden";
-  document.getElementById("advSidebar").style.borderWidth = "1px";
-}
+  <script>
+    MathJax.Hub.Queue(
+      function () {
+        var w = window.innerWidth;
+        document.getElementById('equ').style.visibility = "";
+        if (w < 1000)
+          document.getElementById('equ').style.fontSize = "80%";
+        else if (w < 1200)
+          document.getElementById('equ').style.fontSize = "100%";
+        else if (w < 1400)
+          document.getElementById('equ').style.fontSize = "120%";
+        else
+          document.getElementById('equ').style.fontSize = "133%";
+      }
+    );
+  </script>
 
-function closeNav() {
-  document.getElementById("advSidebar").style.width = "0";
-  document.getElementById("advSidebar").style.padding = "0 0 20px";
-  document.getElementById("advSidebar").style.margin = "20px -2px";
-  document.getElementById("advSidebar").style.borderWidth = "0";
-  document.getElementById("main_solved").style.marginRight = "40px";
-  document.getElementById("bottom").style.marginRight = "0px";
-  document.getElementById("sidebarbtn").style.visibility = "visible";
-}
-</script>
-<title>OTTO-yhtälönratkaisija</title>
-<link rel="stylesheet" type="text/css" href="static/default.css">
+  <script type="text/javascript" language="JavaScript">
+
+    function HandleBrowseClick() {
+      var fileinput = document.getElementById("upload_solution");
+      fileinput.click();
+    }
+
+    function Handlechange() {
+      var fileinput = document.getElementById("upload_solution");
+      var filetext = fileinput.value;
+      var new_filetext = filetext.replace("C:\\fakepath\\", "");
+      var textinput = document.getElementById("filename");
+      textinput.value = new_filetext;
+    }
+
+    function instr() {
+      window.open("/instr_fi", "Ohjeet", "width=800, height=600");
+    }
+
+    function openNav() {
+      document.getElementById("advSidebar").style.width = "240px";
+      document.getElementById("advSidebar").style.margin = "20px 0px";
+      document.getElementById("advSidebar").style.padding = "0px 10px 20px";
+      document.getElementById("main_solved").style.marginRight = "280px";
+      document.getElementById("bottom").style.marginRight = "0px";
+      document.getElementById("sidebarbtn").style.visibility = "hidden";
+      document.getElementById("advSidebar").style.borderWidth = "1px";
+    }
+
+    function closeNav() {
+      document.getElementById("advSidebar").style.width = "0";
+      document.getElementById("advSidebar").style.padding = "0 0 20px";
+      document.getElementById("advSidebar").style.margin = "20px -2px";
+      document.getElementById("advSidebar").style.borderWidth = "0";
+      document.getElementById("main_solved").style.marginRight = "40px";
+      document.getElementById("bottom").style.marginRight = "0px";
+      document.getElementById("sidebarbtn").style.visibility = "visible";
+    }
+  </script>
+
+  <title>OTTO-yhtälönratkaisija</title>
+  <link rel="stylesheet" type="text/css" href="static/default.css">
 </head>
+
 <body>
-<div class="container wrapper">
- <div id="top">
-  <ul id="menu">
-   <li><a href="/">OTTO-yhtälönratkaisija</a>
-  </ul>
- </div>
- <hr>
- <div class="wrapper">
-  <div id="menubar">
-   <div id="menu1">
-   <h3>Sovellus</h3>
-   <ul id="menulist">
-    <li class="menuitem"><a href="/oldadvquestion">Aloita alusta</a>
-    <li class="menuitem"><a href="/newadvquestion">Arvo uusi yhtälö</a>
-    <li class="menuitem"><a href="/createadvquestion">Omat yhtälöt</a>
-    <li class="menuitem"><a href="/inverseview">Rakenna yhtälö</a>  
-    <li class="menuitem"><a href="/simpleview">Perusratkaisija</a>
-    <li class="menuitem"><a onclick="instr()">Ohjeet</a>
-   </ul>
-  </div>
-  <div id="menu2">
-   <h3>Linkkejä</h3>
-   <ul id="menulist2">
-    <li class="menuitem"><a href="/">Etusivu</a></li>
+  <div class="container wrapper">
+    <div id="top">
+      <ul id="menu">
+        <li><a href="/">OTTO-yhtälönratkaisija</a>
+      </ul>
+    </div>
+    <hr>
+    <div class="wrapper">
+      <div id="menubar">
+        <div id="menu1">
+          <h3>Sovellus</h3>
+          <ul id="menulist">
+            <li class="menuitem"><a href="/oldadvquestion">Aloita alusta</a>
+            <li class="menuitem"><a href="/newadvquestion">Arvo uusi yhtälö</a>
+            <li class="menuitem"><a href="/createadvquestion">Omat yhtälöt</a>
+            <li class="menuitem"><a href="/inverseview">Rakenna yhtälö</a>
+            <li class="menuitem"><a href="/simpleview">Perusratkaisija</a>
+            <li class="menuitem"><a onclick="instr()">Ohjeet</a>
+          </ul>
+        </div>
+        <div id="menu2">
+          <h3>Linkkejä</h3>
+          <ul id="menulist2">
+            <li class="menuitem"><a href="/">Etusivu</a></li>
 
-   </ul>
-  </div>
-  </div>
-  <div id="main_solved">
-   <div id="equshow">
-   <h2>Ratkaise yhtälö (edistynyt)</h2>
-   <table>
-    <tr>
-     <td colspan="3">
-      <div id="equ" style="visibility:hidden; font-size:133%;">$:inp_expr</div>
-     </td>
-    </tr>
-   </table>
-    </div>
-    <div id="sidebarbtn" style="font-size:30px;cursor:pointer;" onclick="openNav()">&#9776;</div>
+          </ul>
+        </div>
+      </div>
+      <div id="main_solved">
+        <div id="equshow">
+          <h2>Ratkaise yhtälö (edistynyt)</h2>
+          <table>
+            <tr>
+              <td colspan="3">
+                <div id="equ" style="visibility:hidden; font-size:133%;">$:inp_expr</div>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div id="sidebarbtn" style="font-size:30px;cursor:pointer;" onclick="openNav()">&#9776;</div>
 
-    $if num_ops == record:
-      <div id="bottom"><h2>Mahtavaa, teit ennätyksesi!</h2><p>Käytit $record toimintoa.</p><p>Kokeile saatko parannettua tulostasi: <a href="/oldadvquestion">Yritä uudelleen</a></p></div>
-    $else:
-      <div id="bottom"><p>Käytit $num_ops toimintoa.</p><p>Kokeile saatko parannettua tulostasi: <a href="/oldadvquestion">Yritä uudelleen</a></p></div>
-   </div>
-  <div id="sidebarbtn" style="font-size:30px;cursor:pointer;" onclick="openNav()">&#9776;</div>
-    <div class="sidebar" id="advSidebar" >
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-   <h3>Tietoja</h3>
-   <p>Toimintoja nyt: $num_ops</p>
-   <p>Paras suoritus: $record</p>
-   <h3>Tuo ratkaisu ohjelmaan</h3>
-   <form name="upload_solution_form" method="post" enctype="multipart/form-data" action="">
-    <div>
-     <input type="file" class="upload" name="upload_solution" id="upload_solution"
-      style="display: none" onChange="Handlechange();" /> <input type="button" class="colBut"
-      value="Valitse tiedosto" id="fakeBrowse" onclick="HandleBrowseClick();"/>
+        $if num_ops == record:
+        <div id="bottom">
+          <h2>Mahtavaa, teit ennätyksesi!</h2>
+          <p>Käytit $record toimintoa.</p>
+          <p>Kokeile saatko parannettua tulostasi: <a href="/oldadvquestion">Yritä uudelleen</a></p>
+        </div>
+        $else:
+        <div id="bottom">
+          <p>Käytit $num_ops toimintoa.</p>
+          <p>Kokeile saatko parannettua tulostasi: <a href="/oldadvquestion">Yritä uudelleen</a></p>
+        </div>
+      </div>
+      <div id="sidebarbtn" style="font-size:30px;cursor:pointer;" onclick="openNav()">&#9776;</div>
+      <div class="sidebar" id="advSidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <h3>Tietoja</h3>
+        <p>Toimintoja nyt: $num_ops</p>
+        <p>Paras suoritus: $record</p>
+        <h3>Tuo ratkaisu ohjelmaan</h3>
+        <form name="upload_solution_form" method="post" enctype="multipart/form-data" action="">
+          <div>
+            <input type="file" class="upload" name="upload_solution" id="upload_solution" style="display: none"
+              onChange="Handlechange();" /> <input type="button" class="colBut" value="Valitse tiedosto" id="fakeBrowse"
+              onclick="HandleBrowseClick();" />
+          </div>
+          <div>
+            <input class="inp_field" type="text" id="filename" readonly="true" style="width: 10.4em;" />
+          </div>
+          <div>
+            <button class="colBut" id="buttonUploadFile" name="postBut" value="upload_solution_file">Tuo
+              ratkaisu</button>
+          </div>
+          
+          <h3>Vie ratkaisu tiedostoon</h3>
+          <button class="colBut" id="buttonDownloadFile" name="postBut" value="download_solution">Vie ratkaisu</button>
+          <input type="hidden" id="sidebarStatus4" name="sidebarStatus" value="0">
+        </form>
+      </div>
     </div>
-    <div>
-     <input class ="inp_field" type="text" id="filename" readonly="true" style="width: 10.4em;" />
-    </div>
-    <div>
-     <button class="colBut" id="buttonUploadFile" name="postBut" value="upload_solution_file">Tuo ratkaisu</button>
-    </div>
-   <h3>Vie ratkaisu tiedostoon</h3>
-    <button class="colBut" id="buttonDownloadFile" name="postBut" value="download_solution">Vie ratkaisu</button>
-    <input type="hidden" id="sidebarStatus4" name="sidebarStatus" value="0">
-   </form>
-  </div>
- </div>
     $if not err == []:
-     $:err 
- </div>
-</body> 
+    $:err
+  </div>
+</body>
+
 </html>
