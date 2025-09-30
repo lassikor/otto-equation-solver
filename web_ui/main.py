@@ -1,4 +1,15 @@
 # -*- coding: utf8 -*-
+
+'''
+Main file for the web UI otto-equation-solver application
+This file is part of the otto-equation-solver project.
+Copyright (C) 2020-2025 Lassi Korhonen
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+'''
 import sys
 import os
 rootpath = "C:\\Users\\lassikor\\OneDrive - University of Oulu and Oamk\\projects\\otto-equation-solver\\"

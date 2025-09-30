@@ -85,9 +85,9 @@ $def with (new_equation, equ_lhs_str, equ_rhs_str, user_equs, err=[])
             </tr>
             <tr>
               <td colspan="3" id="buttoncol">
-                <button class="colBut2" id="postBut" value="show_equ" name="postBut">Näytä yhtälö</button>
-                <button class="colBut2" id="postBut" value="save_equ" name="postBut">Tallenna yhtälö</button>
-                <button class="colBut2" id="postBut" value="solve_equ_x" name="postBut">Ratkaise yhtälö</button>
+                <button class="colBut2" id="showEquBut" value="show_equ" name="postBut">Näytä yhtälö</button>
+                <button class="colBut2" id="saveEquBut" value="save_equ" name="postBut">Tallenna yhtälö</button>
+                <button class="colBut2" id="solveEquBut" value="solve_equ_x" name="postBut">Ratkaise yhtälö</button>
               </td>
             </tr>
           </table>
@@ -102,9 +102,9 @@ $def with (new_equation, equ_lhs_str, equ_rhs_str, user_equs, err=[])
         <input class="colBut" type="button" value="Valitse tiedosto" id="fakeBrowse" onclick="HandleBrowseClick();" />
         <input class="inp_field" type="text" id="filename" readonly="true" size="15" />
       </div>
-      <div><button class="colBut" id="postBut" name="postBut" value="file_upload">Tuo yhtälöt</button></div>
+      <div><button class="colBut" id="fileuploadBut" name="postBut" value="file_upload">Tuo yhtälöt</button></div>
       <h3>Vie omat yhtälöt tiedostoon</h3>
-      <button class="colBut" id="postBut" name="postBut" value="file_download">Vie yhtälöt</button>
+      <button class="colBut" id="filedownloadBut" name="postBut" value="file_download">Vie yhtälöt</button>
     </div>
     </form>
   </div>
