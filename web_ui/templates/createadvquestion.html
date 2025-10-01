@@ -93,24 +93,26 @@ $def with (new_equation, equ_lhs_str, equ_rhs_str, user_equs, err=[])
           </table>
         </div>
    
-
-    <div class="sidebar_cr" id="sidebar_cr">
-      <h2>Omat yhtälöt edistyneelle ratkaisijalle</h2>
-      <div id="user_equs" style="visibility: hidden; font-size: 120%; text-align:left; width:100%">$:user_equs</div>
-      <h3>Tuo yhtälöitä ohjelmaan</h3>
-      <div><input class="upload" type="file" name="upload_equs" id="upload_equs" style="display:none" onChange="Handlechange();" />
-        <input class="colBut" type="button" value="Valitse tiedosto" id="fakeBrowse" onclick="HandleBrowseClick();" />
-        <input class="inp_field" type="text" id="filename" readonly="true" size="15" />
-      </div>
-      <div><button class="colBut" id="fileuploadBut" name="postBut" value="file_upload">Tuo yhtälöt</button></div>
-      <h3>Vie omat yhtälöt tiedostoon</h3>
-      <button class="colBut" id="filedownloadBut" name="postBut" value="file_download">Vie yhtälöt</button>
-    </div>
-    </form>
+<div class="sidebar_cr" id="sidebar_cr">
+  <h2>Omat yhtälöt edistyneelle ratkaisijalle</h2>
+  <div id="user_equs" style="visibility: hidden; font-size: 120%; text-align:left; width:100%">$:user_equs</div>
+  <h3>Tuo yhtälöitä ohjelmaan</h3>
+  <div>
+    <input class="upload" type="file" name="upload_equs" id="upload_equs" style="display:none"
+      onChange="Handlechange();" />
+    <input class="colBut" type="button" value="Valitse tiedosto" id="fakeBrowse" onclick="HandleBrowseClick();" />
+    <input class="inp_field" type="text" id="filename" readonly="true" size="15" />
   </div>
+  <div><button class="colBut" id="fileuploadBut" name="postBut" value="file_upload">Tuo yhtälöt</button></div>
+  <h3>Vie omat yhtälöt tiedostoon</h3>
+  <button class="colBut" id="filedownloadBut" name="postBut" value="file_download">Vie yhtälöt</button>
+</div>
+</form>
+</div>
   $if not err == []:
   $:err
   </div>
 </body>
 
 </html>
+

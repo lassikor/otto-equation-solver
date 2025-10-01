@@ -4,6 +4,26 @@ from otsympify import otsympify, SympifyError
 from itertools import combinations
 x = symbols('x')
 
+def tidymul(expr):
+    expr_args = list(expr.args)
+    for term in expr_args:
+        if term.is_Mul:
+            new_term_ix = expr_args.index(term)
+            new_term_list = list(term.args)
+            for j in range(1,len(new_term_list)):
+                if isinstance(new_term_list[j], (Integer, int)):
+                    new_term_list[0]=Mul(new_term_list[j],new_term_list[0],evaluate=True)
+                    new_term_list.pop(j)
+                    expr_args[new_term_ix]=Mul(*new_term_list,evaluate=False)
+                if j>=len(new_term_list):
+                    break
+                
+    return expr.func(*expr_args, evaluate=False)
+
+def tidyexpr(expr_str):
+    expr_str = expr_str.replace(" - 1*"," - ")
+    expr_str = expr_str.replace("1*(","(")
+
 def cleanzeros(inp_expr_str, evaluate=False):
     inp_expr  = otsympify(inp_expr_str, evaluate=evaluate)   
     if isinstance(inp_expr, Add):
@@ -347,7 +367,7 @@ class handleTree(object):
         return expr, errorFlag
             
     
-
+    #find common factor
     def inc_common_factor(self, color, str_factor):
         from sympy import sympify
         errorFlag = 0
@@ -422,7 +442,7 @@ class handleTree(object):
             
         return expr, errorFlag
             
-        
+    #remove braces from multiplications    
     def remove_braces(self, color):
         errorFlag = 0
         if color == 'black':
@@ -477,8 +497,15 @@ class handleTree(object):
                         tmp_expr = 0
                         for term in arg_w_br.args:
                             if term.is_Mul:
-                                new_term_list = list(term.args)   
+                                new_term_list = list(term.args)
                                 new_term_list[0]=Mul(multipl,new_term_list[0],evaluate=True)
+                                for j in range(1, len(new_term_list)):
+                                    if isinstance(new_term_list[j], (Integer, int)):
+                                        new_term_list[0]=Mul(new_term_list[j],new_term_list[0],evaluate=True)
+                                        new_term_list.pop(j)
+                                    if j>=len(new_term_list):
+                                        break       
+                                
                                 tmp_expr = Add(tmp_expr, Mul(*new_term_list, evaluate=False), evaluate=False)
                                 tmp_expr = cleanzeros_sym(tmp_expr,False)
                             else:

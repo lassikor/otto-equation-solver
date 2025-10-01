@@ -36,7 +36,28 @@ $def with (inp_expr, dropmenu_color_l, dropmenu_color_r, symvar, but_str, err=[]
     function instr() {
       window.open("/instr_fi#inv", "Ohjeet", "width=800, height=530");
     }
+
+    function openNav() {
+      document.getElementById("invSidebar").style.width = "240px";
+      document.getElementById("invSidebar").style.margin = "20px 0px";
+      document.getElementById("invSidebar").style.padding = "0px 10px 20px";
+      document.getElementById("main").style.marginRight = "280px";
+      document.getElementById("bottom").style.marginRight = "0px";
+      document.getElementById("sidebarbtn").style.visibility = "hidden";
+      document.getElementById("invSidebar").style.borderWidth = "1px";
+    }
+
+    function closeNav() {
+      document.getElementById("invSidebar").style.width = "0";
+      document.getElementById("invSidebar").style.padding = "0 0 20px";
+      document.getElementById("invSidebar").style.margin = "20px -2px";
+      document.getElementById("invSidebar").style.borderWidth = "0";
+      document.getElementById("main").style.marginRight = "40px";
+      document.getElementById("bottom").style.marginRight = "0px";
+      document.getElementById("sidebarbtn").style.visibility = "visible";
+    }
   </script>
+
   <title>OTTO-yhtälönratkaisija</title>
   <link rel="stylesheet" type="text/css" href="static/default.css">
 </head>
@@ -71,57 +92,59 @@ $def with (inp_expr, dropmenu_color_l, dropmenu_color_r, symvar, but_str, err=[]
 
     <div id="main">
       <div>
-      <h2>Rakenna oma yhtälö</h2>
-      <form method="post">
-        <table>
-          <tr>
-            <td>
-              <p>Syötä haluamasi ratkaisu:</p>
-            </td>
-            <td style="text-align: right;"><input class="inp_field" type="text" id="inp_equ_lhs" name="inp_equ_lhs" size="5" /></td>
-            <td>\(=\)</td>
-            <td style="text-align: left;"><input class="inp_field" type="text" id="inp_equ_rhs" name="inp_equ_rhs" size="5" /></td>
-          </tr>
-          <tr>
-            <td style="text-align: center;" id="buttoncol"><button class="colBut" id="postBut" value="start" name="postBut">Luo
-                yhtälö</button>
-            </td>
-            <td></td>
-            <td></td>
-          </tr>
-        </table>
-      </form>
+        <h2>Rakenna oma yhtälö</h2>
+        <form method="post">
+          <table>
+            <tr>
+              <td>
+                <p>Syötä haluamasi ratkaisu:</p>
+              </td>
+              <td style="text-align: right;"><input class="inp_field" type="text" id="inp_equ_lhs" name="inp_equ_lhs"
+                  size="5" /></td>
+              <td>\(=\)</td>
+              <td style="text-align: left;"><input class="inp_field" type="text" id="inp_equ_rhs" name="inp_equ_rhs"
+                  size="5" /></td>
+            </tr>
+            <tr>
+              <td style="text-align: center;" id="buttoncol"><button class="colBut" id="postBut" value="start"
+                  name="postBut">Luo
+                  yhtälö</button>
+              </td>
+              <td></td>
+              <td></td>
+            </tr>
+          </table>
+        </form>
       </div>
       <hr id="rule">
       <div style="display: flex; flex-wrap: wrap;">
-      $if not inp_expr == []:
-  
-      <div id="equ" style="visibility:hidden; font-size:120%; width:100%; text-align:left" >$:inp_expr</div>
+        $if not inp_expr == []:
+        <div id="equ" style="visibility:hidden; font-size:120%; width:100%; text-align:left">$:inp_expr</div>
 
-      <form name="l_oprs" method="post">
-        <fieldset class="adv-funcForms">
-          <legend>Muokkaa vasenta puolta</legend>
-          <table>
-            <tr>
-              <td colspan="3">Toiminto värille $:dropmenu_color_l</td>
-            </tr>
-            <tr>
-              <td class="buttoncol"><button id="buttonMergeNumbers_l" value="mod_expr_mn_left" name="postBut"
-                  class="colBut2" title="Yhdistä luvut">$:but_str["but_nj_str"]</button></td>
-              <td class="buttoncol"><button id="buttonMergeVariables_l" value="mod_expr_mx_left" name="postBut"
-                  class="colBut2" title="Yhdistä $:symvar-termit ">$:but_str["but_xj_str"]</button></td>
-              <td> <button id="buttonRemoveBraces_l" value="mod_expr_rb_left" name="postBut" class="colBut2"
-                  title="Poista sulut">$:but_str["but_rp_str"]</button></td>
-            </tr>
-            <tr>
-              <td colspan="3" class="buttoncol"><button id="buttonCommonFactor_l" value="mod_expr_cf_left"
-                  name="postBut" class="colBut" title="Ota yhteinen tekijä">Ota yhteinen tekijä</button>
-                <input type="text" id="inpExpr_l" name="inp_expr_l" size="6" value="1" class="inp_field" />
-              </td>
-            </tr>
-          </table>
-        </fieldset>
-      </form>
+        <form name="l_oprs" method="post">
+          <fieldset class="adv-funcForms">
+            <legend>Muokkaa vasenta puolta</legend>
+            <table>
+              <tr>
+                <td colspan="3">Toiminto värille $:dropmenu_color_l</td>
+              </tr>
+              <tr>
+                <td class="buttoncol"><button id="buttonMergeNumbers_l" value="mod_expr_mn_left" name="postBut"
+                    class="colBut2" title="Yhdistä luvut">$:but_str["but_nj_str"]</button></td>
+                <td class="buttoncol"><button id="buttonMergeVariables_l" value="mod_expr_mx_left" name="postBut"
+                    class="colBut2" title="Yhdistä $:symvar-termit ">$:but_str["but_xj_str"]</button></td>
+                <td> <button id="buttonRemoveBraces_l" value="mod_expr_rb_left" name="postBut" class="colBut2"
+                    title="Poista sulut">$:but_str["but_rp_str"]</button></td>
+              </tr>
+              <tr>
+                <td colspan="3" class="buttoncol"><button id="buttonCommonFactor_l" value="mod_expr_cf_left"
+                    name="postBut" class="colBut" title="Ota yhteinen tekijä">Ota yhteinen tekijä</button>
+                  <input type="text" id="inpExpr_l" name="inp_expr_l" size="6" value="1" class="inp_field" />
+                </td>
+              </tr>
+            </table>
+          </fieldset>
+        </form>
 
         <form name="lr_oprs" method="post">
           <fieldset class="adv-funcForms">
@@ -137,7 +160,7 @@ $def with (inp_expr, dropmenu_color_l, dropmenu_color_r, symvar, but_str, err=[]
                     <option value="mul">Kerro termillä:</option>
                     <option value="div">Jaa termillä:</option>
                   </select></td>
-                <td><input type="text" id="inp_expr_lr" name="inp_expr_lr" size="6" value="0" class="inp_field"/></td>
+                <td><input type="text" id="inp_expr_lr" name="inp_expr_lr" size="6" value="0" class="inp_field" /></td>
               </tr>
               <tr>
                 <td colspan="2" style="text-align: center;" id="buttoncol">
@@ -172,32 +195,37 @@ $def with (inp_expr, dropmenu_color_l, dropmenu_color_r, symvar, but_str, err=[]
             </table>
           </fieldset>
         </form>
-</div>
-        <div style = "text-align:center;">
+      </div>
+        <div style="text-align:center;">
           <form name="save_equ_form" method="post">
-            <button class="colBut2"  id="postBut" value="save_simple_equ" name="postBut">Tallenna perusyhtälönä</button>
+            <button class="colBut2" id="postBut" value="save_simple_equ" name="postBut">Tallenna perusyhtälönä</button>
             <button class="colBut2" id="postBut" value="save_adv_equ" name="postBut">Tallenna edistyneenä
               yhtälönä</button>
           </form>
         </div>
-    </div>
-    <div class="sidebar">
-      <h3>Tuo yhtälö ohjelmaan</h3>
-      <form name="upload_equation_form" method="post" enctype="multipart/form-data" action="">
-        <div>
-          <input type="file" class="upload" name="upload_equation" id="upload_equation" style="display: none"
-            onChange="Handlechange();" /> <input type="button" value="Valitse tiedosto" id="fakeBrowse"
-            onclick="HandleBrowseClick();" />
-        </div>
-        <div>
-          <input type="text" id="filename" readonly="true" size="15" />
-        </div>
-        <div>
-          <button id="postBut" name="postBut" value="upload_equation_file">Tuo yhtälö</button>
-        </div>
-        <h3>Tallenna yhtälö tiedostoon</h3>
-        <button id="postBut" name="postBut" value="download_equation">Tallenna yhtälö</button>
-      </form>
+      
+      <div id="sidebarbtn" style="font-size:30px;cursor:pointer;" onclick="openNav()">&#9776;</div>
+      <div class="sidebar" id="invSidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+        <h3>Tuo ratkaisu ohjelmaan</h3>
+        <form name="upload_solution_form" method="post" enctype="multipart/form-data" action="">
+          <div>
+            <input type="file" class="upload" name="upload_solution" id="upload_solution" style="display: none"
+              onChange="Handlechange();" /> <input class="colBut" type="button" value="Valitse tiedosto" id="fakeBrowse"
+              onclick="HandleBrowseClick();" />
+          </div>
+          <div>
+            <input class="inp_field" type="text" id="filename" readonly="true" style="width: 10.4em;" />
+          </div>
+          <div>
+            <button class="colBut" id="buttonUpload" name="postBut" value="upload_solution_file">Tuo ratkaisu</button>
+          </div>
+          <h3>Vie ratkaisu tiedostoon</h3>
+          <button class="colBut" id="buttonDownload" name="postBut" value="download_solution">Vie ratkaisu</button>
+          <input type="hidden" id="sidebarStatus" name="sidebarStatus" value="0">
+        </form>
+      </div>
     </div>
     $if not err == []:
     $:err

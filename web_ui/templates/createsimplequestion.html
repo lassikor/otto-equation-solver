@@ -97,14 +97,14 @@ $def with (new_equation, equ_lhs_str, equ_rhs_str, user_equs, err=[])
 
         <div class="sidebar_cr" id="sidebar_cr">
           <h2>Omat yhtälöt perusratkaisijalle</h2>
-          <div id="user_equs" style="visibility: hidden; font-size: 120%; width:100%; text-align:left;">$:user_equs
-          </div>
+          <div id="user_equs" style="visibility: hidden; font-size: 120%; width:100%; text-align:left;">$:user_equs</div>
           <h3>Tuo yhtälöitä ohjelmaan</h3>
           <div>
             <input class="upload" type="file" name="upload_equs" id="upload_equs" style="display:none" onChange="Handlechange();" />
             <input class="colBut" type="button" value="Valitse tiedosto" id="fakeBrowse" onclick="HandleBrowseClick();" />
+            <input class="inp_field" type="text" id="filename" readonly="true" size="15" />
           </div>
-          <div><input class="inp_field" type="text" id="filename" readonly="true" size="15" /></div>
+          
           <div><button class="colBut" id="fileuploadBut" name="postBut" value="file_upload">Tuo yhtälöt</button>
           </div>
           <h3>Vie omat yhtälöt tiedostoon</h3>

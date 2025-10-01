@@ -60,7 +60,7 @@ session = web.session.Session(app, web.session.DiskStore(rootpath+'web_ui\\sessi
 #error messages
 errs = {'own_equs_full': u'<script>window.alert("Vain kymmenen omaa yhtälöä sallittu!")</script>',
         'expr_error':u'<script>window.alert("Syöttämääsi lauseketta ei voitu muodostaa! Unohditko näppäillä kertomerkin?")</script>',
-        'inp_expr_error': u'<script>window.alert("Syöttämäsi lauseke ei kelpaa. Vain lineaariset lausekkeet kelpaavat!")</script>',        
+        'inp_expr_error': u'<script>window.alert("Syöttämäsi lauseke ei kelpaa. Vain lineaariset lausekkeet, joissa ei ole nollalla kertomista tai jakamista, kelpaavat!")</script>',        
         'equ_error':u'<script>window.alert("Syöttämääsi yhtälöä ei voitu muodostaa!")</script>',
         'equ_error_load':u'<script>window.alert("Tuomasi tiedosto ei kelpaa!")</script>',
         'equ_error_create':u'<script>window.alert("Muodostamasi yhtälö ei kelpaa!")</script>',
@@ -181,11 +181,10 @@ class advview:
         if webinp.postBut == "modequ":
             try:
                 sym_expr = otsympify(webinp.inp_expr_lr, evaluate = False)
-                
             except SympifyError:
                 return advview_render('expr_error')
             else:
-                if not test_linpoly(sym_expr, mode):
+                if not test_linpoly(sym_expr, mode, webinp.op_drop_lr):
                     return advview_render('inp_expr_error')
                 op = webinp.op_drop_lr
                 str_expr = str(sym_expr)
@@ -753,7 +752,17 @@ def createquestion_handler(webinp, mode, equtable, redirect, redirect2):
         else:
             return createquestion_render(mode,0, tmp_equlhs, tmp_equrhs)             
     
-def test_linpoly(a, mode):
+def test_linpoly(a, mode, op=None):
+    str_a = str(a)
+    zeromul = str_a.find('0*')
+
+    if zeromul != -1:
+        return False
+
+    if op == 'mul' or op == 'div':
+        if simplify(a) == 0:
+            return False
+
     if not len(a.free_symbols) == 0:
         if not a.is_polynomial:
             return False
@@ -787,6 +796,7 @@ def save_invequ(mode):
             
     sym_equ_lhs = otsympify(session.invequT.equTableLhs[-1],evaluate=False)
     sym_equ_rhs = otsympify(session.invequT.equTableRhs[-1], evaluate=False)
+
     user_equsl_tmp,_ = equtable.getUserEqus()
     if len(user_equsl_tmp) < 10:
         if not test_linpoly(sym_equ_lhs, mode) or not test_linpoly(sym_equ_rhs, mode)\

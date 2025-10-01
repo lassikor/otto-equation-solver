@@ -22,12 +22,7 @@ class EquTable(object):
                           'div': r'\ \mbox{ Jaoin puolittain sievent&#228;en termill&#228; }',
                           'mul_expr': r'\ \mbox{ Kerroin puolittain termill&#228; }',
                           'err': r'\ \mbox{ Jakajan tai kertojan pit&#228;&#228; olla jokin luku }\neq 0'}
-        # self.func_ids = {'add': r'& \ \ \mbox{L}',
-        #                   'subs': r'& \ \ \mbox{V}',
-        #                   'mul': r'& \ \ \mbox{K}',
-        #                   'mul_expr': r'& \ \ \mbox{K}',
-        #                   'div': r'& \ \ \mbox{J}'}
-      
+
         self.mod_functions = {'remove_braces':otops.open_braces,
                               'common_factor':otops.collect_comm_fact,
                               'merge_terms':otops.collect_terms}
@@ -65,20 +60,22 @@ class EquTable(object):
         
         func = self.functions[op] #operation chosen
         newLhs, newRhs, errorF = func(mod_expr,self.equTableLhs[self.equTableIndx],self.equTableRhs[self.equTableIndx], evaluate = evaluate)
-        mod_expr_tex = latex(otsympify(mod_expr, evaluate = False))
-        if errorF == 1:
-            newText = self.func_texts['err']+'.'
-        else:
-            newText = self.func_texts[op]+mod_expr_tex+'.'
 
         #check if there is zero addition or -1 multiplication and remove it
-        #breakpoint()
         newLhs = otops.cleanzeros(newLhs)
         newRhs = otops.cleanzeros(newRhs)   
         newLhs = newLhs.replace(" - 1*"," - ")
         newRhs = newRhs.replace(" - 1*"," - ")
         newLhs = newLhs.replace("1*(","(")
         newRhs = newRhs.replace("1*(","(")
+        mod_expr = mod_expr.replace(" - 1*"," - ")
+        mod_expr = mod_expr.replace("1*(","(")
+        mod_expr_tex = latex(otsympify(mod_expr, evaluate = False))
+        if errorF == 1:
+            newText = self.func_texts['err']+'.'
+        else:
+            newText = self.func_texts[op]+mod_expr_tex+'.'
+
         #add both sides to table
         self.equTableLhs.append(newLhs)
         self.equTableRhs.append(newRhs)
@@ -91,7 +88,6 @@ class EquTable(object):
     
     #Method for equation modifications   
     def exprMods(self, op, color, side, param1):
-       # breakpoint()
         func = self.mod_functions[op] #operation chosen
        
         if op == 'remove_braces':
@@ -105,15 +101,20 @@ class EquTable(object):
                 newText = r'\ {\color{'+color+r'}\mbox{ Poistin sulut oikealta.}}'
                 
         elif op == 'common_factor':
+
+            #tidy param1
+            param1 = param1.replace("1*(","(")
+            param1 = param1.replace(" - 1*"," - ")
+            param1_tex = latex(otsympify(param1, evaluate = False))
+
             if side == 'left':
                 newLhs, errorF = func(self.equTableLhs[self.equTableIndx], color, param1)
                 newRhs = self.equTableRhs[self.equTableIndx]
-                #param1 = latex(otsympify(param1, evaluate = False))
-                newText = r'\ {\color{'+color+r'}\mbox{ Otin yhteisen tekij&#228;n }'+param1+r'\mbox{ vasemmalta.}}'
+                newText = r'\ {\color{'+color+r'}\mbox{ Otin yhteisen tekij&#228;n }'+param1_tex+r'\mbox{ vasemmalta.}}'
             elif side == 'right':
                 newRhs, errorF = func(self.equTableRhs[self.equTableIndx], color, param1)
                 newLhs = self.equTableLhs[self.equTableIndx]
-                newText = r'\ {\color{'+color+r'}\mbox{ Otin yhteisen tekij&#228;n }'+param1+r'\mbox{ oikealta.}}'
+                newText = r'\ {\color{'+color+r'}\mbox{ Otin yhteisen tekij&#228;n }'+param1_tex+r'\mbox{ oikealta.}}'
                 
         elif op == 'merge_terms':
             if side == 'left':
@@ -194,7 +195,7 @@ class EquTable(object):
     def getLastEqu(self):
         return self.equTableLhs[self.equTableIndx],self.equTableRhs[self.equTableIndx]
     
-    #Method for quation table initialization
+    #Method for equation table initialization
     def initEquTable(self, k, mode='user',new_equ_lhs='', new_equ_rhs='', new_equ_text=''):
         
         if mode == 'user':
