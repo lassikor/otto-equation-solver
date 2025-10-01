@@ -117,16 +117,17 @@ $def with (inp_expr, num_ops, record, err=[])
         <div id="sidebarbtn" style="font-size:30px;cursor:pointer;" onclick="openNav()">&#9776;</div>
 
         $if num_ops == record:
-        <div id="bottom">
-          <h2>Mahtavaa, teit ennätyksesi!</h2>
-          <p>Käytit $record toimintoa.</p>
-          <p>Kokeile saatko parannettua tulostasi: <a href="/oldadvquestion">Yritä uudelleen</a></p>
-        </div>
+          <div id="bottom">
+            <h2>Mahtavaa, teit ennätyksesi!</h2>
+            <p>Käytit $record toimintoa.</p>
+            <p>Kokeile saatko parannettua tulostasi: <a href="/oldadvquestion">Yritä uudelleen</a></p>
+          </div>
         $else:
-        <div id="bottom">
-          <p>Käytit $num_ops toimintoa.</p>
-          <p>Kokeile saatko parannettua tulostasi: <a href="/oldadvquestion">Yritä uudelleen</a></p>
-        </div>
+          <div id="bottom">
+            <p>Käytit $num_ops toimintoa.</p>
+            <p>Kokeile saatko parannettua tulostasi: <a href="/oldadvquestion">Yritä uudelleen</a></p>
+          </div>
+
       </div>
       <div id="sidebarbtn" style="font-size:30px;cursor:pointer;" onclick="openNav()">&#9776;</div>
       <div class="sidebar" id="advSidebar">

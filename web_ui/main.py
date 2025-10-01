@@ -29,7 +29,7 @@ import otops
 from otsympify import otsympify, SympifyError
 from sympy import Poly, Integer, Rational, simplify, ratsimp
 
-from lib2to3.pgen2.literals import simple_escapes
+#from lib2to3.pgen2.literals import simple_escapes
 
 web.config.debug = False
 
@@ -626,6 +626,8 @@ def questionsolved_render(mode,err=0):
 
 
 #supporting functions for solver operations
+
+#create equation handler
 def createquestion_handler(webinp, mode, equtable, redirect, redirect2):
 
     if webinp.postBut == "file_upload":
