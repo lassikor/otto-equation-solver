@@ -184,6 +184,8 @@ class advview:
             except SympifyError:
                 return advview_render('expr_error')
             else:
+                if webinp.op_drop_lr in ['mul', 'div'] and (not isinstance(sym_expr, (Integer, int, Rational)) or sym_expr == 0):
+                    return advview_render('muldiv_error')                
                 if not test_linpoly(sym_expr, mode, webinp.op_drop_lr):
                     return advview_render('inp_expr_error')
                 op = webinp.op_drop_lr

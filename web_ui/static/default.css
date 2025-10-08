@@ -183,6 +183,35 @@ ul#menulist2 a:hover {
     /*border: 1px solid var(--main-border-color);*/
 }
 
+.cookie-consent {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #222;
+    color: #fff;
+    padding: 18px 10px 18px 10px;
+    text-align: center;
+    z-index: 1000;
+    font-size: 1em;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+}
+.cookie-consent button {
+    margin-left: 15px;
+    background: var(--highlight-color);
+    color: #222;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.cookie-consent button:hover {
+    background: #fff;
+    color: var(--main-text-color);
+}
+
 #equshow {
     padding: 5px 20px 20px;
     margin: 0px;
