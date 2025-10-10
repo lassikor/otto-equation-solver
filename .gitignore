@@ -1,0 +1,7 @@
+*.pyc
+*.egg-info/
+.venv/
+.vscode/
+web_ui/sessions/
+__pycache__
+sessions
