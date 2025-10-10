@@ -1,4 +1,8 @@
 # -*- coding: utf8 -*-
+import sys
+import os
+from pathlib import Path
+import logging
 
 '''
 Main file for the web UI otto-equation-solver application
@@ -10,14 +14,24 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 '''
-import sys
-import os
-rootpath = "C:\\Users\\lassikor\\OneDrive - University of Oulu and Oamk\\projects\\otto-equation-solver\\"
-sys.path.append(rootpath+'web_ui\\')
-sys.path.append(rootpath+'web_ui\\static\\')
-sys.path.append(rootpath+'web_ui\\templates\\')
-sys.path.append(rootpath+'web_ui\\sessions\\')
-sys.path.append(rootpath+'equtools\\')
+
+# root path via pathlib
+ROOT_PATH = Path(__file__).resolve().parent.parent
+rootpath = str(ROOT_PATH)  # keep legacy string if referenced elsewhere
+
+# Normalize PYTHONPATH entries (string paths)
+sys.path.extend([
+    str(ROOT_PATH / 'web_ui'),
+    str(ROOT_PATH / 'web_ui' / 'static'),
+    str(ROOT_PATH / 'web_ui' / 'templates'),
+    str(ROOT_PATH / 'web_ui' / 'sessions'),
+    str(ROOT_PATH / 'equtools'),
+])
+
+# Central session dir helper (Path objects)
+SESSIONS_DIR = ROOT_PATH / 'web_ui' / 'sessions'
+TEMPLATES_DIR = ROOT_PATH / 'web_ui' / 'templates'
+
 import web
 import json
 import re as rgex
@@ -33,7 +47,7 @@ from sympy import Poly, Integer, Rational, simplify, ratsimp
 
 web.config.debug = False
 
-render = web.template.render(rootpath+'web_ui\\templates\\')
+render = web.template.render(str(TEMPLATES_DIR))
 
 #url mappings
 urls = ('/','index',
@@ -52,9 +66,9 @@ urls = ('/','index',
         '/oldinversequestion','oldinversequestion')
 
 app = web.application(urls, globals())
-web.config.session_parameters['cookie_path'] = '\\'
+web.config.session_parameters['cookie_path'] = '/'
 #init new session. Sessions are needed for storing equations
-session = web.session.Session(app, web.session.DiskStore(rootpath+'web_ui\\sessions'))
+session = web.session.Session(app, web.session.DiskStore(str(SESSIONS_DIR)))
 #session.kill()
 
 #error messages
@@ -152,9 +166,9 @@ class simpleview:
             web.header('Content-Type','application/json')
             web.header('Content-disposition', 'attachment; filename=oma_ratkaisu.txt')
             sessid = str(session.session_id)
-            with open(rootpath+'/web_ui/sessions/'+sessid+'_oma_ratkaisu.txt','w') as outfile:
-                json.dump([session.simplequT.equTableLhs, session.simplequT.equTableRhs, session.simplequT.equTableText],outfile)
-            return open(rootpath+'/web_ui/sessions/'+sessid+'_oma_ratkaisu.txt').read()        
+            with open(SESSIONS_DIR / f"{sessid}_oma_ratkaisu.txt", 'w') as outfile:
+                json.dump([session.simplequT.equTableLhs, session.simplequT.equTableRhs, session.simplequT.equTableText], outfile)
+            return open(SESSIONS_DIR / f"{sessid}_oma_ratkaisu.txt").read()        
             
 #advanced equation solving training page handling
 class advview:
@@ -219,9 +233,9 @@ class advview:
             web.header('Content-Type','application/json')
             web.header('Content-disposition', 'attachment; filename=oma_ratkaisu.txt')
             sessid = str(session.session_id)
-            with open(rootpath+'/web_ui/sessions/'+sessid+'_oma_ratkaisu.txt','w') as outfile:
-                json.dump([session.equT.equTableLhs, session.equT.equTableRhs, session.equT.equTableText],outfile)
-            return open(rootpath+'/web_ui/sessions/'+sessid+'_oma_ratkaisu.txt').read()
+            with open(SESSIONS_DIR / f"{sessid}_oma_ratkaisu.txt", 'w') as outfile:
+                json.dump([session.equT.equTableLhs, session.equT.equTableRhs, session.equT.equTableText], outfile)
+            return open(SESSIONS_DIR / f"{sessid}_oma_ratkaisu.txt").read()
 
         #if only one side is modified
         elif webinp.postBut.find("right") > -1:
@@ -337,9 +351,9 @@ class inverseview:
             web.header('Content-Type','application/json')
             web.header('Content-disposition', 'attachment; filename=oma_yhtalo.txt')
             sessid = str(session.session_id)
-            with open(rootpath+'/web_ui/sessions/'+sessid+'_oma_yhtalo.txt','w') as outfile:
-                json.dump([[session.invequT.equTableLhs[-1]], [session.invequT.equTableRhs[-1]]],outfile)
-            return open(rootpath+'/web_ui/sessions/'+sessid+'_oma_yhtalo.txt').read()
+            with open(SESSIONS_DIR / f"{sessid}_oma_yhtalo.txt", 'w') as outfile:
+                json.dump([[session.invequT.equTableLhs[-1]], [session.invequT.equTableRhs[-1]]], outfile)
+            return open(SESSIONS_DIR / f"{sessid}_oma_yhtalo.txt").read()
 
 #classes for other pages handling      
 class newadvquestion:
@@ -661,9 +675,9 @@ def createquestion_handler(webinp, mode, equtable, redirect, redirect2):
         web.header('Content-Type','application/json')
         web.header('Content-disposition', 'attachment; filename=omat_yhtalot.txt')
         sessid = str(session.session_id)
-        with open(rootpath+'/web_ui/sessions/'+sessid+'_omat_yhtalot.txt','w') as outfile:
-            json.dump([equtable.userEquLhs,equtable.userEquRhs],outfile)
-        return open(rootpath+'/web_ui/sessions/'+sessid+'_omat_yhtalot.txt').read()
+        with open(SESSIONS_DIR / f"{sessid}_omat_yhtalot.txt", 'w') as outfile:
+            json.dump([equtable.userEquLhs, equtable.userEquRhs], outfile)
+        return open(SESSIONS_DIR / f"{sessid}_omat_yhtalot.txt").read()
     
     elif webinp.postBut == "show_equ":
         try:
@@ -897,11 +911,14 @@ def handleFileIO(webinp, mode):
         web.header('Content-Type','application/json')
         web.header('Content-disposition', 'attachment; filename=oma_ratkaisu.txt')
         sessid = str(session.session_id)
-        with open(rootpath+'web_ui//sessions/'+sessid+'_oma_ratkaisu.txt','w') as outfile:
-            json.dump([equtable.equTableLhs, equtable.equTableRhs, equtable.equTableText],outfile)
-        return open(rootpath+'/web_ui/sessions/'+sessid+'_oma_ratkaisu.txt').read()   
+        with open(SESSIONS_DIR / f"{sessid}_oma_ratkaisu.txt", 'w') as outfile:
+            json.dump([equtable.equTableLhs, equtable.equTableRhs, equtable.equTableText], outfile)
+        return open(SESSIONS_DIR / f"{sessid}_oma_ratkaisu.txt").read()   
     
-if __name__=="__main__":
-    
-    
-    app.run()
+# def main():
+#     app.run()
+
+# if __name__ == "__main__":
+#     main()
+
+application = app.wsgifunc()
