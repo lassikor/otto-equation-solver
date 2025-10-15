@@ -271,7 +271,7 @@ class handleTree(object):
             new_term = 0
             
             for term in args_old:
-                if term.is_number:
+                if term.is_number and term_id == 'const':
                     new_term = Add(new_term, simplify(term))
                 elif isinstance(term, (Symbol, Mul)) and term_id == 'xterm' and not term.as_coefficient(Symbol(self.symvar)) == None:
                     new_term = Add(new_term, term)    
@@ -298,7 +298,7 @@ class handleTree(object):
                 new_term = 0
   
                 for term in args_old:
-                    if term.is_number:
+                    if term.is_number and term_id == 'const':
                         new_term = Add(new_term, simplify(term))
                            
                     elif isinstance(term, (Symbol, Mul)) and term_id == 'xterm' and not term.as_coefficient(Symbol(self.symvar)) == None:

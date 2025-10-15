@@ -222,7 +222,7 @@ ul#menulist2 a:hover {
 
 #main_cr {
     padding: 5px 20px 20px;
-    margin: 20px 500px 20px 20px;
+    margin: 20px 540px 20px 20px;
     background-color: var(--block-bg-color);
     color: var(--main-text-color);
     border-radius: 4px;
@@ -395,8 +395,8 @@ i:hover {
     background-color: var(--block-bg-color);
     color: var(--main-text-color);
     padding: 0px 20px 20px;
-    min-width: 420px;
-    min-height: 250px;
+    min-width: 460px;
+    min-height: 300px;
     /*bottom: 0;*/
     top: 0;
     right: 0;
