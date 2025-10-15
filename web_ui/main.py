@@ -267,8 +267,8 @@ class inverseview:
             except (SympifyError, IndexError):
                 return render.inverseview([],[],[],errs['expr_error'])
             else:
-                if not test_linpoly(sym_equ_lhs, 'adv') or not test_linpoly(sym_equ_rhs, 'adv')\
-                or not test_linpoly(sym_equ_lhs-sym_equ_rhs, 'adv'):
+                if not test_linpoly(sym_equ_lhs, 'inv') or not test_linpoly(sym_equ_rhs, 'inv')\
+                or not test_linpoly(sym_equ_lhs-sym_equ_rhs, 'inv'):
                     return inverseview_render('equ_error_create')
                 else:
                     session.invequT.initEquTable(0,'new',str(sym_equ_lhs),str(sym_equ_rhs))
@@ -281,7 +281,7 @@ class inverseview:
             except SympifyError:
                 return inverseview_render('expr_error')
             else:
-                if not test_linpoly(sym_expr, mode):
+                if not test_linpoly(sym_expr, 'inv'):
                     return inverseview_render('inp_expr_error')
                 if webinp.op_drop_lr in ['mul_expr', 'div'] and (not isinstance(sym_expr, (Integer, int, Rational)) or sym_expr == 0):
                         return inverseview_render('muldiv_error')
@@ -766,6 +766,18 @@ def test_linpoly(a, mode, op=None):
             return False
 
     if not len(a.free_symbols) == 0:
+        if mode == 'simple':
+            symvar_a = str(a.free_symbols.pop())
+            if not symvar_a == session.simplequT.symvar:
+                return False
+        if mode == 'adv':
+            symvar_a = str(a.free_symbols.pop())
+            if not symvar_a == session.equT.symvar:
+                return False
+        if mode == 'inv':
+            symvar_a = str(a.free_symbols.pop())
+            if not symvar_a == session.invequT.symvar:
+                return False
         if not a.is_polynomial:
             return False
         elif Poly(a).is_multivariate:
