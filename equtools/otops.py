@@ -146,8 +146,7 @@ def multiplr(inp_expr_str, orig_expr_l_str, orig_expr_r_str, evaluate=False):
             new_args = [] 
             new_args = multiply_by_terms(new_args, inp_expr, orig_expr_r, symvar)
             outp_expr_r = new_args[0]            
-#   outp_expr_l = Mul(orig_expr_l, inp_expr, evaluate = True)
-#   outp_expr_r = Mul(orig_expr_r, inp_expr, evaluate = True)
+
         return str(outp_expr_l), str(outp_expr_r), errorFlag
     else:
         errorFlag = 1
@@ -272,26 +271,8 @@ class handleTree(object):
             new_term = 0
             
             for term in args_old:
-                
-                if isinstance(term, (int, Integer, Rational)) and term_id == 'const':
-                    new_term = Add(new_term, term)
-                elif isinstance(term, Pow) and term_id == 'const':
-                    if len(term.args) == 2 and isinstance(term.args[0], (Integer, int)) and isinstance(term.args[1], (Integer, int)):
-                        new_term = Add(new_term, simplify(term))
-                elif isinstance(term, Mul) and term_id == 'const':
-                    if len(term.args) == 2 and isinstance(term.args[0], (Integer, int, Rational, Pow)) and isinstance(term.args[1], (Integer, int, Rational, Pow)):
-                        if isinstance(term.args[0], Pow):
-                            if len(term.args[0].args) == 2 and isinstance(term.args[0].args[0], (Integer, int)) and isinstance(term.args[0].args[1], (Integer, int)):
-                                new_term = Add(new_term, simplify(term))
-                        elif isinstance(term.args[1], Pow):
-                            if len(term.args[1].args) == 2 and isinstance(term.args[1].args[0], (Integer, int)) and isinstance(term.args[1].args[1], (Integer, int)):
-                                new_term = Add(new_term, simplify(term))
-                        else:
-                            new_term = Add(new_term, simplify(term))
-                    else:
-                        args_new.append(term)
-                        
-                    
+                if term.is_number:
+                    new_term = Add(new_term, simplify(term))
                 elif isinstance(term, (Symbol, Mul)) and term_id == 'xterm' and not term.as_coefficient(Symbol(self.symvar)) == None:
                     new_term = Add(new_term, term)    
                 else:
@@ -316,24 +297,8 @@ class handleTree(object):
                 new_term = 0
   
                 for term in args_old:
-                    
-                    if isinstance(term, (int, Integer, Rational)) and term_id == 'const':
-                        new_term = Add(new_term, term)
-                    elif isinstance(term, Pow) and term_id == 'const':
-                        if len(term.args) == 2 and isinstance(term.args[0], (Integer, int)) and isinstance(term.args[1], (Integer, int)):
-                            new_term = Add(new_term, simplify(term))
-                    elif isinstance(term, Mul) and term_id == 'const':
-                        if len(term.args) == 2 and isinstance(term.args[0], (Integer, int, Rational, Pow)) and isinstance(term.args[1], (Integer, int, Rational, Pow)):
-                            if isinstance(term.args[0], Pow):
-                                if len(term.args[0].args) == 2 and isinstance(term.args[0].args[0], (Integer, int)) and isinstance(term.args[0].args[1], (Integer, int)):
-                                    new_term = Add(new_term, simplify(term))
-                            elif isinstance(term.args[1], Pow):
-                                if len(term.args[1].args) == 2 and isinstance(term.args[1].args[0], (Integer, int)) and isinstance(term.args[1].args[1], (Integer, int)):
-                                    new_term = Add(new_term, simplify(term))
-                            else:
-                                new_term = Add(new_term, simplify(term))
-                        else:
-                            args_new.append(term)
+                    if term.is_number:
+                        new_term = Add(new_term, simplify(term))
                            
                     elif isinstance(term, (Symbol, Mul)) and term_id == 'xterm' and not term.as_coefficient(Symbol(self.symvar)) == None:
                         new_term = Add(new_term, term)    
