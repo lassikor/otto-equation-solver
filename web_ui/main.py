@@ -288,6 +288,8 @@ class inverseview:
                 if not test_linpoly(sym_equ_lhs, mode) or not test_linpoly(sym_equ_rhs, mode)\
                 or not test_linpoly(sym_equ_lhs-sym_equ_rhs, mode):
                     return inverseview_render('equ_error_create')
+                elif solve(sym_equ_lhs - sym_equ_rhs) == []:
+                    return inverseview_render('equ_error_create')
                 else:
                     session.invequT.initEquTable(0,'new',str(sym_equ_lhs),str(sym_equ_rhs))
                     return inverseview_render()
