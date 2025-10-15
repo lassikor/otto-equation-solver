@@ -277,8 +277,9 @@ class handleTree(object):
                     new_term = Add(new_term, term)    
                 else:
                     args_new.append(term)
-                    
-            args_new.append(simplify(new_term))
+
+            if not new_term == 0:        
+                args_new.append(simplify(new_term))
             expr = Add(*args_new, evaluate=False)
             
         elif not color == 'black':
@@ -304,8 +305,8 @@ class handleTree(object):
                         new_term = Add(new_term, term)    
                     else:
                         args_new.append(term)
-                        
-                args_new.append(simplify(new_term))
+                if not new_term == 0:       
+                    args_new.append(simplify(new_term))
                 expr = Add(*args_new, evaluate=False)
                 
                 for i in range(len(fun_chain)):

@@ -26,12 +26,15 @@ class EquTable(object):
         self.mod_functions = {'remove_braces':otops.open_braces,
                               'common_factor':otops.collect_comm_fact,
                               'merge_terms':otops.collect_terms}
-
-        if not mode == 'inv': 
-            LhsTmp, RhsTmp = create_equ(mode)
-            symLhsTmp = otsympify(LhsTmp)
-            symRhsTmp = otsympify(RhsTmp)
-            self.solution = solve(symLhsTmp-symRhsTmp)
+        #create a random equation
+        self.solution = []
+        if not mode == 'inv':
+            while self.solution == []: 
+                LhsTmp, RhsTmp = create_equ(mode)
+                symLhsTmp = otsympify(LhsTmp)
+                symRhsTmp = otsympify(RhsTmp)
+                self.solution = solve(symLhsTmp-symRhsTmp)
+                
         else:
             LhsTmp, RhsTmp = '0','0'
             symLhsTmp = otsympify(LhsTmp)
@@ -168,19 +171,26 @@ class EquTable(object):
         return self.equTableLhs, self.equTableRhs, self.equTableText
     
     def clearEquTable(self, mode=' adv', new = 0):
+        #clear the equation table and create a new equation
         old_equ_lhs,  old_equ_rhs = self.equTableLhs[0], self.equTableRhs[0]
+        old_solution = self.solution
         self.equTableLhs = []
         self.equTableRhs = []
         self.equTableText = []
         self.equTableIndx = 0
+        self.solution = []
+
         if new == 0:
             self.equTableLhs.append(old_equ_lhs)
             self.equTableRhs.append(old_equ_rhs)
+            self.solution = old_solution
         else:
-            LhsTmp, RhsTmp = create_equ(mode)
-            symLhsTmp = otsympify(LhsTmp)
-            symRhsTmp = otsympify(RhsTmp)
-            self.solution = solve(symLhsTmp-symRhsTmp)
+
+            while self.solution == []:
+                LhsTmp, RhsTmp = create_equ(mode)
+                symLhsTmp = otsympify(LhsTmp)
+                symRhsTmp = otsympify(RhsTmp)
+                self.solution = solve(symLhsTmp-symRhsTmp)
             if not len(symLhsTmp.free_symbols) == 0:
                 self.symvar = str(symLhsTmp.free_symbols.pop())
             elif not len(symRhsTmp.free_symbols) == 0:

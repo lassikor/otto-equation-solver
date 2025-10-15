@@ -41,7 +41,7 @@ from otlatex import latex
 import otequhandle
 import otops
 from otsympify import otsympify, SympifyError
-from sympy import Poly, Integer, Rational, simplify, ratsimp
+from sympy import Poly, Integer, Rational, simplify, ratsimp, solve
 
 #from lib2to3.pgen2.literals import simple_escapes
 
@@ -74,7 +74,7 @@ session = web.session.Session(app, web.session.DiskStore(str(SESSIONS_DIR)))
 #error messages
 errs = {'own_equs_full': u'<script>window.alert("Vain kymmenen omaa yhtälöä sallittu!")</script>',
         'expr_error':u'<script>window.alert("Syöttämääsi lauseketta ei voitu muodostaa! Unohditko näppäillä kertomerkin?")</script>',
-        'inp_expr_error': u'<script>window.alert("Syöttämäsi lauseke ei kelpaa. Vain lineaariset lausekkeet, joissa ei ole nollalla kertomista tai jakamista, kelpaavat!")</script>',        
+        'inp_expr_error': u'<script>window.alert("Syöttämäsi lauseke ei kelpaa!\\nVain yhden muuttujan lineaariset lausekkeet,\\njoissa ei ole nollalla kertomista tai jakamista, kelpaavat!")</script>',        
         'equ_error':u'<script>window.alert("Syöttämääsi yhtälöä ei voitu muodostaa!")</script>',
         'equ_error_load':u'<script>window.alert("Tuomasi tiedosto ei kelpaa!")</script>',
         'equ_error_create':u'<script>window.alert("Muodostamasi yhtälö ei kelpaa!")</script>',
@@ -126,6 +126,8 @@ class simpleview:
             else:
                 if webinp.op_drop_lr in ['mul', 'div'] and (not isinstance(sym_expr, (Integer, int, Rational)) or sym_expr == 0):
                     return simpleview_render('muldiv_error')
+                elif not test_linpoly(sym_expr, 'simple', webinp.op_drop_lr):
+                    return simpleview_render('inp_expr_error')
                 op = webinp.op_drop_lr
                 str_expr = str(sym_expr)
                 session.simplequT.equTransf(op,str_expr)
@@ -252,12 +254,13 @@ class advview:
 class inverseview:
     
     def GET(self):
+        mode = 'inv'
         #init button strings
         but_str = webelements.get_button_strings()
 
         #check if the equation is not established
         if not hasattr(session,'invequT'):
-            session.invequT = otequhandle.EquTable('inv')
+            session.invequT = otequhandle.EquTable(mode)
             return render.inverseview([],[],[],[],but_str)
         elif session.invequT.equTableLhs == ['0'] and session.invequT.equTableRhs == ['0']:
             return render.inverseview([],[],[],[],but_str)
@@ -265,12 +268,13 @@ class inverseview:
             return inverseview_render()
     
     def POST(self):
+        mode = 'inv'
         if not hasattr(session,'invequT'):
-            session.invequT = otequhandle.EquTable('inv')
+            session.invequT = otequhandle.EquTable(mode)
             return inverseview_render('session_expired')
  
         webinp = web.input()
-        mode = 'adv'
+        
         
         #user starts creation
         if webinp.postBut == "start":
@@ -281,8 +285,8 @@ class inverseview:
             except (SympifyError, IndexError):
                 return render.inverseview([],[],[],errs['expr_error'])
             else:
-                if not test_linpoly(sym_equ_lhs, 'inv') or not test_linpoly(sym_equ_rhs, 'inv')\
-                or not test_linpoly(sym_equ_lhs-sym_equ_rhs, 'inv'):
+                if not test_linpoly(sym_equ_lhs, mode) or not test_linpoly(sym_equ_rhs, mode)\
+                or not test_linpoly(sym_equ_lhs-sym_equ_rhs, mode):
                     return inverseview_render('equ_error_create')
                 else:
                     session.invequT.initEquTable(0,'new',str(sym_equ_lhs),str(sym_equ_rhs))
@@ -295,7 +299,7 @@ class inverseview:
             except SympifyError:
                 return inverseview_render('expr_error')
             else:
-                if not test_linpoly(sym_expr, 'inv'):
+                if not test_linpoly(sym_expr, mode):
                     return inverseview_render('inp_expr_error')
                 if webinp.op_drop_lr in ['mul_expr', 'div'] and (not isinstance(sym_expr, (Integer, int, Rational)) or sym_expr == 0):
                         return inverseview_render('muldiv_error')
@@ -306,11 +310,11 @@ class inverseview:
             
         elif webinp.postBut.find("left") > -1:
             side = 'left'
-            return advops_handler(webinp, side, 'inv')  
+            return advops_handler(webinp, side, mode)  
                                            
         elif webinp.postBut.find("right") > -1:
             side = 'right'
-            return advops_handler(webinp, side, 'inv')
+            return advops_handler(webinp, side, mode)
         
         elif webinp.postBut == "save_adv_equ":
             mode = 'adv'
@@ -658,18 +662,20 @@ def createquestion_handler(webinp, mode, equtable, redirect, redirect2):
             return createquestion_render(mode,err=4)
         
         else:
-            if not test_linpoly(sym_equ_lhs[-1], mode) or not test_linpoly(sym_equ_rhs[-1], mode)\
-            or not test_linpoly(sym_equ_lhs[-1]-sym_equ_rhs[-1], mode):
-                return createquestion_render(mode,err=4)
+            for (equLsym, equRsym) in zip(sym_equ_lhs, sym_equ_rhs):
+                if not test_linpoly(equLsym, mode) or not test_linpoly(equRsym, mode)\
+            or not test_linpoly(equLsym-equRsym, mode):
+                    return createquestion_render(mode,err=4)
+                elif solve(equLsym - equRsym) == []:
+                    return createquestion_render(mode,err=4)
             
-            else:
-                for (equL,equR) in zip(newUserEqusL,newUserEqusR):
-                    if len(equtable.userEquLhs) < 10:
-                        equtable.addUserEqu(equL, equR)
-                    else:
-                        return createquestion_render(mode,err=3)
+            for (equL,equR) in zip(newUserEqusL,newUserEqusR):
+                if len(equtable.userEquLhs) < 10:
+                    equtable.addUserEqu(equL, equR)
+                else:
+                    return createquestion_render(mode,err=3)
                 
-                raise web.seeother(redirect2)
+            raise web.seeother(redirect2)
         
     elif webinp.postBut == "file_download":
         web.header('Content-Type','application/json')
@@ -699,11 +705,12 @@ def createquestion_handler(webinp, mode, equtable, redirect, redirect2):
         except (SympifyError, IndexError):
             return createquestion_render(mode,1)
         else:
-            #check if the input equation is linear
+            #check if the input equation is linear and has a solution
             if not test_linpoly(sym_equ_lhs, mode) or not test_linpoly(sym_equ_rhs, mode)\
             or not test_linpoly(sym_equ_lhs-sym_equ_rhs, mode):
                 return createquestion_render(mode,1)
-           
+            elif solve(sym_equ_lhs - sym_equ_rhs) == []:
+                return createquestion_render(mode,1)
             user_equsl_tmp,_ = equtable.getUserEqus()
             if len(user_equsl_tmp) < 10:
                 new_equlhs_str,  new_equrhs_str = str(sym_equ_lhs), str(sym_equ_rhs)
@@ -723,11 +730,12 @@ def createquestion_handler(webinp, mode, equtable, redirect, redirect2):
             except (SympifyError, IndexError):
                 return createquestion_render(mode,1)
             else:
-                #check if the input equation is linear
+                #check if the input equation is linear and solution exists
                 if not test_linpoly(sym_equ_lhs, mode) or not test_linpoly(sym_equ_rhs, mode)\
                 or not test_linpoly(sym_equ_lhs-sym_equ_rhs, mode):
                     return createquestion_render(mode,1)
-                
+                elif solve(sym_equ_lhs - sym_equ_rhs) == []:
+                    return createquestion_render(mode,1)
                 new_equlhs_str,  new_equrhs_str = str(sym_equ_lhs), str(sym_equ_rhs)
                 equtable.clearEquTable(mode,1)
                 equtable.initEquTable(0,'new',new_equlhs_str,new_equrhs_str)
